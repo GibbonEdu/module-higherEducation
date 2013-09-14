@@ -1,0 +1,22 @@
+CHANGELOG
+=========
+v1.0.01
+-------
+Added comptability with Gibbon core v6.
+
+v1.0.00
+-------
+Ability for student to make notes for referees to use in application writing.
+Ability for student to request a reference
+Ability for coordinator to manage references
+Ability for referees to write references
+
+v0.5.00
+-------
+Ability to manage lists of majors and institutions
+Ability to manage students and staff
+Ability for students to enter application information
+Ability for coordinators/advisors to view student application information
+
+	
+
