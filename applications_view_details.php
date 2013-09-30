@@ -72,7 +72,7 @@ else {
 				print "<div class='trailHead'><a href='" . $_SESSION[$guid]["absoluteURL"] . "'>Home</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/" . getModuleEntry($_GET["q"], $connection2, $guid) . "'>" . getModuleName($_GET["q"]) . "</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/applications_view.php'>View Applications</a> > </div><div class='trailEnd'>Application Details</div>" ;
 				print "</div>" ;
 				
-				print "<table style='width: 100%'>" ;
+				print "<table class='smallIntBorder' cellspacing='0' style='width: 100%'>" ;
 					print "<tr>" ;
 						print "<td style='width: 34%; vertical-align: top'>" ;
 							print "<span style='font-size: 115%; font-weight: bold'>Name</span><br/>" ;
@@ -129,8 +129,7 @@ else {
 						//Create application record
 						?>
 						<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/applications_trackProcess.php?higherEducationApplicationID=" . $row["higherEducationApplicationID"] ?>">
-						<table style="width: 100%">	
-							<tr><td style="width: 30%"></td><td></td></tr>
+						<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 							<tr id='careerInterestsRow' <? if ($row["applying"]=="N" OR $row["applying"]=="") { print "style='display: none;'" ; } ?>>
 								<td colspan=2 style='padding-top: 15px;'> 
 									<b>Career Interests</b><br/>
@@ -200,7 +199,7 @@ else {
 									print "</div>" ;
 								}
 								else {
-									print "<table style='width: 100%'>" ;
+									print "<table cellspacing='0' style='width: 100%'>" ;
 										print "<tr class='head'>" ;
 											print "<th>" ;
 												print "Institution" ;
@@ -262,13 +261,18 @@ else {
 												print "<td style='border-bottom: 1px solid #333'></td>" ;
 												
 												print "<td style='border-bottom: 1px solid #333' colspan=4>" ;
-													print "<table style='width: 100%'>" ;
+													print "<table class='mini' cellspacing='0' style='width: 100%'>" ;
 														print "<tr>" ;
 															print "<td style='vertical-align: top'>" ;
 																print "<b>Application Number</b>" ;
 															print "</td>" ;
 															print "<td style='vertical-align: top'>" ;
-																print $rowApps["applicationNumber"] ;
+																if ($rowApps["applicationNumber"]=="") {
+																	print "NA" ;
+																}
+																else {
+																	print $rowApps["applicationNumber"] ;
+																}
 															print "</td>" ;
 														print "</tr>" ;
 														print "<tr>" ;
@@ -276,7 +280,12 @@ else {
 																print "<b>Scholarship Details</b>" ;
 															print "</td>" ;
 															print "<td style='vertical-align: top'>" ;
-																print $rowApps["scholarship"] ;
+																if ($rowApps["scholarship"]=="") {
+																	print "NA" ;
+																}
+																else {
+																	print $rowApps["scholarship"] ;
+																}
 															print "</td>" ;
 														print "</tr>" ;
 														print "<tr>" ;
@@ -284,8 +293,14 @@ else {
 																print "<b>Offer</b>" ;
 															print "</td>" ;
 															print "<td style='vertical-align: top'>" ;
-																print $rowApps["offer"] . "</br>" ;
-																print "<i>" . $rowApps["offerDetails"] . "</i></br>" ;
+																if ($rowApps["offer"]=="") {
+																	print "NA" ;
+																}
+																else {
+																	print $rowApps["offer"] . "</br>" ;
+																	print "<i>" . $rowApps["offerDetails"] . "</i></br>" ;
+																}
+																
 															print "</td>" ;
 														print "</tr>" ;
 														print "<tr>" ;
@@ -293,7 +308,12 @@ else {
 																print "<b>Application Question</b>" ;
 															print "</td>" ;
 															print "<td style='vertical-align: top'>" ;
-																print $rowApps["question"] ;
+																if ($rowApps["question"]=="") {
+																	print "NA" ;
+																}
+																else {
+																	print $rowApps["question"] ;
+																}
 															print "</td>" ;
 														print "</tr>" ;
 														print "<tr>" ;
@@ -301,7 +321,12 @@ else {
 																print "<b>Application Answer</b>" ;
 															print "</td>" ;
 															print "<td style='vertical-align: top'>" ;
-																print $rowApps["answer"] ;
+																if ($rowApps["answer"]=="") {
+																	print "NA" ;
+																}
+																else {
+																	print $rowApps["answer"] ;
+																}
 															print "</td>" ;
 														print "</tr>" ;
 													print "</table>" ;

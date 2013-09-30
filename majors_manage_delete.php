@@ -91,7 +91,7 @@ else {
 				$row=$result->fetch() ;
 				?>
 				<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/majors_manage_deleteProcess.php?higherEducationMajorID=$higherEducationMajorID" ?>">
-					<table style="width: 100%">	
+					<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 						<tr>
 							<td> 
 								<b>Are you sure you want to delete "<? print $row["name"] ?>" from the Higher Education programme?</b><br/>

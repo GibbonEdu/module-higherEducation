@@ -119,8 +119,7 @@ else {
 				print "</div>" ;
 				?>
 				<form method="get" action="<? print $_SESSION[$guid]["absoluteURL"]?>/index.php">
-					<table style="width: 100%">	
-						<tr><td style="width: 30%"></td><td></td></tr>
+					<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 						<tr>
 							<td> 
 								<b>Search For</b><br/>
@@ -180,7 +179,7 @@ else {
 						printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]["pagination"], "top", "gibbonSchoolYearID=$gibbonSchoolYearID&search=$search") ;
 					}
 				
-					print "<table style='width: 100%'>" ;
+					print "<table cellspacing='0' style='width: 100%'>" ;
 						print "<tr class='head'>" ;
 							print "<th>" ;
 								print "Name<br/>" ;

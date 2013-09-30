@@ -80,8 +80,7 @@ else {
 			On this page you can store some notes that will help your referee write about you. You might want to include some highlights of your achievements in and out of school, community service work you have done and activities you have taken part in.
 		</p>
 		<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/references_myNotesProcess.php" ?>">
-			<table style="width: 100%">	
-				<tr><td style="width: 30%"></td><td></td></tr>
+			<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 				<tr>
 					<td colspan=2> 
 						<? print getEditor($guid,  TRUE, "referenceNotes", $row["referenceNotes"], 25, false, false, false) ?>
@@ -89,14 +88,12 @@ else {
 				</tr>
 				
 				<tr>
-					<td class="right" colspan=2>
+					<td>
+						<span style="font-size: 90%"><i>* denotes a required field</i></span>
+					</td>
+					<td class="right">
 						<input type="hidden" name="address" value="<? print $_SESSION[$guid]["address"] ?>">
 						<input type="reset" value="Reset"> <input type="submit" value="Submit">
-					</td>
-				</tr>
-				<tr>
-					<td class="right" colspan=2>
-						<span style="font-size: 90%"><i>* denotes a required field</i></span>
 					</td>
 				</tr>
 			</table>

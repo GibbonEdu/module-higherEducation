@@ -109,7 +109,7 @@ else {
 					$row=$result->fetch() ;
 					?>
 					<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/applications_track_deleteProcess.php?higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID" ?>">
-						<table style="width: 100%">	
+						<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 							<tr>
 								<td> 
 									<b>Are you sure you want to delete your application to study at <? print $row["name"] ?>?</b><br/>

@@ -119,7 +119,7 @@ else {
 			<?	
 			print "</div>" ;
 			
-			print "<table style='width: 100%'>" ;
+			print "<table cellspacing='0' style='width: 100%'>" ;
 				print "<tr class='head'>" ;
 					print "<th>" ;
 						print "Name" ;
