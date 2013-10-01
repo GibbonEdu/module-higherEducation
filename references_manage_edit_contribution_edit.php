@@ -123,7 +123,7 @@ else {
 							}
 							?>
 							</i></span><br/>
-							<textarea name="body" id="body" rows=20 style="width:756px; margin: 5px 0px 0px 0px"><? print $row["body"] ?></textarea>
+							<textarea name="body" id="body" rows=20 style="width:738px; margin: 5px 0px 0px 0px"><? print $row["body"] ?></textarea>
 							<script type="text/javascript">
 								var body = new LiveValidation('body');
 								body.add(Validate.Presence);

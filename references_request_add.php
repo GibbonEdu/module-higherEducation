@@ -139,7 +139,7 @@ else {
 					<td colspan=2 style='padding-top: 15px;'> 
 						<b>Notes</b><br/>
 						<span style="font-size: 90%"><i>Any information you need to share with your referee(s), that is not already in your <a href='<? print $_SESSION[$guid]["absoluteURL"] ?>/index.php?q=/modules/Higher Education/references_myNotes.php'>general reference notes</a>.</i></span><br/>
-						<textarea name="notes" id="notes" rows=4 style="width:756px; margin: 5px 0px 0px 0px"></textarea>
+						<textarea name="notes" id="notes" rows=4 style="width:738px; margin: 5px 0px 0px 0px"></textarea>
 					</td>
 				</tr>
 				

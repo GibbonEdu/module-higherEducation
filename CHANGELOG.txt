@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.0.03
+-------
+Fixed textarea width issue. 
+
 v1.0.02
 -------
 Brought module up to visual refresh standard of Gibbon Core v7. 

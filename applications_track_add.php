@@ -191,21 +191,21 @@ else {
 						<td colspan=2 style='padding-top: 15px;'> 
 							<b>Application Question</b><br/>
 							<span style="font-size: 90%"><i>If the application form has a question, enter it here.</i></span><br/>
-							<textarea name="question" id="question" rows=4 style="width:756px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["question"]) ?></textarea>
+							<textarea name="question" id="question" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["question"]) ?></textarea>
 						</td>
 					</tr>
 					<tr>
 						<td colspan=2 style='padding-top: 15px;'> 
 							<b>Application Answer</b><br/>
 							<span style="font-size: 90%"><i>Answer the above question here.</i></span><br/>
-							<textarea name="answer" id="answer" rows=14 style="width:756px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["answer"]) ?></textarea>
+							<textarea name="answer" id="answer" rows=14 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["answer"]) ?></textarea>
 						</td>
 					</tr>
 					<tr>
 						<td colspan=2 style='padding-top: 15px;'> 
 							<b>Scholarship Details</b><br/>
 							<span style="font-size: 90%"><i>Have you applied for a scholarship? If so, list the details below.</i></span><br/>
-							<textarea name="scholarship" id="scholarship" rows=4 style="width:756px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["scholarship"]) ?></textarea>
+							<textarea name="scholarship" id="scholarship" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["scholarship"]) ?></textarea>
 						</td>
 					</tr>
 					
@@ -255,7 +255,7 @@ else {
 						<td colspan=2 style='padding-top: 15px;'> 
 							<b>Offer Details</b><br/>
 							<span style="font-size: 90%"><i>If you have received an offer, enter details here.</i></span><br/>
-							<textarea name="offerDetails" id="offerDetails" rows=4 style="width:756px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["question"]) ?></textarea>
+							<textarea name="offerDetails" id="offerDetails" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["question"]) ?></textarea>
 						</td>
 					</tr>
 					<tr>

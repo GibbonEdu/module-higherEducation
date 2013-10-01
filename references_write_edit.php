@@ -115,7 +115,7 @@ else {
 						<td colspan=2 style='padding-top: 15px;'> 
 							<b>Reference Notes</b><br/>
 							<span style="font-size: 90%"><i>Information about this reference shared by the student. This value cannot be changed.</i></span><br/>
-							<textarea readonly name="notes" id="notes" rows=4 style="width:756px; margin: 5px 0px 0px 0px"><? print $row["notes"] ?></textarea>
+							<textarea readonly name="notes" id="notes" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><? print $row["notes"] ?></textarea>
 						</td>
 					</tr>
 					
@@ -206,7 +206,7 @@ else {
 							<td colspan=2 style='padding-top: 15px;'> 
 								<b>Higher Education Notes</b><br/>
 								<span style="font-size: 90%"><i>Information about higher education in general shared by the student. This value cannot be changed.</i></span><br/>
-								<div style="padding: 1px; background-color: #e2e2e2; border: 1px solid #BFBFBF; min-height: 74px; width:756px; margin: 5px 0px 0px 0px"><? print $rowNotes["referenceNotes"] ?></div>
+								<div style="padding: 1px; background-color: #e2e2e2; border: 1px solid #BFBFBF; min-height: 74px; width:738px; margin: 5px 0px 0px 0px"><? print $rowNotes["referenceNotes"] ?></div>
 							</td>
 						</tr>
 						<?
@@ -256,7 +256,7 @@ else {
 							}
 							?>
 							</i></span><br/>
-							<textarea name="body" id="body" rows=20 style="width:756px; margin: 5px 0px 0px 0px"><? print $row["body"] ?></textarea>
+							<textarea name="body" id="body" rows=20 style="width:738px; margin: 5px 0px 0px 0px"><? print $row["body"] ?></textarea>
 							<script type="text/javascript">
 								var body = new LiveValidation('body');
 								body.add(Validate.Presence);

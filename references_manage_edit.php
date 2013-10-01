@@ -200,7 +200,7 @@ else {
 							<td colspan=2 style='padding-top: 15px;'> 
 								<b>Reference Notes</b><br/>
 								<span style="font-size: 90%"><i>Information about this reference shared by the student. This value cannot be changed.</i></span><br/>
-								<textarea readonly name="notes" id="notes" rows=4 style="width:756px; margin: 5px 0px 0px 0px"><? print $row["notes"] ?></textarea>
+								<textarea readonly name="notes" id="notes" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><? print $row["notes"] ?></textarea>
 							</td>
 						</tr>
 						
