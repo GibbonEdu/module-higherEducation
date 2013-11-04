@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.0.04
+-------
+Fixed application tracking update issue.
+
 v1.0.03
 -------
 Fixed textarea width issue. 

@@ -80,12 +80,14 @@ else {
 		//Update existing record
 		try {
 			$data=array("applying"=>$applying, "careerInterests"=>$careerInterests, "coursesMajors"=>$coursesMajors, "otherScores"=>$otherScores, "personalStatement"=>$personalStatement, "meetingNotes"=>$meetingNotes, "higherEducationApplicationID"=>$higherEducationApplicationID); 
-			$sql="UPDATE higherEducationApplication SET applying=:applying, careerInterests=:careerInterests, coursesMajors=:coursesMajors, otherScores=:otherScores, personalStatement=:personalStatement, meetingNotes=:meetingNotes, higherEducationApplicationID=:higherEducationApplicationID" ;
+			$sql="UPDATE higherEducationApplication SET applying=:applying, careerInterests=:careerInterests, coursesMajors=:coursesMajors, otherScores=:otherScores, personalStatement=:personalStatement, meetingNotes=:meetingNotes WHERE higherEducationApplicationID=:higherEducationApplicationID" ;
 			$result=$connection2->prepare($sql);
 			$result->execute($data);
 		}
 		catch(PDOException $e) { 
 			//Fail 2
+			print $e->getMessage() ;
+			exit() ;
 			$URL = $URL . "&updateReturn=fail2" ;
 			header("Location: {$URL}");
 			break ;
