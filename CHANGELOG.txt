@@ -1,5 +1,10 @@
 CHANGELOG
 =========
+v1.0.05
+-------
+Removed reset buttons
+
+
 v1.0.04
 -------
 Fixed application tracking update issue.
