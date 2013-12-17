@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-session_start() ;
+@session_start() ;
 
 if (isActionAccessible($guid, $connection2, "/modules/Higher Education/references_manage_edit.php")==FALSE) {
 	//Acess denied
@@ -59,7 +59,7 @@ else {
 			print "<div class='trailHead'><a href='" . $_SESSION[$guid]["absoluteURL"] . "'>Home</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/" . getModuleEntry($_GET["q"], $connection2, $guid) . "'>" . getModuleName($_GET["q"]) . "</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/references_manage.php&gibbonSchoolYearID=$gibbonSchoolYearID'>Manage References</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/references_manage_edit.php&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID'>Edit Reference</a> > </div><div class='trailEnd'>Edit Contribution</div>" ;
 			print "</div>" ;
 			
-			$updateReturn = $_GET["updateReturn"] ;
+			if (isset($_GET["updateReturn"])) { $updateReturn=$_GET["updateReturn"] ; } else { $updateReturn="" ; }
 			$updateReturnMessage ="" ;
 			$class="error" ;
 			if (!($updateReturn=="")) {
@@ -105,7 +105,7 @@ else {
 						<td class="right">
 							<input name="title" id="title" maxlength=10 value="<? print $row["title"] ?>" type="text" style="width: 300px">
 							<script type="text/javascript">
-								var title = new LiveValidation('title');
+								var title=new LiveValidation('title');
 								title.add(Validate.Presence);
 							 </script>
 						</td>
@@ -125,7 +125,7 @@ else {
 							</i></span><br/>
 							<textarea name="body" id="body" rows=20 style="width:738px; margin: 5px 0px 0px 0px"><? print $row["body"] ?></textarea>
 							<script type="text/javascript">
-								var body = new LiveValidation('body');
+								var body=new LiveValidation('body');
 								body.add(Validate.Presence);
 								<?
 								if ($row["refType"]=="US Reference") {

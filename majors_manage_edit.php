@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-session_start() ;
+@session_start() ;
 
 //Module includes
 include "./modules/" . $_SESSION[$guid]["module"] . "/moduleFunctions.php" ;
@@ -42,7 +42,7 @@ else {
 		print "</div>" ;
 	}
 	else {
-		$updateReturn = $_GET["updateReturn"] ;
+		if (isset($_GET["updateReturn"])) { $updateReturn=$_GET["updateReturn"] ; } else { $updateReturn="" ; }
 		$updateReturnMessage ="" ;
 		$class="error" ;
 		if (!($updateReturn=="")) {
@@ -112,7 +112,7 @@ else {
 							<td class="right">
 								<input name="name" id="uniname" maxlength=150 value="<? print $row["name"] ?>" type="text" style="width: 300px">
 								<script type="text/javascript">
-									var uniname = new LiveValidation('uniname');
+									var uniname=new LiveValidation('uniname');
 									uniname.add(Validate.Presence);
 								 </script>
 							</td>

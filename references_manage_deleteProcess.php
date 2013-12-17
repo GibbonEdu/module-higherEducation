@@ -30,7 +30,7 @@ catch(PDOException $e) {
     echo $e->getMessage();
 }
 
-session_start() ;
+@session_start() ;
 
 //Module includes
 include "./moduleFunctions.php" ;
@@ -45,21 +45,21 @@ $URLDelete=$_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModul
 
 if (isActionAccessible($guid, $connection2, "/modules/Higher Education/majors_manage_delete.php")==FALSE) {
 	//Fail 0
-	$URL = $URL . "&deleteReturn=fail0" ;
+	$URL=$URL . "&deleteReturn=fail0" ;
 	header("Location: {$URL}");
 }
 else {
 	$role=staffHigherEducationRole($_SESSION[$guid]["gibbonPersonID"], $connection2) ;
 	if ($role!="Coordinator") {
 		//Fail 0
-		$URL = $URL . "&addReturn=fail0" ;
+		$URL=$URL . "&addReturn=fail0" ;
 		header("Location: {$URL}");
 	}
 	else {	
 		//Proceed!
 		if ($higherEducationReferenceID=="" OR $gibbonSchoolYearID=="") {
 			//Fail1
-			$URL = $URL . "&deleteReturn=fail1" ;
+			$URL=$URL . "&deleteReturn=fail1" ;
 			header("Location: {$URL}");
 		}
 		else {
@@ -71,14 +71,14 @@ else {
 			}
 			catch(PDOException $e) { 
 				//Fail2
-				$URL = $URL . "&deleteReturn=fail2" ;
+				$URL=$URL . "&deleteReturn=fail2" ;
 				header("Location: {$URL}");
 				break ;
 			}
 	
 			if ($result->rowCount()!=1) {
 				//Fail 2
-				$URL = $URL . "&deleteReturn=fail2" ;
+				$URL=$URL . "&deleteReturn=fail2" ;
 				header("Location: {$URL}");
 			}
 			else {
@@ -91,13 +91,13 @@ else {
 				}
 				catch(PDOException $e) { 
 					//Fail2
-					$URL = $URL . "&deleteReturn=fail2" ;
+					$URL=$URL . "&deleteReturn=fail2" ;
 					header("Location: {$URL}");
 					break ;
 				}
 	
 				//Success 0
-				$URLDelete = $URLDelete . "&deleteReturn=success0" ;
+				$URLDelete=$URLDelete . "&deleteReturn=success0" ;
 				header("Location: {$URLDelete}");
 			}
 		}

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-session_start() ;
+@session_start() ;
 
 //Module includes
 include "./modules/" . $_SESSION[$guid]["module"] . "/moduleFunctions.php" ;
@@ -34,7 +34,7 @@ else {
 	print "<div class='trailHead'><a href='" . $_SESSION[$guid]["absoluteURL"] . "'>Home</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/" . getModuleEntry($_GET["q"], $connection2, $guid) . "'>" . getModuleName($_GET["q"]) . "</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/applications_track.php'>Track Applications</a> > </div><div class='trailEnd'>Add Application</div>" ; 
 	print "</div>" ;
 	
-	$addReturn = $_GET["addReturn"] ;
+	if (isset($_GET["addReturn"])) { $addReturn=$_GET["addReturn"] ; } else { $addReturn="" ; }
 	$addReturnMessage ="" ;
 	$class="error" ;
 	if (!($addReturn=="")) {
@@ -116,7 +116,7 @@ else {
 								?>				
 							</select>
 							<script type="text/javascript">
-								var higherEducationInstitutionID = new LiveValidation('higherEducationInstitutionID');
+								var higherEducationInstitutionID=new LiveValidation('higherEducationInstitutionID');
 								higherEducationInstitutionID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
 							 </script>
 						</td>
@@ -142,7 +142,7 @@ else {
 								?>				
 							</select>
 							<script type="text/javascript">
-								var higherEducationMajorID = new LiveValidation('higherEducationMajorID');
+								var higherEducationMajorID=new LiveValidation('higherEducationMajorID');
 								higherEducationMajorID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
 							 </script>
 						</td>
@@ -191,21 +191,21 @@ else {
 						<td colspan=2 style='padding-top: 15px;'> 
 							<b>Application Question</b><br/>
 							<span style="font-size: 90%"><i>If the application form has a question, enter it here.</i></span><br/>
-							<textarea name="question" id="question" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["question"]) ?></textarea>
+							<textarea name="question" id="question" rows=4 style="width:738px; margin: 5px 0px 0px 0px"></textarea>
 						</td>
 					</tr>
 					<tr>
 						<td colspan=2 style='padding-top: 15px;'> 
 							<b>Application Answer</b><br/>
 							<span style="font-size: 90%"><i>Answer the above question here.</i></span><br/>
-							<textarea name="answer" id="answer" rows=14 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["answer"]) ?></textarea>
+							<textarea name="answer" id="answer" rows=14 style="width:738px; margin: 5px 0px 0px 0px"></textarea>
 						</td>
 					</tr>
 					<tr>
 						<td colspan=2 style='padding-top: 15px;'> 
 							<b>Scholarship Details</b><br/>
 							<span style="font-size: 90%"><i>Have you applied for a scholarship? If so, list the details below.</i></span><br/>
-							<textarea name="scholarship" id="scholarship" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["scholarship"]) ?></textarea>
+							<textarea name="scholarship" id="scholarship" rows=4 style="width:738px; margin: 5px 0px 0px 0px"></textarea>
 						</td>
 					</tr>
 					
@@ -255,7 +255,7 @@ else {
 						<td colspan=2 style='padding-top: 15px;'> 
 							<b>Offer Details</b><br/>
 							<span style="font-size: 90%"><i>If you have received an offer, enter details here.</i></span><br/>
-							<textarea name="offerDetails" id="offerDetails" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["question"]) ?></textarea>
+							<textarea name="offerDetails" id="offerDetails" rows=4 style="width:738px; margin: 5px 0px 0px 0px"></textarea>
 						</td>
 					</tr>
 					<tr>

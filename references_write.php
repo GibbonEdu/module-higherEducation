@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-session_start() ;
+@session_start() ;
 
 //Module includes
 include "./modules/" . $_SESSION[$guid]["module"] . "/moduleFunctions.php" ;
@@ -39,7 +39,10 @@ else {
 	print "<p>" ;
 	
 	//Set pagination variable
-	$page=$_GET["page"] ;
+	$page=NULL ;
+	if (isset($_GET["page"])) {
+		$page=$_GET["page"] ;
+	}
 	if ((!is_numeric($page)) OR $page<1) {
 		$page=1 ;
 	}
@@ -103,11 +106,6 @@ else {
 				}
 				$count++ ;
 				
-				//Color rows based on start and end date
-				if (!($row["dateStart"]=="" OR $row["dateStart"]<=date("Y-m-d")) AND ($row["dateEnd"]=="" OR $row["dateEnd"]>=date("Y-m-d"))) {
-					$rowNum="error" ;
-				}
-				
 				print "<tr class=$rowNum>" ;
 					print "<td>" ;
 						print formatName("", $row["preferredName"], $row["surname"], "Student", true) . "<br/>" ;
@@ -126,7 +124,7 @@ else {
 					print "</td>" ;
 					print "<td>" ;
 						print "<b>" . $row["status"] . "</b>" ;
-						if ($row["statusNotes"]!="") {
+						if (isset($row["statusNotes"])) {
 							print "<br/><span style='font-size: 75%; font-style: italic'>" . $row["statusNotes"] . "</span>" ;
 						}
 					print "</td>" ;

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-session_start() ;
+@session_start() ;
 
 //Module includes
 include "./modules/" . $_SESSION[$guid]["module"] . "/moduleFunctions.php" ;
@@ -41,7 +41,7 @@ else {
 		print "</div>" ;
 	}
 	else {
-		$addReturn = $_GET["addReturn"] ;
+		if (isset($_GET["addReturn"])) { $addReturn=$_GET["addReturn"] ; } else { $addReturn="" ; }
 		$addReturnMessage ="" ;
 		$class="error" ;
 		if (!($addReturn=="")) {
@@ -83,7 +83,7 @@ else {
 					<td class="right">
 						<input name="name" id="uniname" maxlength=150 value="" type="text" style="width: 300px">
 						<script type="text/javascript">
-							var uniname = new LiveValidation('uniname');
+							var uniname=new LiveValidation('uniname');
 							uniname.add(Validate.Presence);
 						 </script>
 					</td>
@@ -110,7 +110,7 @@ else {
 							?>				
 						</select>
 						<script type="text/javascript">
-							var country = new LiveValidation('country');
+							var country=new LiveValidation('country');
 							country.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
 						 </script>
 					</td>

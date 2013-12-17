@@ -30,7 +30,7 @@ catch(PDOException $e) {
     echo $e->getMessage();
 }
 
-session_start() ;
+@session_start() ;
 
 //Module includes
 include "./moduleFunctions.php" ;
@@ -44,21 +44,21 @@ $URL=$_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName(
 
 if (isActionAccessible($guid, $connection2, "/modules/Higher Education/references_manage_edit.php")==FALSE) {
 	//Fail 0
-	$URL = $URL . "&updateReturn=fail0" ;
+	$URL=$URL . "&updateReturn=fail0" ;
 	header("Location: {$URL}");
 }
 else {
 	$role=staffHigherEducationRole($_SESSION[$guid]["gibbonPersonID"], $connection2) ;
 	if ($role!="Coordinator") {
 		//Fail 0
-		$URL = $URL . "&addReturn=fail0" ;
+		$URL=$URL . "&addReturn=fail0" ;
 		header("Location: {$URL}");
 	}
 	else {	
 		//Proceed!
 		if ($higherEducationReferenceID=="" OR $gibbonSchoolYearID=="") {
 			//Fail1
-			$URL = $URL . "&updateReturn=fail1" ;
+			$URL=$URL . "&updateReturn=fail1" ;
 			header("Location: {$URL}");
 		}
 		else {
@@ -70,14 +70,14 @@ else {
 			}
 			catch(PDOException $e) { 
 				//Fail2
-				$URL = $URL . "&updateReturn=fail2" ;
+				$URL=$URL . "&updateReturn=fail2" ;
 				header("Location: {$URL}");
 				break ;
 			}
 	
 			if ($result->rowCount()!=1) {
 				//Fail 2
-				$URL = $URL . "&updateReturn=fail2" ;
+				$URL=$URL . "&updateReturn=fail2" ;
 				header("Location: {$URL}");
 			}
 			else {
@@ -97,7 +97,7 @@ else {
 				
 				if ($status=="") {
 					//Fail 3
-					$URL = $URL . "&updateReturn=fail3" ;
+					$URL=$URL . "&updateReturn=fail3" ;
 					header("Location: {$URL}");
 				}
 				else {
@@ -116,12 +116,12 @@ else {
 							$partialFail=true ;
 						}
 						while ($rowEmail=$resultEmail->fetch()) {
-							$to = $rowEmail["email"];
-							$subject = $_SESSION[$guid]["organisationNameShort"] . " Reference Contribution Notification";
-							$body = "Dear " . $rowEmail["preferredName"] . ",<br/><br/>" ;
-							$body = $body . "Your input in creating a higher education reference for " . formatName("", $row["preferredName"], $row["surname"], "Student", false) . " is requested. Please log in to Gibbon and go to Other > Higher Education > Write References. Your assistance is most appreciated. Regards,<br/><br/>" ;
-							$body = $body . $_SESSION[$guid]["preferredName"] . " " . $_SESSION[$guid]["surname"] ;
-							$headers = "From: " . $_SESSION[$guid]["email"] . "\r\n";
+							$to=$rowEmail["email"];
+							$subject=$_SESSION[$guid]["organisationNameShort"] . " Reference Contribution Notification";
+							$body="Dear " . $rowEmail["preferredName"] . ",<br/><br/>" ;
+							$body=$body . "Your input in creating a higher education reference for " . formatName("", $row["preferredName"], $row["surname"], "Student", false) . " is requested. Please log in to Gibbon and go to Other > Higher Education > Write References. Your assistance is most appreciated. Regards,<br/><br/>" ;
+							$body=$body . $_SESSION[$guid]["preferredName"] . " " . $_SESSION[$guid]["surname"] ;
+							$headers="From: " . $_SESSION[$guid]["email"] . "\r\n";
 							$headers .= "MIME-Version: 1.0\r\n";
 							$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n" ;
 				
@@ -140,19 +140,19 @@ else {
 					}
 					catch(PDOException $e) { 
 						//Fail 2
-						$URL = $URL . "&updateReturn=fail2" ;
+						$URL=$URL . "&updateReturn=fail2" ;
 						header("Location: {$URL}");
 						break ;
 					}
 					
 					if ($partialFail==true) {
 						//Fail 5
-						$URL = $URL . "&updateReturn=fail5" ;
+						$URL=$URL . "&updateReturn=fail5" ;
 						header("Location: {$URL}");
 					}
 					else {
 						//Success 0
-						$URL = $URL . "&updateReturn=success0" ;
+						$URL=$URL . "&updateReturn=success0" ;
 						header("Location: {$URL}");
 					}
 				}

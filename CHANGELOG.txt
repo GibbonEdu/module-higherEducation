@@ -1,9 +1,12 @@
 CHANGELOG
 =========
+v1.0.06
+-------
+Fixed PHP notice issues
+
 v1.0.05
 -------
 Removed reset buttons
-
 
 v1.0.04
 -------

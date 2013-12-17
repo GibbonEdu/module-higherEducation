@@ -30,7 +30,7 @@ catch(PDOException $e) {
   echo $e->getMessage();
 }
 
-session_start() ;
+@session_start() ;
 
 //Module includes
 include "./moduleFunctions.php" ;
@@ -42,14 +42,14 @@ $URL=$_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName(
 
 if (isActionAccessible($guid, $connection2, "/modules/Higher Education/references_request_add.php")==FALSE) {
 	//Fail 0
-	$URL = $URL . "&addReturn=fail0" ;
+	$URL=$URL . "&addReturn=fail0" ;
 	header("Location: {$URL}");
 }
 else {
 	//Check for student enrolment
 	if (studentEnrolment($_SESSION[$guid]["gibbonPersonID"], $connection2)==FALSE) {
 		//Fail 0
-		$URL = $URL . "&addReturn=fail0" ;
+		$URL=$URL . "&addReturn=fail0" ;
 		header("Location: {$URL}");
 	}
 	else {
@@ -57,7 +57,10 @@ else {
 		$gibbonPersonID=$_SESSION[$guid]["gibbonPersonID"] ;
 		$gibbonSchoolYearID=$_SESSION[$guid]["gibbonSchoolYearID"] ;
 		$type=$_POST["type"] ;
-		$gibbonPersonIDReferee=$_POST["gibbonPersonIDReferee"] ;
+		$gibbonPersonIDReferee=NULL ;
+		if (isset($_POST["gibbonPersonIDReferee"])) {
+			$gibbonPersonIDReferee=$_POST["gibbonPersonIDReferee"] ;
+		}
 		$status="Pending" ;
 		$statusNotes="" ;
 		$notes=$_POST["notes"] ;
@@ -65,7 +68,7 @@ else {
 		
 		if ($type=="" OR ($type=="US References" AND $gibbonPersonIDReferee=="")) {
 			//Fail 3
-			$URL = $URL . "&addReturn=fail3" ;
+			$URL=$URL . "&addReturn=fail3" ;
 			header("Location: {$URL}");
 		}
 		else {
@@ -78,7 +81,7 @@ else {
 			}
 			catch(PDOException $e) { 
 				//Fail 2
-				$URL = $URL . "&addReturn=fail2" ;
+				$URL=$URL . "&addReturn=fail2" ;
 				header("Location: {$URL}");
 				break ;
 			}
@@ -184,12 +187,12 @@ else {
 			
 			if ($partialFail==true) {
 				//Fail 5
-				$URL = $URL . "&addReturn=fail5" ;
+				$URL=$URL . "&addReturn=fail5" ;
 				header("Location: {$URL}");
 			}
 			else {
 				//Success 0
-				$URL = $URL . "&addReturn=success0" ;
+				$URL=$URL . "&addReturn=success0" ;
 				header("Location: {$URL}");
 			}
 		}

@@ -30,7 +30,7 @@ catch(PDOException $e) {
   echo $e->getMessage();
 }
 
-session_start() ;
+@session_start() ;
 
 //Module includes
 include "./moduleFunctions.php" ;
@@ -42,14 +42,14 @@ $URL=$_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName(
 
 if (isActionAccessible($guid, $connection2, "/modules/Higher Education/applications_track_add.php")==FALSE) {
 	//Fail 0
-	$URL = $URL . "&addReturn=fail0" ;
+	$URL=$URL . "&addReturn=fail0" ;
 	header("Location: {$URL}");
 }
 else {
 	//Check for student enrolment
 	if (studentEnrolment($_SESSION[$guid]["gibbonPersonID"], $connection2)==FALSE) {
 		//Fail 0
-		$URL = $URL . "&addReturn=fail0" ;
+		$URL=$URL . "&addReturn=fail0" ;
 		header("Location: {$URL}");
 	}
 	else {
@@ -62,14 +62,14 @@ else {
 		}
 		catch(PDOException $e) { 
 			//Fail 2
-			$URL = $URL . "&addReturn=fail2" ;
+			$URL=$URL . "&addReturn=fail2" ;
 			header("Location: {$URL}");
 			break ;
 		}
 		
 		if ($result->rowCount()!=1) {
 			//Fail 2
-			$URL = $URL . "&addReturn=fail2" ;
+			$URL=$URL . "&addReturn=fail2" ;
 			header("Location: {$URL}");
 		}
 		else {
@@ -91,7 +91,7 @@ else {
 			
 			if ($higherEducationApplicationID=="" OR $higherEducationInstitutionID=="" OR $higherEducationMajorID=="") {
 				//Fail 3
-				$URL = $URL . "&addReturn=fail3" ;
+				$URL=$URL . "&addReturn=fail3" ;
 				header("Location: {$URL}");
 			}
 			else {
@@ -104,13 +104,13 @@ else {
 				}
 				catch(PDOException $e) { 
 					//Fail 2
-					$URL = $URL . "&addReturn=fail2" ;
+					$URL=$URL . "&addReturn=fail2" ;
 					header("Location: {$URL}");
 					break ;
 				}
 				
 				//Success 0
-				$URL = $URL . "&addReturn=success0" ;
+				$URL=$URL . "&addReturn=success0" ;
 				header("Location: {$URL}");
 			}
 		}

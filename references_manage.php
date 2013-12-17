@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-session_start() ;
+@session_start() ;
 
 //Module includes
 include "./modules/" . $_SESSION[$guid]["module"] . "/moduleFunctions.php" ;
@@ -49,7 +49,7 @@ else {
 			print "<div class='trailHead'><a href='" . $_SESSION[$guid]["absoluteURL"] . "'>Home</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/" . getModuleEntry($_GET["q"], $connection2, $guid) . "'>" . getModuleName($_GET["q"]) . "</a> > </div><div class='trailEnd'>Manage References</div>" ;
 			print "</div>" ;
 			
-			$deleteReturn = $_GET["deleteReturn"] ;
+			if (isset($_GET["deleteReturn"])) { $deleteReturn=$_GET["deleteReturn"] ; } else { $deleteReturn="" ; }
 			$deleteReturnMessage ="" ;
 			$class="error" ;
 			if (!($deleteReturn=="")) {
@@ -62,12 +62,15 @@ else {
 				print "</div>" ;
 			} 
 			
-			$gibbonSchoolYearID=$_GET["gibbonSchoolYearID"] ;
+			$gibbonSchoolYearID=NULL ;
+			if (isset($_GET["gibbonSchoolYearID"])) {
+				$gibbonSchoolYearID=$_GET["gibbonSchoolYearID"] ;
+			}
 			if ($gibbonSchoolYearID=="") {
 				$gibbonSchoolYearID=$_SESSION[$guid]["gibbonSchoolYearID"] ;
 				$gibbonSchoolYearName=$_SESSION[$guid]["gibbonSchoolYearName"] ;
 			}
-			if ($_GET["gibbonSchoolYearID"]!="") {
+			if (isset($_GET["gibbonSchoolYearID"])) {
 				try {
 					$data=array("gibbonSchoolYearID"=>$_GET["gibbonSchoolYearID"]); 
 					$sql="SELECT * FROM gibbonSchoolYear WHERE gibbonSchoolYearID=:gibbonSchoolYearID" ;
@@ -87,6 +90,11 @@ else {
 					$gibbonSchoolYearID=$row["gibbonSchoolYearID"] ;
 					$gibbonSchoolYearName=$row["name"] ;
 				}
+			}
+			
+			$search="" ;
+			if (isset($_GET["search"])) {
+				$search=$_GET["search"] ;
 			}
 			
 			if ($gibbonSchoolYearID!="") {
@@ -126,7 +134,7 @@ else {
 								<span style="font-size: 90%"><i>Preferred, surname, username.</i></span>
 							</td>
 							<td class="right">
-								<input name="search" id="search" maxlength=20 value="<? print $_GET["search"] ?>" type="text" style="width: 300px">
+								<input name="search" id="search" maxlength=20 value="<? print $search ?>" type="text" style="width: 300px">
 							</td>
 						</tr>
 						<tr>
@@ -148,12 +156,14 @@ else {
 				print "<p>" ;
 				
 				//Set pagination variable
-				$page=$_GET["page"] ;
+				$page="" ;
+				if (isset($_GET["page"])) {
+					$page=$_GET["page"] ;
+				}
 				if ((!is_numeric($page)) OR $page<1) {
 					$page=1 ;
 				}
 				
-				$search=$_GET["search"] ;
 				try {
 					$data=array("gibbonSchoolYearID"=>$gibbonSchoolYearID); 
 					$sql="SELECT higherEducationReference.*, surname, preferredName, title FROM higherEducationReference JOIN gibbonPerson ON (higherEducationReference.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReference.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' ORDER BY status, timestamp" ; 
@@ -213,12 +223,7 @@ else {
 								$rowNum="odd" ;
 							}
 							$count++ ;
-							
-							//Color rows based on start and end date
-							if (!($row["dateStart"]=="" OR $row["dateStart"]<=date("Y-m-d")) AND ($row["dateEnd"]=="" OR $row["dateEnd"]>=date("Y-m-d"))) {
-								$rowNum="error" ;
-							}
-							
+						
 							print "<tr class=$rowNum>" ;
 								print "<td>" ;
 									print formatName("", $row["preferredName"], $row["surname"], "Student", true) . "<br/>" ;

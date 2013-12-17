@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-session_start() ;
+@session_start() ;
 
 //Module includes
 include "./modules/" . $_SESSION[$guid]["module"] . "/moduleFunctions.php" ;
@@ -35,7 +35,7 @@ else {
 	print "<div class='trailHead'><a href='" . $_SESSION[$guid]["absoluteURL"] . "'>Home</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/" . getModuleEntry($_GET["q"], $connection2, $guid) . "'>" . getModuleName($_GET["q"]) . "</a> > </div><div class='trailEnd'>Track Application</div>" ;
 	print "</div>" ;
 	
-	$updateReturn = $_GET["updateReturn"] ;
+	if (isset($_GET["updateReturn"])) { $updateReturn=$_GET["updateReturn"] ; } else { $updateReturn="" ; }
 	$updateReturnMessage ="" ;
 	$class="error" ;
 	if (!($updateReturn=="")) {
@@ -63,7 +63,7 @@ else {
 		print "</div>" ;
 	} 
 	
-	$deleteReturn = $_GET["deleteReturn"] ;
+	if (isset($_GET["deleteReturn"])) { $deleteReturn=$_GET["deleteReturn"] ; } else { $deleteReturn="" ; }
 	$deleteReturnMessage ="" ;
 	$class="error" ;
 	if (!($deleteReturn=="")) {
@@ -111,6 +111,31 @@ else {
 		<script type="text/javascript">
 			/* Controls for showing/hiding fields */
 			$(document).ready(function(){
+				<?
+				if (isset($row["applying"])) { 
+					if ($row["applying"]=="N") {
+						?>
+						$("#applicationsDiv").css("display", "none");
+						$("#careerInterestsRow").css("display", "none");
+						$("#coursesMajorsRow").css("display", "none");
+						$("#otherScoresRow").css("display", "none");
+						$("#personalStatementRow").css("display", "none");
+						$("#meetingNotesRow").css("display", "none");
+						<?
+					}
+				}
+				else if (isset($row["applying"])==FALSE) { 
+					?>
+					$("#applicationsDiv").css("display", "none");
+					$("#careerInterestsRow").css("display", "none");
+					$("#coursesMajorsRow").css("display", "none");
+					$("#otherScoresRow").css("display", "none");
+					$("#personalStatementRow").css("display", "none");
+					$("#meetingNotesRow").css("display", "none");
+					<?
+				}
+				?>
+						
 				$("#applying").change(function(){
 					if ($('#applying option:selected').val() == "Y" ) {
 						$("#applicationsDiv").slideDown("fast", $("#applicationsDiv").css("{'display' : 'table-row'}")); //Slide Down Effect
@@ -131,7 +156,13 @@ else {
 				 });
 			});
 		</script>
-		<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/applications_trackProcess.php?higherEducationApplicationID=" . $row["higherEducationApplicationID"] ?>">
+		<?
+		$higherEducationApplicationID=NULL ;
+		if (isset($row["higherEducationApplicationID"])) {
+			$higherEducationApplicationID=$row["higherEducationApplicationID"] ;
+		}
+		?>
+		<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/applications_trackProcess.php?higherEducationApplicationID=" . $higherEducationApplicationID ?>">
 		<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 			<tr>
 				<td> 
@@ -140,44 +171,44 @@ else {
 				</td>
 				<td class="right">
 					<select style="width: 302px" name="applying" id="applying">
-						<option value='N' <? if ($row["applying"]=="N") { print "selected" ; }?>>N</option>	
-						<option value='Y' <? if ($row["applying"]=="Y") { print "selected" ; }?>>Y</option>		
+						<option value='N' <? if (isset($row["applying"])) { if ($row["applying"]=="N") { print "selected" ; } } ?>>N</option>	
+						<option value='Y' <? if (isset($row["applying"])) { if ($row["applying"]=="Y") { print "selected" ; } } ?>>Y</option>		
 					</select>
 				</td>
 			</tr>
-			<tr id='careerInterestsRow' <? if ($row["applying"]=="N" OR $row["applying"]=="") { print "style='display: none;'" ; } ?>>
+			<tr id='careerInterestsRow' <? if (isset($row["applying"])) { if ($row["applying"]=="N" OR $row["applying"]=="") { print "style='display: none;'" ; } } ?>>
 				<td colspan=2 style='padding-top: 15px;'> 
 					<b>Career Interests</b><br/>
 					<span style="font-size: 90%"><i>What areas of work are you interested in? What are your ambitions?</i></span><br/>
-					<textarea name="careerInterests" id="careerInterests" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["careerInterests"]) ?></textarea>
+					<textarea name="careerInterests" id="careerInterests" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><? if (isset($row["careerInterests"])) { print htmlPrep($row["careerInterests"]) ; } ?></textarea>
 				</td>
 			</tr>
-			<tr id='coursesMajorsRow' <? if ($row["applying"]=="N" OR $row["applying"]=="") { print "style='display: none;'" ; } ?>>
+			<tr id='coursesMajorsRow' <? if (isset($row["applying"])) { if ($row["applying"]=="N" OR $row["applying"]=="") { print "style='display: none;'" ; } } ?>>
 				<td colspan=2 style='padding-top: 15px;'> 
 					<b>Courses/Majors</b><br/>
 					<span style="font-size: 90%"><i>What areas of study are you interested in? How do these relate to your career interests?</i></span><br/>
-					<textarea name="coursesMajors" id="coursesMajors" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["coursesMajors"]) ?></textarea>
+					<textarea name="coursesMajors" id="coursesMajors" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><? if (isset($row["coursesMajors"])) {  print htmlPrep($row["coursesMajors"]) ; } ?></textarea>
 				</td>
 			</tr>
-			<tr id='otherScoresRow' <? if ($row["applying"]=="N" OR $row["applying"]=="") { print "style='display: none;'" ; } ?>>
+			<tr id='otherScoresRow' <? if (isset($row["applying"])) { if ($row["applying"]=="N" OR $row["applying"]=="") { print "style='display: none;'" ; } } ?>>
 				<td colspan=2 style='padding-top: 15px;'> 
 					<b>Scores</b><br/>
 					<span style="font-size: 90%"><i>Do you have any non-<? print $_SESSION[$guid]["organisationNameShort"] ?> exam scores?</i></span><br/>
-					<textarea name="otherScores" id="otherScores" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["otherScores"]) ?></textarea>
+					<textarea name="otherScores" id="otherScores" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><? if (isset($row["otherScores"])) {   print htmlPrep($row["otherScores"]) ; } ?></textarea>
 				</td>
 			</tr>
-			<tr id='personalStatementRow' <? if ($row["applying"]=="N" OR $row["applying"]=="") { print "style='display: none;'" ; } ?>>
+			<tr id='personalStatementRow' <? if (isset($row["applying"])) { if ($row["applying"]=="N" OR $row["applying"]=="") { print "style='display: none;'" ; } } ?>>
 				<td colspan=2 style='padding-top: 15px;'> 
 					<b>Personal Statement</b><br/>
 					<span style="font-size: 90%"><i>Draft out ideas for your personal statement.</i></span><br/>
-					<textarea name="personalStatement" id="personalStatement" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["personalStatement"]) ?></textarea>
+					<textarea name="personalStatement" id="personalStatement" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><? if (isset($row["personalStatement"])) {   print htmlPrep($row["personalStatement"]) ; } ?></textarea>
 				</td>
 			</tr>
-			<tr id='meetingNotesRow' <? if ($row["applying"]=="N" OR $row["applying"]=="") { print "style='display: none;'" ; } ?>>
+			<tr id='meetingNotesRow' <? if (isset($row["applying"])) { if ($row["applying"]=="N" OR $row["applying"]=="") { print "style='display: none;'" ; } } ?>>
 				<td colspan=2 style='padding-top: 15px;'> 
 					<b>Meeting notes</b><br/>
 					<span style="font-size: 90%"><i>Take notes on any meetings you have regarding your application process.</i></span><br/>
-					<textarea name="meetingNotes" id="meetingNotes" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["meetingNotes"]) ?></textarea>
+					<textarea name="meetingNotes" id="meetingNotes" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><? if (isset($row["meetingNotes"])) {   print htmlPrep($row["meetingNotes"]) ; } ?></textarea>
 				</td>
 			</tr>
 			
@@ -195,14 +226,14 @@ else {
 		<?
 		
 		$style="" ;
-		if ($row["applying"]=="N" OR $row["applying"]=="") { $style="display: none;" ; }
+		if (isset($row["applying"])) { if ($row["applying"]=="N" OR $row["applying"]=="") { $style="display: none;" ; } }
 		print "<div id='applicationsDiv' style='$style'>" ;
 			print "<h2>" ;
 			print "Application To Institutions" ;
 			print "</h2>" ;
 			
 			
-			if ($row["higherEducationApplicationID"]=="") {
+			if (isset($row["higherEducationApplicationID"])==FALSE) {
 				print "<div class='warning'>" ;
 				print "You need to save the information above (press the Submit button) before you can start adding applications." ;
 				print "</div>" ;

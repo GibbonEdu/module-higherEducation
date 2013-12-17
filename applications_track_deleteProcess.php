@@ -30,7 +30,7 @@ catch(PDOException $e) {
   echo $e->getMessage();
 }
 
-session_start() ;
+@session_start() ;
 
 //Module includes
 include "./moduleFunctions.php" ;
@@ -45,14 +45,14 @@ $URLDelete=$_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModul
 
 if (isActionAccessible($guid, $connection2, "/modules/Higher Education/applications_track_delete.php")==FALSE) {
 	//Fail 0
-	$URL = $URL . "&deleteReturn=fail0" ;
+	$URL=$URL . "&deleteReturn=fail0" ;
 	header("Location: {$URL}");
 }
 else {
 	//Check for student enrolment
 	if (studentEnrolment($_SESSION[$guid]["gibbonPersonID"], $connection2)==FALSE) {
 		//Fail 0
-		$URL = $URL . "&addReturn=fail0" ;
+		$URL=$URL . "&addReturn=fail0" ;
 		header("Location: {$URL}");
 	}
 	else {
@@ -65,14 +65,14 @@ else {
 		}
 		catch(PDOException $e) { 
 			//Fail 2
-			$URL = $URL . "&addReturn=fail2" ;
+			$URL=$URL . "&addReturn=fail2" ;
 			header("Location: {$URL}");
 			break ;
 		}
 		
 		if ($result->rowCount()!=1) {
 			//Fail 2
-			$URL = $URL . "&addReturn=fail2" ;
+			$URL=$URL . "&addReturn=fail2" ;
 			header("Location: {$URL}");
 		}
 		else {
@@ -81,7 +81,7 @@ else {
 			//Check if application specified
 			if ($higherEducationApplicationInstitutionID=="") {
 				//Fail 1
-				$URL = $URL . "&addReturn=fail1" ;
+				$URL=$URL . "&addReturn=fail1" ;
 				header("Location: {$URL}");
 			}
 			else {
@@ -93,13 +93,13 @@ else {
 				}
 				catch(PDOException $e) { 
 					//Fail 2
-					$URL = $URL . "&addReturn=fail2" ;
+					$URL=$URL . "&addReturn=fail2" ;
 					header("Location: {$URL}");
 				}
 				
 				if ($result->rowCount()!=1) {
 					//Fail 2
-					$URL = $URL . "&addReturn=fail2" ;
+					$URL=$URL . "&addReturn=fail2" ;
 					header("Location: {$URL}");
 				}
 				else {
@@ -112,13 +112,13 @@ else {
 					}
 					catch(PDOException $e) { 
 						//Fail 2
-						$URL = $URL . "&deleteReturn=fail2" ;
+						$URL=$URL . "&deleteReturn=fail2" ;
 						header("Location: {$URL}");
 						break ;
 					}
 					
 					//Success 0
-					$URLDelete = $URLDelete . "&deleteReturn=success0" ;
+					$URLDelete=$URLDelete . "&deleteReturn=success0" ;
 					header("Location: {$URLDelete}");
 				}
 			}

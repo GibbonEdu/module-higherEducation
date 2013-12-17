@@ -31,7 +31,7 @@ catch(PDOException $e) {
 }
 
 
-session_start() ;
+@session_start() ;
 
 //Set timezone from session variable
 date_default_timezone_set($_SESSION[$guid]["timezone"]);
@@ -41,7 +41,7 @@ $URL=$_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName(
 if (isActionAccessible($guid, $connection2, "/modules/Higher Education/student_manage_add.php")==FALSE) {
 
 	//Fail 0
-	$URL = $URL . "&addReturn=fail0" ;
+	$URL=$URL . "&addReturn=fail0" ;
 	header("Location: {$URL}");
 }
 else {
@@ -58,7 +58,7 @@ else {
 	
 	if (count($choices)<1) {
 		//Fail 2
-		$URL = $URL . "&addReturn=fail1" ;
+		$URL=$URL . "&addReturn=fail1" ;
 		header("Location: {$URL}");
 	}
 	else {
@@ -72,7 +72,7 @@ else {
 			}
 			catch(PDOException $e) { 
 				//Fail 2
-				$URL = $URL . "&addReturn=fail1" ;
+				$URL=$URL . "&addReturn=fail1" ;
 				header("Location: {$URL}");
 				$update=FALSE;
 			}
@@ -93,12 +93,12 @@ else {
 		//Write to database
 		if ($update==FALSE) {
 			//Fail 2
-			$URL = $URL . "&addReturn=fail2" ;
+			$URL=$URL . "&addReturn=fail2" ;
 			header("Location: {$URL}");
 		}
 		else {
 			//Success 0
-			$URL = $URL . "&addReturn=success0" ;
+			$URL=$URL . "&addReturn=success0" ;
 			header("Location: {$URL}");
 		}
 	}
