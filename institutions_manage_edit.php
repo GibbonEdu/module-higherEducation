@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -102,7 +102,7 @@ else {
 				//Let's go!
 				$row=$result->fetch() ;
 				?>
-				<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/institutions_manage_editProcess.php?higherEducationInstitutionID=$higherEducationInstitutionID" ?>">
+				<form method="post" action="<?php print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/institutions_manage_editProcess.php?higherEducationInstitutionID=$higherEducationInstitutionID" ?>">
 					<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 						<tr>
 							<td> 
@@ -110,7 +110,7 @@ else {
 								<span style="font-size: 90%"><i></i></span>
 							</td>
 							<td class="right">
-								<input name="name" id="uniname" maxlength=150 value="<? print $row["name"] ?>" type="text" style="width: 300px">
+								<input name="name" id="uniname" maxlength=150 value="<?php print $row["name"] ?>" type="text" style="width: 300px">
 								<script type="text/javascript">
 									var uniname=new LiveValidation('uniname');
 									uniname.add(Validate.Presence);
@@ -124,7 +124,7 @@ else {
 							</td>
 							<td class="right">
 								<select name="country" id="country" style="width: 302px">
-									<?
+									<?php
 									print "<option value='Please select...'>Please select...</option>" ;
 									try {
 										$dataSelect=array(); 
@@ -154,8 +154,8 @@ else {
 							</td>
 							<td class="right">
 								<select name="active" id="active" style="width: 302px">
-									<option <? if ($row["active"]=="Y") { print " selected " ; } ?>value="Y">Y</option>
-									<option <? if ($row["active"]=="N") { print " selected " ; } ?>value="N">N</option>
+									<option <?php if ($row["active"]=="Y") { print " selected " ; } ?>value="Y">Y</option>
+									<option <?php if ($row["active"]=="N") { print " selected " ; } ?>value="N">N</option>
 								</select>
 							</td>
 						</tr>
@@ -164,13 +164,13 @@ else {
 								<span style="font-size: 90%"><i>* denotes a required field</i></span>
 							</td>
 							<td class="right">
-								<input type="hidden" name="address" value="<? print $_SESSION[$guid]["address"] ?>">
+								<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
 								<input type="submit" value="Submit">
 							</td>
 						</tr>
 					</table>
 				</form>
-				<?
+				<?php
 			}
 		}
 	}

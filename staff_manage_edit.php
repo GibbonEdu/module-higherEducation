@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -119,7 +119,7 @@ else {
 			//Let's go!
 			$row=$result->fetch() ;
 			?>
-			<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/staff_manage_editProcess.php?higherEducationStaffID=$higherEducationStaffID" ?>">
+			<form method="post" action="<?php print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/staff_manage_editProcess.php?higherEducationStaffID=$higherEducationStaffID" ?>">
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 					<tr>
 						<td> 
@@ -127,7 +127,7 @@ else {
 							<span style="font-size: 90%"><i>This value cannot be changed</i></span>
 						</td>
 						<td class="right">
-							<input readonly type='text' style='width: 302px' value='<? print formatName("", $row["preferredName"], $row["surname"], "Staff", true, true) ?>'>
+							<input readonly type='text' style='width: 302px' value='<?php print formatName("", $row["preferredName"], $row["surname"], "Staff", true, true) ?>'>
 							<script type="text/javascript">
 								var gibbonPersonID=new LiveValidation('gibbonPersonID');
 								gibbonPersonID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
@@ -142,8 +142,8 @@ else {
 						<td class="right">
 							<select name="role" id="role" style="width: 302px">
 								<option value="Please select...">Please select...</option>
-								<option <? if ($row["role"]=="Coordinator") {print "selected ";}?>value="Coordinator">Coordinator</option>
-								<option <? if ($row["role"]=="Advisor") {print "selected ";}?>value="Advisor">Advisor</option>
+								<option <?php if ($row["role"]=="Coordinator") {print "selected ";}?>value="Coordinator">Coordinator</option>
+								<option <?php if ($row["role"]=="Advisor") {print "selected ";}?>value="Advisor">Advisor</option>
 							</select>
 							<script type="text/javascript">
 								var role=new LiveValidation('role');
@@ -156,13 +156,13 @@ else {
 							<span style="font-size: 90%"><i>* denotes a required field</i></span>
 						</td>
 						<td class="right">
-							<input type="hidden" name="address" value="<? print $_SESSION[$guid]["address"] ?>">
+							<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
 							<input type="submit" value="Submit">
 						</td>
 					</tr>
 				</table>
 			</form>
-			<?
+			<?php
 		}
 	}
 }

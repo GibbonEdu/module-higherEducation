@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -115,7 +115,7 @@ else {
 					//Let's go!
 					$row=$result->fetch() ;
 					?>
-					<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/applications_track_editProcess.php?higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID" ?>">
+					<form method="post" action="<?php print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/applications_track_editProcess.php?higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID" ?>">
 						<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 							<tr class='break'>
 								<td colspan=2> 
@@ -128,7 +128,7 @@ else {
 								</td>
 								<td class="right">
 									<select name="higherEducationInstitutionID" id="higherEducationInstitutionID" style="width: 302px">
-										<?
+										<?php
 										print "<option value='Please select...'>Please select...</option>" ;
 										try {
 											$dataSelect=array(); 
@@ -158,7 +158,7 @@ else {
 								</td>
 								<td class="right">
 									<select name="higherEducationMajorID" id="higherEducationMajorID" style="width: 302px">
-										<?
+										<?php
 										print "<option value='Please select...'>Please select...</option>" ;
 										try {
 											$dataSelect=array(); 
@@ -188,7 +188,7 @@ else {
 									<span style="font-size: 90%"><i>Official number for your application (given by institution, UCAS, etc).</i></span>
 								</td>
 								<td class="right">
-									<input name="applicationNumber" id="applicationNumber" maxlength=50 value="<? print $row["applicationNumber"] ?>" type="text" style="width: 300px">
+									<input name="applicationNumber" id="applicationNumber" maxlength=50 value="<?php print $row["applicationNumber"] ?>" type="text" style="width: 300px">
 								</td>
 							</tr>
 							<tr>
@@ -198,7 +198,7 @@ else {
 								</td>
 								<td class="right">
 									<select name="rank" id="rank" style="width: 302px">
-										<?
+										<?php
 										print "<option value=''></option>" ;
 										for ($i=1; $i<11; $i++) {
 											$selected="" ;
@@ -218,11 +218,11 @@ else {
 								</td>
 								<td class="right">
 									<select name="rating" id="rating" style="width: 302px">
-										<option <? if ($row["rating"]=="") { print "selected" ; } ?> value=""></option>
-										<option <? if ($row["rating"]=="High Reach") { print "selected" ; } ?> value="High Reach">High Reach</option>
-										<option <? if ($row["rating"]=="Reach") { print "selected" ; } ?> value="Reach">Reach</option>
-										<option <? if ($row["rating"]=="Mid") { print "selected" ; } ?> value="Mid">Mid</option>
-										<option <? if ($row["rating"]=="Safe") { print "selected" ; } ?> value="Safe">Safe</option>		
+										<option <?php if ($row["rating"]=="") { print "selected" ; } ?> value=""></option>
+										<option <?php if ($row["rating"]=="High Reach") { print "selected" ; } ?> value="High Reach">High Reach</option>
+										<option <?php if ($row["rating"]=="Reach") { print "selected" ; } ?> value="Reach">Reach</option>
+										<option <?php if ($row["rating"]=="Mid") { print "selected" ; } ?> value="Mid">Mid</option>
+										<option <?php if ($row["rating"]=="Safe") { print "selected" ; } ?> value="Safe">Safe</option>		
 									</select>
 								</td>
 							</tr>
@@ -230,21 +230,21 @@ else {
 								<td colspan=2 style='padding-top: 15px;'> 
 									<b>Application Question</b><br/>
 									<span style="font-size: 90%"><i>If the application form has a question, enter it here.</i></span><br/>
-									<textarea name="question" id="question" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["question"]) ?></textarea>
+									<textarea name="question" id="question" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><?php print htmlPrep($row["question"]) ?></textarea>
 								</td>
 							</tr>
 							<tr>
 								<td colspan=2 style='padding-top: 15px;'> 
 									<b>Application Answer</b><br/>
 									<span style="font-size: 90%"><i>Answer the above question here.</i></span><br/>
-									<textarea name="answer" id="answer" rows=14 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["answer"]) ?></textarea>
+									<textarea name="answer" id="answer" rows=14 style="width:738px; margin: 5px 0px 0px 0px"><?php print htmlPrep($row["answer"]) ?></textarea>
 								</td>
 							</tr>
 							<tr>
 								<td colspan=2 style='padding-top: 15px;'> 
 									<b>Scholarship Details</b><br/>
 									<span style="font-size: 90%"><i>Have you applied for a scholarship? If so, list the details below.</i></span><br/>
-									<textarea name="scholarship" id="scholarship" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["scholarship"]) ?></textarea>
+									<textarea name="scholarship" id="scholarship" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><?php print htmlPrep($row["scholarship"]) ?></textarea>
 								</td>
 							</tr>
 							
@@ -260,18 +260,18 @@ else {
 								</td>
 								<td class="right">
 									<select name="status" id="status" style="width: 302px">
-										<option <? if ($row["status"]=="") { print "selected" ; } ?> value=""></option>
-										<option <? if ($row["status"]=="Not Yet Started") { print "selected" ; } ?> value="Not Yet Started">Not Yet Started</option>
-										<option <? if ($row["status"]=="Researching") { print "selected" ; } ?> value="Researching">Researching</option>
-										<option <? if ($row["status"]=="Started") { print "selected" ; } ?> value="Started">Started</option>
-										<option <? if ($row["status"]=="Passed To Careers Office") { print "selected" ; } ?> value="Passed To Careers Office">Passed To Careers Office</option>
-										<option <? if ($row["status"]=="Completed") { print "selected" ; } ?> value="Completed">Completed</option>
-										<option <? if ($row["status"]=="Application Sent") { print "selected" ; } ?> value="Application Sent">Application Sent</option>
-										<option <? if ($row["status"]=="Offer/Acceptance Received") { print "selected" ; } ?> value="Offer/Acceptance Received">Offer/Acceptance Received</option>
-										<option <? if ($row["status"]=="Rejection Received") { print "selected" ; } ?> value="Rejection Received">Rejection Received</option>
-										<option <? if ($row["status"]=="Offer Denied") { print "selected" ; } ?> value="Offer Denied">Offer Denied</option>
-										<option <? if ($row["status"]=="Deposit Paid/Offer Accepted") { print "selected" ; } ?> value="Deposit Paid/Offer Accepted">Deposit Paid/Offer Accepted</option>
-										<option <? if ($row["status"]=="Enrolling") { print "selected" ; } ?> value="Enrolling">Enrolling</option>	
+										<option <?php if ($row["status"]=="") { print "selected" ; } ?> value=""></option>
+										<option <?php if ($row["status"]=="Not Yet Started") { print "selected" ; } ?> value="Not Yet Started">Not Yet Started</option>
+										<option <?php if ($row["status"]=="Researching") { print "selected" ; } ?> value="Researching">Researching</option>
+										<option <?php if ($row["status"]=="Started") { print "selected" ; } ?> value="Started">Started</option>
+										<option <?php if ($row["status"]=="Passed To Careers Office") { print "selected" ; } ?> value="Passed To Careers Office">Passed To Careers Office</option>
+										<option <?php if ($row["status"]=="Completed") { print "selected" ; } ?> value="Completed">Completed</option>
+										<option <?php if ($row["status"]=="Application Sent") { print "selected" ; } ?> value="Application Sent">Application Sent</option>
+										<option <?php if ($row["status"]=="Offer/Acceptance Received") { print "selected" ; } ?> value="Offer/Acceptance Received">Offer/Acceptance Received</option>
+										<option <?php if ($row["status"]=="Rejection Received") { print "selected" ; } ?> value="Rejection Received">Rejection Received</option>
+										<option <?php if ($row["status"]=="Offer Denied") { print "selected" ; } ?> value="Offer Denied">Offer Denied</option>
+										<option <?php if ($row["status"]=="Deposit Paid/Offer Accepted") { print "selected" ; } ?> value="Deposit Paid/Offer Accepted">Deposit Paid/Offer Accepted</option>
+										<option <?php if ($row["status"]=="Enrolling") { print "selected" ; } ?> value="Enrolling">Enrolling</option>	
 									</select>
 								</td>
 							</tr>
@@ -282,11 +282,11 @@ else {
 								</td>
 								<td class="right">
 									<select name="offer" id="offer" style="width: 302px">
-										<option <? if ($row["offer"]=="") { print "selected" ; } ?> value=""></option>
-										<option <? if ($row["offer"]=="First Choice") { print "selected" ; } ?> value="First Choice">Yes - First Choice</option>
-										<option <? if ($row["offer"]=="Backup") { print "selected" ; } ?> value="Backup">Yes - Backup Choice</option>	
-										<option <? if ($row["offer"]=="Y") { print "selected" ; } ?> value="Y">Yes - Other</option>	
-										<option <? if ($row["offer"]=="N") { print "selected" ; } ?> value="N">No</option>		
+										<option <?php if ($row["offer"]=="") { print "selected" ; } ?> value=""></option>
+										<option <?php if ($row["offer"]=="First Choice") { print "selected" ; } ?> value="First Choice">Yes - First Choice</option>
+										<option <?php if ($row["offer"]=="Backup") { print "selected" ; } ?> value="Backup">Yes - Backup Choice</option>	
+										<option <?php if ($row["offer"]=="Y") { print "selected" ; } ?> value="Y">Yes - Other</option>	
+										<option <?php if ($row["offer"]=="N") { print "selected" ; } ?> value="N">No</option>		
 									</select>
 								</td>
 							</tr>
@@ -294,7 +294,7 @@ else {
 								<td colspan=2 style='padding-top: 15px;'> 
 									<b>Offer Details</b><br/>
 									<span style="font-size: 90%"><i>If you have received an offer, enter details here.</i></span><br/>
-									<textarea name="offerDetails" id="offerDetails" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><? print htmlPrep($row["offerDetails"]) ?></textarea>
+									<textarea name="offerDetails" id="offerDetails" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><?php print htmlPrep($row["offerDetails"]) ?></textarea>
 								</td>
 							</tr>
 							<tr>
@@ -302,15 +302,15 @@ else {
 									<span style="font-size: 90%"><i>* denotes a required field</i></span>
 								</td>
 								<td class="right">
-									<input name="gibbonCourseID" id="gibbonCourseID" value="<? print $gibbonCourseID ?>" type="hidden">
-									<input name="gibbonSchoolYearID" id="gibbonSchoolYearID" value="<? print $gibbonSchoolYearID ?>" type="hidden">
-									<input type="hidden" name="address" value="<? print $_SESSION[$guid]["address"] ?>">
+									<input name="gibbonCourseID" id="gibbonCourseID" value="<?php print $gibbonCourseID ?>" type="hidden">
+									<input name="gibbonSchoolYearID" id="gibbonSchoolYearID" value="<?php print $gibbonSchoolYearID ?>" type="hidden">
+									<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
 									<input type="submit" value="Submit">
 								</td>
 							</tr>
 						</table>
 					</form>
-					<?
+					<?php
 				}
 			}
 		}

@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -112,7 +112,7 @@ else {
 				print "</div>" ;
 				?>
 				
-				<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/references_manage_editProcess.php?higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
+				<form method="post" action="<?php print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/references_manage_editProcess.php?higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
 					<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 						<tr class='break'>
 							<td colspan=2> 
@@ -125,7 +125,7 @@ else {
 								<span style="font-size: 90%"><i>This value cannot be changed.</i></span>
 							</td>
 							<td class="right">
-								<input readonly name="student" id="student" maxlength=255 value="<? print formatName("", htmlPrep($row["preferredName"]), htmlPrep($row["surname"]), "Student", false, false) ?>" type="text" style="width: 300px">
+								<input readonly name="student" id="student" maxlength=255 value="<?php print formatName("", htmlPrep($row["preferredName"]), htmlPrep($row["surname"]), "Student", false, false) ?>" type="text" style="width: 300px">
 							</td>
 						</tr>
 						<tr>
@@ -134,7 +134,7 @@ else {
 								<span style="font-size: 90%"><i>This value cannot be changed.</i></span>
 							</td>
 							<td class="right">
-								<input readonly name="type" id="type" maxlength=255 value="<? print $row["type"] ?>" type="text" style="width: 300px">
+								<input readonly name="type" id="type" maxlength=255 value="<?php print $row["type"] ?>" type="text" style="width: 300px">
 							</td>
 						</tr>
 						<tr>
@@ -143,31 +143,31 @@ else {
 							</td>
 							<td class="right">
 								<select name="status" id="status" style="width: 302px">
-									<?
+									<?php
 									if ($row["status"]=="Pending") {
 										?>
-										<option <? if ($row["status"]=="Pending") { print "selected" ; } ?> value='Pending'>Pending</option> ;
-										<option <? if ($row["status"]=="In Progress") { print "selected" ; } ?> value='In Progress'>In Progress</option> ;
-										<option <? if ($row["status"]=="Complete") { print "selected" ; } ?> value='Complete'>Complete</option> ;
-										<option <? if ($row["status"]=="Cancelled") { print "selected" ; } ?> value='Cancelled'>Cancelled</option> ;
-										<?
+										<option <?php if ($row["status"]=="Pending") { print "selected" ; } ?> value='Pending'>Pending</option> ;
+										<option <?php if ($row["status"]=="In Progress") { print "selected" ; } ?> value='In Progress'>In Progress</option> ;
+										<option <?php if ($row["status"]=="Complete") { print "selected" ; } ?> value='Complete'>Complete</option> ;
+										<option <?php if ($row["status"]=="Cancelled") { print "selected" ; } ?> value='Cancelled'>Cancelled</option> ;
+										<?php
 									}
 									else if ($row["status"]=="In Progress") {
 										?>
-										<option <? if ($row["status"]=="In Progress") { print "selected" ; } ?> value='In Progress'>In Progress</option> ;
-										<option <? if ($row["status"]=="Complete") { print "selected" ; } ?> value='Complete'>Complete</option> ;
-										<option <? if ($row["status"]=="Cancelled") { print "selected" ; } ?> value='Cancelled'>Cancelled</option> ;
-										<?
+										<option <?php if ($row["status"]=="In Progress") { print "selected" ; } ?> value='In Progress'>In Progress</option> ;
+										<option <?php if ($row["status"]=="Complete") { print "selected" ; } ?> value='Complete'>Complete</option> ;
+										<option <?php if ($row["status"]=="Cancelled") { print "selected" ; } ?> value='Cancelled'>Cancelled</option> ;
+										<?php
 									}
 									else if ($row["status"]=="Complete") {
 										?>
-										<option <? if ($row["status"]=="Complete") { print "selected" ; } ?> value='Complete'>Complete</option> ;
-										<?
+										<option <?php if ($row["status"]=="Complete") { print "selected" ; } ?> value='Complete'>Complete</option> ;
+										<?php
 									}
 									else if ($row["status"]=="Cancelled") {
 										?>
-										<option <? if ($row["status"]=="Cancelled") { print "selected" ; } ?> value='Cancelled'>Cancelled</option> ;
-										<?
+										<option <?php if ($row["status"]=="Cancelled") { print "selected" ; } ?> value='Cancelled'>Cancelled</option> ;
+										<?php
 									}
 									?>
 								</select>
@@ -176,7 +176,7 @@ else {
 						<tr>
 							<td> 
 								<b>Status Notes</b><br/>
-								<?
+								<?php
 								if ($row["status"]=="Pending" OR $row["status"]=="In Progress") {
 									print "<span style=\"font-size: 90%\"><i>Brief comment on current status.</i></span>" ;
 								}
@@ -186,7 +186,7 @@ else {
 								?>
 							</td>
 							<td class="right">
-								<?
+								<?php
 								$readonly="" ;
 								if ($row["status"]=="Complete" OR $row["status"]=="Cancelled") {
 									$readonly="readonly" ;
@@ -200,7 +200,7 @@ else {
 							<td colspan=2 style='padding-top: 15px;'> 
 								<b>Reference Notes</b><br/>
 								<span style="font-size: 90%"><i>Information about this reference shared by the student. This value cannot be changed.</i></span><br/>
-								<textarea readonly name="notes" id="notes" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><? print $row["notes"] ?></textarea>
+								<textarea readonly name="notes" id="notes" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><?php print $row["notes"] ?></textarea>
 							</td>
 						</tr>
 						
@@ -224,7 +224,7 @@ else {
 						</tr>
 						<tr>
 							<td colspan=2> 
-								<?
+								<?php
 								//Check alert status
 								print "<input type=\"hidden\" name=\"alertsSent\" value=\"" . $row["alertsSent"] . "\">" ;
 								$style="" ;
@@ -350,13 +350,13 @@ else {
 								<span style="font-size: 90%"><i>* denotes a required field</i></span>
 							</td>
 							<td class="right">
-								<input type="hidden" name="address" value="<? print $_SESSION[$guid]["address"] ?>">
+								<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
 								<input type="submit" value="Submit">
 							</td>
 						</tr>
 					</table>
 				</form>
-				<?
+				<?php
 			}
 		}	
 	}

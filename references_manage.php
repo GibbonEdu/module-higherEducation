@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -126,7 +126,7 @@ else {
 				print "<a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . $_SESSION[$guid]["module"] . "/references_manage.php'>Clear Search</a>" ;
 				print "</div>" ;
 				?>
-				<form method="get" action="<? print $_SESSION[$guid]["absoluteURL"]?>/index.php">
+				<form method="get" action="<?php print $_SESSION[$guid]["absoluteURL"]?>/index.php">
 					<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 						<tr>
 							<td> 
@@ -134,19 +134,19 @@ else {
 								<span style="font-size: 90%"><i>Preferred, surname, username.</i></span>
 							</td>
 							<td class="right">
-								<input name="search" id="search" maxlength=20 value="<? print $search ?>" type="text" style="width: 300px">
+								<input name="search" id="search" maxlength=20 value="<?php print $search ?>" type="text" style="width: 300px">
 							</td>
 						</tr>
 						<tr>
 							<td colspan=2 class="right">
-								<input type="hidden" name="q" value="/modules/<? print $_SESSION[$guid]["module"] ?>/references_manage.php">
-								<input type="hidden" name="address" value="<? print $_SESSION[$guid]["address"] ?>">
+								<input type="hidden" name="q" value="/modules/<?php print $_SESSION[$guid]["module"] ?>/references_manage.php">
+								<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
 								<input type="submit" value="Submit">
 							</td>
 						</tr>
 					</table>
 				</form>
-				<?
+				<?php
 				
 				print "<h3 class='top'>" ;
 				print "View" ;

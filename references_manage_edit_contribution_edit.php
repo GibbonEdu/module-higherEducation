@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -87,7 +87,7 @@ else {
 				print "</div>" ;
 			} 
 			?>
-			<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/references_manage_edit_contribution_editProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
+			<form method="post" action="<?php print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/references_manage_edit_contribution_editProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 					<tr>
 						<td> 
@@ -95,7 +95,7 @@ else {
 							<span style="font-size: 90%"><i>This value cannot be changed.</i></span>
 						</td>
 						<td class="right">
-							<input readonly name="type" id="type" maxlength=255 value="<? print $row["type"] ?>" type="text" style="width: 300px">
+							<input readonly name="type" id="type" maxlength=255 value="<?php print $row["type"] ?>" type="text" style="width: 300px">
 						</td>
 					</tr>
 					<tr>
@@ -103,7 +103,7 @@ else {
 							<b>Title *</b><br/>
 						</td>
 						<td class="right">
-							<input name="title" id="title" maxlength=10 value="<? print $row["title"] ?>" type="text" style="width: 300px">
+							<input name="title" id="title" maxlength=10 value="<?php print $row["title"] ?>" type="text" style="width: 300px">
 							<script type="text/javascript">
 								var title=new LiveValidation('title');
 								title.add(Validate.Presence);
@@ -114,7 +114,7 @@ else {
 						<td colspan=2 style='padding-top: 15px;'> 
 							<b>Reference *</b><br/>
 							<span style="font-size: 90%"><i>
-							<?
+							<?php
 							if ($row["refType"]=="US Reference") {
 								print "Maximum limit of 10,000 characters." ;
 							}
@@ -123,11 +123,11 @@ else {
 							}
 							?>
 							</i></span><br/>
-							<textarea name="body" id="body" rows=20 style="width:738px; margin: 5px 0px 0px 0px"><? print $row["body"] ?></textarea>
+							<textarea name="body" id="body" rows=20 style="width:738px; margin: 5px 0px 0px 0px"><?php print $row["body"] ?></textarea>
 							<script type="text/javascript">
 								var body=new LiveValidation('body');
 								body.add(Validate.Presence);
-								<?
+								<?php
 								if ($row["refType"]=="US Reference") {
 									print "body.add( Validate.Length, { maximum: 10000 } );" ;
 								}
@@ -144,8 +144,8 @@ else {
 						</td>
 						<td class="right">
 							<select name="status" id="status" style="width: 302px">
-								<option <? if ($row["status"]=="In Progress") { print "selected" ; } ?> value='In Progress'>In Progress</option> ;
-								<option <? if ($row["status"]=="Complete") { print "selected" ; } ?> value='Complete'>Complete</option> ;
+								<option <?php if ($row["status"]=="In Progress") { print "selected" ; } ?> value='In Progress'>In Progress</option> ;
+								<option <?php if ($row["status"]=="Complete") { print "selected" ; } ?> value='Complete'>Complete</option> ;
 							</select>
 						</td>
 					</tr>
@@ -154,14 +154,14 @@ else {
 							<span style="font-size: 90%"><i>* denotes a required field</i></span>
 						</td>
 						<td class="right">
-							<input name="higherEducationReferenceID" id="higherEducationReferenceID" value="<? print $higherEducationReferenceID ?>" type="hidden">
-							<input type="hidden" name="address" value="<? print $_SESSION[$guid]["address"] ?>">
+							<input name="higherEducationReferenceID" id="higherEducationReferenceID" value="<?php print $higherEducationReferenceID ?>" type="hidden">
+							<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
 							<input type="submit" value="Submit">
 						</td>
 					</tr>
 				</table>
 			</form>
-			<?
+			<?php
 		}
 	}
 }

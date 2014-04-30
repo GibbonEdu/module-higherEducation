@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -80,7 +80,7 @@ else {
 				print "</div>" ;
 			} 
 			?>
-			<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/references_manage_edit_contribution_deleteProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
+			<form method="post" action="<?php print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/references_manage_edit_contribution_deleteProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 					<tr>
 						<td> 
@@ -93,7 +93,7 @@ else {
 					</tr>
 					<tr>
 						<td> 
-							<input type="hidden" name="address" value="<? print $_SESSION[$guid]["address"] ?>">
+							<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
 							<input type="submit" value="Yes">
 						</td>
 						<td class="right">
@@ -102,7 +102,7 @@ else {
 					</tr>
 				</table>
 			</form>
-			<?
+			<?php
 		}
 	}
 }

@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -73,7 +73,7 @@ else {
 							<b>Student</b><br/>
 						</td>
 						<td class="right">
-							<input readonly name="student" id="student" maxlength=255 value="<? print formatName("", htmlPrep($row["preferredName"]), htmlPrep($row["surname"]), "Student", false, false) ?>" type="text" style="width: 300px">
+							<input readonly name="student" id="student" maxlength=255 value="<?php print formatName("", htmlPrep($row["preferredName"]), htmlPrep($row["surname"]), "Student", false, false) ?>" type="text" style="width: 300px">
 						</td>
 					</tr>
 					<tr>
@@ -81,10 +81,10 @@ else {
 							<b>Reference Type</b><br/>
 						</td>
 						<td class="right">
-							<input readonly name="type" id="type" maxlength=255 value="<? print $row["type"] ?>" type="text" style="width: 300px">
+							<input readonly name="type" id="type" maxlength=255 value="<?php print $row["type"] ?>" type="text" style="width: 300px">
 						</td>
 					</tr>
-					<?
+					<?php
 					try {
 						$dataContributions=array("higherEducationReferenceID"=>$row["higherEducationReferenceID"]);  
 						$sqlContributions="SELECT higherEducationReferenceComponent.*, preferredName, surname FROM higherEducationReferenceComponent JOIN gibbonPerson ON (higherEducationReferenceComponent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReferenceID=:higherEducationReferenceID ORDER BY title" ; 

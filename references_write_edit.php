@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -86,7 +86,7 @@ else {
 			//Let's go!
 			$row=$result->fetch() ;
 			?>
-			<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/references_write_editProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID" ?>">
+			<form method="post" action="<?php print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/references_write_editProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID" ?>">
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 					<tr class='break'>
 						<td colspan=2> 
@@ -99,7 +99,7 @@ else {
 							<span style="font-size: 90%"><i>This value cannot be changed.</i></span>
 						</td>
 						<td class="right">
-							<input readonly name="student" id="student" maxlength=255 value="<? print formatName("", htmlPrep($row["preferredName"]), htmlPrep($row["surname"]), "Student", false, false) ?>" type="text" style="width: 300px">
+							<input readonly name="student" id="student" maxlength=255 value="<?php print formatName("", htmlPrep($row["preferredName"]), htmlPrep($row["surname"]), "Student", false, false) ?>" type="text" style="width: 300px">
 						</td>
 					</tr>
 					<tr>
@@ -108,14 +108,14 @@ else {
 							<span style="font-size: 90%"><i>This value cannot be changed.</i></span>
 						</td>
 						<td class="right">
-							<input readonly name="refType" id="refType" maxlength=255 value="<? print $row["refType"] ?>" type="text" style="width: 300px">
+							<input readonly name="refType" id="refType" maxlength=255 value="<?php print $row["refType"] ?>" type="text" style="width: 300px">
 						</td>
 					</tr>
 					<tr>
 						<td colspan=2 style='padding-top: 15px;'> 
 							<b>Reference Notes</b><br/>
 							<span style="font-size: 90%"><i>Information about this reference shared by the student. This value cannot be changed.</i></span><br/>
-							<textarea readonly name="notes" id="notes" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><? print $row["notes"] ?></textarea>
+							<textarea readonly name="notes" id="notes" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><?php print $row["notes"] ?></textarea>
 						</td>
 					</tr>
 					
@@ -129,7 +129,7 @@ else {
 							<b>Academic</b><br/>
 						</td>
 						<td class="right">
-							<a target='_blank' href='<? print $_SESSION[$guid]["absoluteURL"] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<? print $row["gibbonPersonIDStudent"] ?>&subpage=Markbook'>Markbook</a> | <a target='_blank' href='<? print $_SESSION[$guid]["absoluteURL"] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<? print $row["gibbonPersonIDStudent"] ?>&subpage=External Assessment'>External Assessment</a>
+							<a target='_blank' href='<?php print $_SESSION[$guid]["absoluteURL"] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php print $row["gibbonPersonIDStudent"] ?>&subpage=Markbook'>Markbook</a> | <a target='_blank' href='<?php print $_SESSION[$guid]["absoluteURL"] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php print $row["gibbonPersonIDStudent"] ?>&subpage=External Assessment'>External Assessment</a>
 						</td>
 					</tr>
 					<tr>
@@ -137,8 +137,8 @@ else {
 							<b>Co-curricular</b><br/>
 						</td>
 						<td class="right">
-							<a target='_blank' href='<? print $_SESSION[$guid]["absoluteURL"] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<? print $row["gibbonPersonIDStudent"] ?>&subpage=Activities'>Activities</a>
-							<?
+							<a target='_blank' href='<?php print $_SESSION[$guid]["absoluteURL"] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php print $row["gibbonPersonIDStudent"] ?>&subpage=Activities'>Activities</a>
+							<?php
 								$gibbonModuleID=checkModuleReady("/modules/IB Diploma/index.php", $connection2);
 								if ($gibbonModuleID!=FALSE) {
 									try {
@@ -182,10 +182,10 @@ else {
 							<b>Miscellaneous</b><br/>
 						</td>
 						<td class="right">
-							<a target='_blank' href='<? print $_SESSION[$guid]["absoluteURL"] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<? print $row["gibbonPersonIDStudent"] ?>&subpage=Behaviour'>Behaviour</a> | <a target='_blank' href='<? print $_SESSION[$guid]["absoluteURL"] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<? print $row["gibbonPersonIDStudent"] ?>&subpage=School Attendance'>Attendance</a>
+							<a target='_blank' href='<?php print $_SESSION[$guid]["absoluteURL"] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php print $row["gibbonPersonIDStudent"] ?>&subpage=Behaviour'>Behaviour</a> | <a target='_blank' href='<?php print $_SESSION[$guid]["absoluteURL"] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php print $row["gibbonPersonIDStudent"] ?>&subpage=School Attendance'>Attendance</a>
 						</td>
 					</tr>
-					<?
+					<?php
 					try {
 						$dataNotes=array("gibbonPersonID"=>$row["gibbonPersonIDStudent"]);  
 						$sqlNotes="SELECT * FROM higherEducationStudent WHERE gibbonPersonID=:gibbonPersonID" ; 
@@ -206,10 +206,10 @@ else {
 							<td colspan=2 style='padding-top: 15px;'> 
 								<b>Higher Education Notes</b><br/>
 								<span style="font-size: 90%"><i>Information about higher education in general shared by the student. This value cannot be changed.</i></span><br/>
-								<div style="padding: 1px; background-color: #e2e2e2; border: 1px solid #BFBFBF; min-height: 74px; width:738px; margin: 5px 0px 0px 0px"><? print $rowNotes["referenceNotes"] ?></div>
+								<div style="padding: 1px; background-color: #e2e2e2; border: 1px solid #BFBFBF; min-height: 74px; width:738px; margin: 5px 0px 0px 0px"><?php print $rowNotes["referenceNotes"] ?></div>
 							</td>
 						</tr>
-						<?
+						<?php
 					}
 					?>
 					
@@ -225,10 +225,10 @@ else {
 							<span style="font-size: 90%"><i>This value cannot be changed.</i></span>
 						</td>
 						<td class="right">
-							<input readonly name="type" id="type" maxlength=255 value="<? print $row["type"] ?>" type="text" style="width: 300px">
+							<input readonly name="type" id="type" maxlength=255 value="<?php print $row["type"] ?>" type="text" style="width: 300px">
 						</td>
 					</tr>
-					<?
+					<?php
 					if ($row["title"]!="") {
 						?>
 						<tr>
@@ -237,17 +237,17 @@ else {
 								<span style="font-size: 90%"><i>This value cannot be changed.</i></span>
 							</td>
 							<td class="right">
-								<input readonly name="title" id="title" maxlength=255 value="<? print $row["title"] ?>" type="text" style="width: 300px">
+								<input readonly name="title" id="title" maxlength=255 value="<?php print $row["title"] ?>" type="text" style="width: 300px">
 							</td>
 						</tr>
-						<?
+						<?php
 					}
 					?>
 					<tr>
 						<td colspan=2 style='padding-top: 15px;'> 
 							<b>Reference *</b><br/>
 							<span style="font-size: 90%"><i>
-							<?
+							<?php
 							if ($row["refType"]=="US Reference") {
 								print "Maximum limit of 10,000 characters." ;
 							}
@@ -256,11 +256,11 @@ else {
 							}
 							?>
 							</i></span><br/>
-							<textarea name="body" id="body" rows=20 style="width:738px; margin: 5px 0px 0px 0px"><? print $row["body"] ?></textarea>
+							<textarea name="body" id="body" rows=20 style="width:738px; margin: 5px 0px 0px 0px"><?php print $row["body"] ?></textarea>
 							<script type="text/javascript">
 								var body=new LiveValidation('body');
 								body.add(Validate.Presence);
-								<?
+								<?php
 								if ($row["refType"]=="US Reference") {
 									print "body.add( Validate.Length, { maximum: 10000 } );" ;
 								}
@@ -278,13 +278,13 @@ else {
 						</td>
 						<td class="right">
 							<select name="status" id="status" style="width: 302px">
-								<option <? if ($row["status"]=="In Progress") { print "selected" ; } ?> value='In Progress'>In Progress</option> ;
-								<option <? if ($row["status"]=="Complete") { print "selected" ; } ?> value='Complete'>Complete</option> ;
+								<option <?php if ($row["status"]=="In Progress") { print "selected" ; } ?> value='In Progress'>In Progress</option> ;
+								<option <?php if ($row["status"]=="Complete") { print "selected" ; } ?> value='Complete'>Complete</option> ;
 							</select>
 						</td>
 					</tr>
 					
-					<?
+					<?php
 					try {
 						$dataContributions=array("higherEducationReferenceID"=>$row["higherEducationReferenceID"], "higherEducationReferenceComponentID"=>$higherEducationReferenceComponentID);  
 						$sqlContributions="SELECT higherEducationReferenceComponent.*, preferredName, surname FROM higherEducationReferenceComponent JOIN gibbonPerson ON (higherEducationReferenceComponent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReferenceID=:higherEducationReferenceID AND NOT higherEducationReferenceComponentID=:higherEducationReferenceComponentID ORDER BY title" ; 
@@ -298,7 +298,7 @@ else {
 						<tr>
 							<td colspan=2> 
 								<h3>Other Contributions</h3>
-								<?
+								<?php
 								print "<table cellspacing='0' style='width: 100%'>" ;
 									print "<tr class='head'>" ;
 										print "<th>" ;
@@ -382,7 +382,7 @@ else {
 								?>
 							</td>
 						</tr>
-						<?
+						<?php
 					}
 					?>
 					
@@ -391,13 +391,13 @@ else {
 							<span style="font-size: 90%"><i>* denotes a required field</i></span>
 						</td>
 						<td class="right">
-							<input type="hidden" name="address" value="<? print $_SESSION[$guid]["address"] ?>">
+							<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
 							<input type="submit" value="Submit">
 						</td>
 					</tr>
 				</table>
 			</form>
-			<?
+			<?php
 		}	
 	}
 }

@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -88,7 +88,7 @@ else {
 		else {
 			$row=$result->fetch() ;
 			?>
-			<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/applications_track_addProcess.php" ?>">
+			<form method="post" action="<?php print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/applications_track_addProcess.php" ?>">
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 					<tr class='break'>
 						<td colspan=2> 
@@ -101,7 +101,7 @@ else {
 						</td>
 						<td class="right">
 							<select name="higherEducationInstitutionID" id="higherEducationInstitutionID" style="width: 302px">
-								<?
+								<?php
 								print "<option value='Please select...'>Please select...</option>" ;
 								try {
 									$dataSelect=array(); 
@@ -127,7 +127,7 @@ else {
 						</td>
 						<td class="right">
 							<select name="higherEducationMajorID" id="higherEducationMajorID" style="width: 302px">
-								<?
+								<?php
 								print "<option value='Please select...'>Please select...</option>" ;
 								try {
 									$dataSelect=array(); 
@@ -163,7 +163,7 @@ else {
 						</td>
 						<td class="right">
 							<select name="rank" id="rank" style="width: 302px">
-								<?
+								<?php
 								print "<option value=''></option>" ;
 								for ($i=1; $i<11; $i++) {
 									print "<option value='$i'>$i</option>" ;
@@ -263,13 +263,13 @@ else {
 							<span style="font-size: 90%"><i>* denotes a required field</i></span>
 						</td>
 						<td class="right">
-							<input type="hidden" name="address" value="<? print $_SESSION[$guid]["address"] ?>">
+							<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
 							<input type="submit" value="Submit">
 						</td>
 					</tr>
 				</table>
 			</form>
-			<?
+			<?php
 		}	
 	}
 }

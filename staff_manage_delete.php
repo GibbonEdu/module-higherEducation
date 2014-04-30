@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -83,11 +83,11 @@ else {
 			//Let's go!
 			$row=$result->fetch() ;
 			?>
-			<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/staff_manage_deleteProcess.php?higherEducationStaffID=$higherEducationStaffID" ?>">
+			<form method="post" action="<?php print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/staff_manage_deleteProcess.php?higherEducationStaffID=$higherEducationStaffID" ?>">
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 					<tr>
 						<td> 
-							<b>Are you sure you want to delete "<? print formatName("", $row["preferredName"], $row["surname"], "Staff", true, true) ?>" from the higher education process?</b><br/>
+							<b>Are you sure you want to delete "<?php print formatName("", $row["preferredName"], $row["surname"], "Staff", true, true) ?>" from the higher education process?</b><br/>
 							<span style="font-size: 90%; color: #cc0000"><i>This operation cannot be undone, and may lead to loss of vital data in your system.<br/>PROCEED WITH CAUTION!</i></span>
 						</td>
 						<td class="right">
@@ -96,8 +96,8 @@ else {
 					</tr>
 					<tr>
 						<td> 
-							<input name="higherEducationStaffID" id="higherEducationStaffID" value="<? print $higherEducationStaffID ?>" type="hidden">
-							<input type="hidden" name="address" value="<? print $_SESSION[$guid]["address"] ?>">
+							<input name="higherEducationStaffID" id="higherEducationStaffID" value="<?php print $higherEducationStaffID ?>" type="hidden">
+							<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
 							<input type="submit" value="Yes">
 						</td>
 						<td class="right">
@@ -106,7 +106,7 @@ else {
 					</tr>
 				</table>
 			</form>
-			<?
+			<?php
 		}
 	}	
 }

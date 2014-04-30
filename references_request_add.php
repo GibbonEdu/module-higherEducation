@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -70,7 +70,7 @@ else {
 	}
 	else {
 		?>
-		<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/references_request_addProcess.php" ?>">
+		<form method="post" action="<?php print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/references_request_addProcess.php" ?>">
 			<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 				<tr>
 					<td> 
@@ -114,7 +114,7 @@ else {
 					</td>
 					<td class="right">
 						<select name="gibbonPersonIDReferee" id="gibbonPersonIDReferee" style="width: 302px">
-							<?
+							<?php
 							print "<option value='Please select...'>Please select...</option>" ;
 							try {
 								$data=array("gibbonSchoolYearID"=>$_SESSION[$guid]["gibbonSchoolYearID"], "gibbonPersonID1"=>$gibbonPersonID, "gibbonPersonID2"=>$gibbonPersonID); 
@@ -138,7 +138,7 @@ else {
 				<tr>
 					<td colspan=2 style='padding-top: 15px;'> 
 						<b>Notes</b><br/>
-						<span style="font-size: 90%"><i>Any information you need to share with your referee(s), that is not already in your <a href='<? print $_SESSION[$guid]["absoluteURL"] ?>/index.php?q=/modules/Higher Education/references_myNotes.php'>general reference notes</a>.</i></span><br/>
+						<span style="font-size: 90%"><i>Any information you need to share with your referee(s), that is not already in your <a href='<?php print $_SESSION[$guid]["absoluteURL"] ?>/index.php?q=/modules/Higher Education/references_myNotes.php'>general reference notes</a>.</i></span><br/>
 						<textarea name="notes" id="notes" rows=4 style="width:738px; margin: 5px 0px 0px 0px"></textarea>
 					</td>
 				</tr>
@@ -148,13 +148,13 @@ else {
 						<span style="font-size: 90%"><i>* denotes a required field</i></span>
 					</td>
 					<td class="right">
-						<input type="hidden" name="address" value="<? print $_SESSION[$guid]["address"] ?>">
+						<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
 						<input type="submit" value="Submit">
 					</td>
 				</tr>
 			</table>
 		</form>
-		<?
+		<?php
 	}
 }
 ?>

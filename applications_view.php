@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -94,7 +94,7 @@ else {
 
 				<select name="searchInput" class="searchInput" style='float: none; width: 100px'>
 					<option selected value=''>All</option>
-					<?
+					<?php
 					try {
 						if ($role=="Coordinator") {
 							$dataSelect=array("gibbonSchoolYearID"=>$_SESSION[$guid]["gibbonSchoolYearID"]);  
@@ -116,7 +116,7 @@ else {
 					}
 					?>
 				</select>
-			<?	
+			<?php	
 			print "</div>" ;
 			
 			print "<table cellspacing='0' style='width: 100%'>" ;

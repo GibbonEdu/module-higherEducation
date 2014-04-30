@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -66,7 +66,7 @@ else {
 	} 
 	
 	?>
-	<form method="post" action="<? print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/student_manage_addProcess.php" ?>">
+	<form method="post" action="<?php print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/student_manage_addProcess.php" ?>">
 		<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 			<tr>
 				<td> 
@@ -74,7 +74,7 @@ else {
 				</td>
 				<td class="right">
 					<select name="Members[]" id="Members[]" multiple style="width: 302px; height: 150px">
-						<?
+						<?php
 						try {
 							$dataSelect=array("gibbonSchoolYearID"=>$_SESSION[$guid]["gibbonSchoolYearID"]);  
 							$sqlSelect="SELECT gibbonPerson.gibbonPersonID, preferredName, surname, gibbonRollGroup.name AS name FROM gibbonPerson, gibbonStudentEnrolment, gibbonRollGroup WHERE gibbonPerson.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID AND gibbonStudentEnrolment.gibbonRollGroupID=gibbonRollGroup.gibbonRollGroupID AND status='FULL' AND gibbonRollGroup.gibbonSchoolYearID=:gibbonSchoolYearID ORDER BY name, surname, preferredName" ;
@@ -95,7 +95,7 @@ else {
 				</td>
 				<td class="right">
 					<select style="width: 302px" name="gibbonPersonIDAdvisor" id="gibbonPersonIDAdvisor">
-						<?
+						<?php
 						print "<option value=''></option>" ;
 						try {
 							$data=array();  
@@ -116,12 +116,12 @@ else {
 					<span style="font-size: 90%"><i>* denotes a required field</i></span>
 				</td>
 				<td class="right">
-					<input type="hidden" name="address" value="<? print $_SESSION[$guid]["address"] ?>">
+					<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
 					<input type="submit" value="Submit">
 				</td>
 			</tr>
 		</table>
 	</form>
-	<?
+	<?php
 }
 ?>
