@@ -56,4 +56,9 @@ $count++ ;
 $sql[$count][0]="1.0.07" ;
 $sql[$count][1]="" ;
 
+//v1.0.08
+$count++ ;
+$sql[$count][0]="1.0.08" ;
+$sql[$count][1]="" ;
+
 ?>
