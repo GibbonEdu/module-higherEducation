@@ -227,7 +227,7 @@ else {
 							print "<tr class=$rowNum>" ;
 								print "<td>" ;
 									print formatName("", $row["preferredName"], $row["surname"], "Student", true) . "<br/>" ;
-									print "<span style='font-size: 75%; font-style: italic'>" . dateConvertBack(substr($row["timestamp"],0,10)) . "</span>" ;
+									print "<span style='font-size: 75%; font-style: italic'>" . dateConvertBack($guid, substr($row["timestamp"],0,10)) . "</span>" ;
 								print "</td>" ;
 								print "<td style='width: 25px'>" ;
 									if ($row["status"]=="Cancelled") {
