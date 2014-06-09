@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.0.10
+-------
+Fixed datConvert issues
+
 v1.0.09
 -------
 Fixed datConvert issue in Manage References

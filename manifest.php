@@ -25,7 +25,7 @@ $description="A module to support students as they undertake the higher educatio
 $entryURL="index.php" ;
 $type="Additional" ;
 $category="Other" ;
-$version="1.0.09" ;
+$version="1.0.10" ;
 $author="Ross Parker" ;
 $url="http://rossparker.org" ;
 

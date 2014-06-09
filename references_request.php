@@ -109,7 +109,7 @@ else {
 					//COLOR ROW BY STATUS!
 					print "<tr class=$rowNum>" ;
 						print "<td>" ;
-							print "<b>" . dateConvertBack(substr($row["timestamp"],0,10)) . "</b><br/>" ;
+							print "<b>" . dateConvertBack($guid, substr($row["timestamp"],0,10)) . "</b><br/>" ;
 							print "<span style='font-size: 75%; font-style: italic'>" . substr($row["timestamp"],11,5) . "</span>" ;
 						print "</td>" ;
 						print "<td>" ;
