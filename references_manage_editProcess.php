@@ -101,14 +101,14 @@ else {
 					header("Location: {$URL}");
 				}
 				else {
-					//Sent alerts
+					//Set notifications
 					$partialFail=false ;
 					if ($status=="In Progress" AND $alertsSent=="N") {
 						$alertsSend="Y" ;
 						
 						try {
 							$dataEmail=array("higherEducationReferenceID"=>$higherEducationReferenceID);  
-							$sqlEmail="SELECT preferredName, email FROM higherEducationReferenceComponent JOIN gibbonPerson ON (higherEducationReferenceComponent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReferenceID=:higherEducationReferenceID" ;
+							$sqlEmail="SELECT gibbonPerson.gibbonPersonID FROM higherEducationReferenceComponent JOIN gibbonPerson ON (higherEducationReferenceComponent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReferenceID=:higherEducationReferenceID" ;
 							$resultEmail=$connection2->prepare($sqlEmail);
 							$resultEmail->execute($dataEmail);
 						}
@@ -116,18 +116,8 @@ else {
 							$partialFail=true ;
 						}
 						while ($rowEmail=$resultEmail->fetch()) {
-							$to=$rowEmail["email"];
-							$subject=$_SESSION[$guid]["organisationNameShort"] . " Reference Contribution Notification";
-							$body="Dear " . $rowEmail["preferredName"] . ",<br/><br/>" ;
-							$body=$body . "Your input in creating a higher education reference for " . formatName("", $row["preferredName"], $row["surname"], "Student", false) . " is requested. Please log in to Gibbon and go to Other > Higher Education > Write References. Your assistance is most appreciated. Regards,<br/><br/>" ;
-							$body=$body . $_SESSION[$guid]["preferredName"] . " " . $_SESSION[$guid]["surname"] ;
-							$headers="From: " . $_SESSION[$guid]["email"] . "\r\n";
-							$headers .= "MIME-Version: 1.0\r\n";
-							$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n" ;
-				
-							if (mail($to, $subject, $body, $headers)==false) {
-								$partialFail=true ;
-							}
+							$notificationText=sprintf(_('Someone has requested your input on a Higher Education reference.')) ;
+							setNotification($connection2, $guid, $rowEmail["gibbonPersonID"], $notificationText, "Higher Education", "/index.php?q=/modules/Higher Education/references_write.php") ;
 						}
 					}
 					

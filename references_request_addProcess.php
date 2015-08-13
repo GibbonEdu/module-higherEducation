@@ -86,6 +86,8 @@ else {
 				break ;
 			}
 			
+			$higherEducationReferenceID=$connection2->lastInsertID() ;
+			
 			//Set referees based on type of reference
 			$partialFail=false ;
 			//Get new unit ID
@@ -183,6 +185,19 @@ else {
 						$partialFail=true ;
 					}	
 				}
+			}
+			
+			//Attempt to notify coordinators
+			try {
+				$dataNotify=array();  
+				$sqlNotify="SELECT gibbonPerson.gibbonPersonID FROM higherEducationStaff JOIN gibbonPerson ON (higherEducationStaff.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE status='Full' AND role='Coordinator'" ; 
+				$resultNotify=$connection2->prepare($sqlNotify);
+				$resultNotify->execute($dataNotify); 
+			}
+			catch(PDOException $e) { }
+			while ($rowNotify=$resultNotify->fetch()) {
+				$notificationText=sprintf(_('Someone has created a new Higher Education reference request.')) ;
+				setNotification($connection2, $guid, $rowNotify["gibbonPersonID"], $notificationText, "Higher Education", "/index.php?q=/modules/Higher Education/references_manage.php") ;
 			}
 			
 			if ($partialFail==true) {

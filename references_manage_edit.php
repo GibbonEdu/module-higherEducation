@@ -232,7 +232,7 @@ else {
 								print "<div id='contributionsRow' $style>" ;
 									if ($row["alertsSent"]=="N") {
 										print "<div class='warning'>" ;
-											print "The user(s) listed below will be automatically notified by email that their input is required for this reference. This will take place the next time you press the Submit beutton below." ;
+											print "The user(s) listed below will be notified that their input is required for this reference. This will take place the next time you press the Submit beutton below." ;
 										print "</div>" ;
 									}
 									else {
