@@ -73,7 +73,7 @@ else {
 			//Fail 2
 			$URL=$URL . "&updateReturn=fail2" ;
 			header("Location: {$URL}");
-			break ;
+			exit() ;
 		}
 	}
 	else {
@@ -90,7 +90,7 @@ else {
 			exit() ;
 			$URL=$URL . "&updateReturn=fail2" ;
 			header("Location: {$URL}");
-			break ;
+			exit() ;
 		}
 	}
 			

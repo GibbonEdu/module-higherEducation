@@ -83,7 +83,7 @@ else {
 				//Fail 2
 				$URL=$URL . "&addReturn=fail2" ;
 				header("Location: {$URL}");
-				break ;
+				exit() ;
 			}
 			
 			$higherEducationReferenceID=$connection2->lastInsertID() ;
@@ -196,7 +196,7 @@ else {
 			}
 			catch(PDOException $e) { }
 			while ($rowNotify=$resultNotify->fetch()) {
-				$notificationText=sprintf(_('Someone has created a new Higher Education reference request.')) ;
+				$notificationText=sprintf(__($guid, 'Someone has created a new Higher Education reference request.')) ;
 				setNotification($connection2, $guid, $rowNotify["gibbonPersonID"], $notificationText, "Higher Education", "/index.php?q=/modules/Higher Education/references_manage.php") ;
 			}
 			

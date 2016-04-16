@@ -72,7 +72,7 @@ else {
 				//Fail2
 				$URL=$URL . "&updateReturn=fail2" ;
 				header("Location: {$URL}");
-				break ;
+				exit() ;
 			}
 	
 			if ($result->rowCount()!=1) {
@@ -116,7 +116,7 @@ else {
 							$partialFail=true ;
 						}
 						while ($rowEmail=$resultEmail->fetch()) {
-							$notificationText=sprintf(_('Someone has requested your input on a Higher Education reference.')) ;
+							$notificationText=sprintf(__($guid, 'Someone has requested your input on a Higher Education reference.')) ;
 							setNotification($connection2, $guid, $rowEmail["gibbonPersonID"], $notificationText, "Higher Education", "/index.php?q=/modules/Higher Education/references_write.php") ;
 						}
 					}
@@ -132,7 +132,7 @@ else {
 						//Fail 2
 						$URL=$URL . "&updateReturn=fail2" ;
 						header("Location: {$URL}");
-						break ;
+						exit() ;
 					}
 					
 					if ($partialFail==true) {

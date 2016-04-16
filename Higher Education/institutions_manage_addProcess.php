@@ -75,7 +75,7 @@ else {
 				//Fail 2
 				$URL=$URL . "&addReturn=fail2" ;
 				header("Location: {$URL}");
-				break ;
+				exit() ;
 			}
 		
 			//Success 0
