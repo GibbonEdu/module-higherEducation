@@ -17,136 +17,128 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@session_start() ;
+@session_start();
 
 //Module includes
-include "./modules/" . $_SESSION[$guid]["module"] . "/moduleFunctions.php" ;
+include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, "/modules/Higher Education/references_write.php")==FALSE) {
-	//Acess denied
-	print "<div class='error'>" ;
-		print "You do not have access to this action." ;
-	print "</div>" ;
+if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_write.php') == false) {
+    //Acess denied
+    echo "<div class='error'>";
+    echo 'You do not have access to this action.';
+    echo '</div>';
+} else {
+    //Proceed!
+    echo "<div class='trail'>";
+    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > </div><div class='trailEnd'>Write References</div>";
+    echo '</div>';
+
+    echo '<p>';
+    echo 'The table below shows all references for which your input is required in the current school year.';
+    echo '<p>';
+
+    //Set pagination variable
+    $page = null;
+    if (isset($_GET['page'])) {
+        $page = $_GET['page'];
+    }
+    if ((!is_numeric($page)) or $page < 1) {
+        $page = 1;
+    }
+
+    try {
+        $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID'], 'gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
+        $sql = "SELECT higherEducationReference.timestamp, higherEducationReference.type AS typeReference, higherEducationReferenceComponent.*, surname, preferredName FROM higherEducationReferenceComponent JOIN higherEducationReference ON (higherEducationReferenceComponent.higherEducationReferenceID=higherEducationReference.higherEducationReferenceID) JOIN gibbonPerson ON (higherEducationReference.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReference.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND higherEducationReference.status='In Progress' AND higherEducationReferenceComponent.gibbonPersonID=:gibbonPersonID ORDER BY higherEducationReferenceComponent.status, timestamp DESC";
+        $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($page - 1) * $_SESSION[$guid]['pagination']);
+        $result = $connection2->prepare($sql);
+        $result->execute($data);
+    } catch (PDOException $e) {
+        echo "<div class='error'>".$e->getMessage().'</div>';
+    }
+
+    if ($result->rowCount() < 1) {
+        echo "<div class='success'>";
+        echo 'There are no reference requests at current.';
+        echo '</div>';
+    } else {
+        if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
+            printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'top');
+        }
+
+        echo "<table cellspacing='0' style='width: 100%'>";
+        echo "<tr class='head'>";
+        echo '<th>';
+        echo 'Name<br/>';
+        echo "<span style='font-size: 75%; font-style: italic'>Date</span>";
+        echo '</th>';
+        echo '<th colspan=2>';
+        echo 'Your Contribution';
+        echo '</th>';
+        echo '<th>';
+        echo 'Type';
+        echo '</th>';
+        echo '<th>';
+        echo 'Perspective';
+        echo '</th>';
+        echo '<th>';
+        echo 'Actions';
+        echo '</th>';
+        echo '</tr>';
+
+        $count = 0;
+        $rowNum = 'odd';
+        try {
+            $resultPage = $connection2->prepare($sqlPage);
+            $resultPage->execute($data);
+        } catch (PDOException $e) {
+            echo "<div class='error'>".$e->getMessage().'</div>';
+        }
+        while ($row = $resultPage->fetch()) {
+            if ($count % 2 == 0) {
+                $rowNum = 'even';
+            } else {
+                $rowNum = 'odd';
+            }
+            ++$count;
+
+            echo "<tr class=$rowNum>";
+            echo '<td>';
+            echo formatName('', $row['preferredName'], $row['surname'], 'Student', true).'<br/>';
+            echo "<span style='font-size: 75%; font-style: italic'>".dateConvertBack($guid, substr($row['timestamp'], 0, 10)).'</span>';
+            echo '</td>';
+            echo "<td style='width: 25px'>";
+            if ($row['status'] == 'Cancelled') {
+                echo "<img style='margin-right: 3px; float: left' title='Cancelled' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconCross.png'/> ";
+            } elseif ($row['status'] == 'Complete') {
+                echo "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconTick.png'/> ";
+            } else {
+                echo "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconTick_light.png'/> ";
+            }
+            echo '</td>';
+            echo '<td>';
+            echo '<b>'.$row['status'].'</b>';
+            if (isset($row['statusNotes'])) {
+                echo "<br/><span style='font-size: 75%; font-style: italic'>".$row['statusNotes'].'</span>';
+            }
+            echo '</td>';
+            echo '<td>';
+            echo $row['typeReference'];
+            echo '</td>';
+            echo '<td>';
+            echo $row['type'].'<br/>';
+            if ($row['title'] != '') {
+                echo "<span style='font-size: 75%; font-style: italic'>".$row['title'].'</span>';
+            }
+            echo '</td>';
+            echo '<td>';
+            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/references_write_edit.php&higherEducationReferenceComponentID='.$row['higherEducationReferenceComponentID']."'><img title='Edit' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/config.png'/></a> ";
+            echo '</td>';
+            echo '</tr>';
+        }
+        echo '</table>';
+
+        if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
+            printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'bottom');
+        }
+    }
 }
-else {
-	//Proceed!
-	print "<div class='trail'>" ;
-	print "<div class='trailHead'><a href='" . $_SESSION[$guid]["absoluteURL"] . "'>Home</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/" . getModuleEntry($_GET["q"], $connection2, $guid) . "'>" . getModuleName($_GET["q"]) . "</a> > </div><div class='trailEnd'>Write References</div>" ;
-	print "</div>" ;
-	
-	print "<p>" ;
-	print "The table below shows all references for which your input is required in the current school year." ;
-	print "<p>" ;
-	
-	//Set pagination variable
-	$page=NULL ;
-	if (isset($_GET["page"])) {
-		$page=$_GET["page"] ;
-	}
-	if ((!is_numeric($page)) OR $page<1) {
-		$page=1 ;
-	}
-	
-	try {
-		$data=array("gibbonSchoolYearID"=>$_SESSION[$guid]["gibbonSchoolYearID"], "gibbonPersonID"=>$_SESSION[$guid]["gibbonPersonID"]); 
-		$sql="SELECT higherEducationReference.timestamp, higherEducationReference.type AS typeReference, higherEducationReferenceComponent.*, surname, preferredName FROM higherEducationReferenceComponent JOIN higherEducationReference ON (higherEducationReferenceComponent.higherEducationReferenceID=higherEducationReference.higherEducationReferenceID) JOIN gibbonPerson ON (higherEducationReference.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReference.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND higherEducationReference.status='In Progress' AND higherEducationReferenceComponent.gibbonPersonID=:gibbonPersonID ORDER BY higherEducationReferenceComponent.status, timestamp DESC" ; 
-		$sqlPage= $sql . " LIMIT " . $_SESSION[$guid]["pagination"] . " OFFSET " . (($page-1)*$_SESSION[$guid]["pagination"]) ; 
-		$result=$connection2->prepare($sql);
-		$result->execute($data);
-	}
-	catch(PDOException $e) { 
-		print "<div class='error'>" . $e->getMessage() . "</div>" ; 
-	}
-	
-	if ($result->rowCount()<1) {
-		print "<div class='success'>" ;
-		print "There are no reference requests at current." ;
-		print "</div>" ;
-	}
-	else {
-		if ($result->rowCount()>$_SESSION[$guid]["pagination"]) {
-			printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]["pagination"], "top") ;
-		}
-	
-		print "<table cellspacing='0' style='width: 100%'>" ;
-			print "<tr class='head'>" ;
-				print "<th>" ;
-					print "Name<br/>" ;
-					print "<span style='font-size: 75%; font-style: italic'>Date</span>" ;
-				print "</th>" ;
-				print "<th colspan=2>" ;
-					print "Your Contribution" ;
-				print "</th>" ;
-				print "<th>" ;
-					print "Type" ;
-				print "</th>" ;
-				print "<th>" ;
-					print "Perspective" ;
-				print "</th>" ;
-				print "<th>" ;
-					print "Actions" ;
-				print "</th>" ;
-			print "</tr>" ;
-			
-			$count=0;
-			$rowNum="odd" ;
-			try {
-				$resultPage=$connection2->prepare($sqlPage);
-				$resultPage->execute($data);
-			}
-			catch(PDOException $e) { 
-				print "<div class='error'>" . $e->getMessage() . "</div>" ; 
-			}
-			while ($row=$resultPage->fetch()) {
-				if ($count%2==0) {
-					$rowNum="even" ;
-				}
-				else {
-					$rowNum="odd" ;
-				}
-				$count++ ;
-				
-				print "<tr class=$rowNum>" ;
-					print "<td>" ;
-						print formatName("", $row["preferredName"], $row["surname"], "Student", true) . "<br/>" ;
-						print "<span style='font-size: 75%; font-style: italic'>" . dateConvertBack($guid, substr($row["timestamp"],0,10)) . "</span>" ;
-					print "</td>" ;
-					print "<td style='width: 25px'>" ;
-						if ($row["status"]=="Cancelled") {
-							print "<img style='margin-right: 3px; float: left' title='Cancelled' src='./themes/" . $_SESSION[$guid]["gibbonThemeName"] . "/img/iconCross.png'/> " ;
-						}
-						else if ($row["status"]=="Complete") {
-							print "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/" . $_SESSION[$guid]["gibbonThemeName"] . "/img/iconTick.png'/> " ;
-						}
-						else {
-							print "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/" . $_SESSION[$guid]["gibbonThemeName"] . "/img/iconTick_light.png'/> " ;
-						}
-					print "</td>" ;
-					print "<td>" ;
-						print "<b>" . $row["status"] . "</b>" ;
-						if (isset($row["statusNotes"])) {
-							print "<br/><span style='font-size: 75%; font-style: italic'>" . $row["statusNotes"] . "</span>" ;
-						}
-					print "</td>" ;
-					print "<td>" ;
-						print $row["typeReference"] ;
-					print "</td>" ;
-					print "<td>" ;
-						print $row["type"] . "<br/>" ;
-						if ($row["title"]!="") {
-							print "<span style='font-size: 75%; font-style: italic'>" . $row["title"] . "</span>" ;
-						}
-					print "</td>" ;
-					print "<td>" ;
-						print "<a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . $_SESSION[$guid]["module"] . "/references_write_edit.php&higherEducationReferenceComponentID=" . $row["higherEducationReferenceComponentID"] . "'><img title='Edit' src='./themes/" . $_SESSION[$guid]["gibbonThemeName"] . "/img/config.png'/></a> " ;
-					print "</td>" ;
-				print "</tr>" ;
-			}
-		print "</table>" ;
-		
-		if ($result->rowCount()>$_SESSION[$guid]["pagination"]) {
-			printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]["pagination"], "bottom") ;
-		}
-	}
-}
-?>

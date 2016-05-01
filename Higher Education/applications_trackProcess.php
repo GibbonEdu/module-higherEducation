@@ -17,85 +17,76 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-include "../../functions.php" ;
-include "../../config.php" ;
+include '../../functions.php';
+include '../../config.php';
 
 //New PDO DB connection
 try {
-  	$connection2=new PDO("mysql:host=$databaseServer;dbname=$databaseName;charset=utf8", $databaseUsername, $databasePassword);
-	$connection2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$connection2->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-}
-catch(PDOException $e) {
-  echo $e->getMessage();
+    $connection2 = new PDO("mysql:host=$databaseServer;dbname=$databaseName;charset=utf8", $databaseUsername, $databasePassword);
+    $connection2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $connection2->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo $e->getMessage();
 }
 
-@session_start() ;
+@session_start();
 
 //Set timezone from session variable
-date_default_timezone_set($_SESSION[$guid]["timezone"]);
+date_default_timezone_set($_SESSION[$guid]['timezone']);
 
-$higherEducationApplicationID=$_GET["higherEducationApplicationID"] ;
-$URL=$_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_POST["address"]) . "/applications_track.php" ;
+$higherEducationApplicationID = $_GET['higherEducationApplicationID'];
+$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/applications_track.php';
 
-if (isActionAccessible($guid, $connection2, "/modules/Higher Education/applications_track.php")==FALSE) {
-	//Fail 0
-	$URL=$URL . "&updateReturn=fail0" ;
-	header("Location: {$URL}");
+if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_track.php') == false) {
+    //Fail 0
+    $URL = $URL.'&return=error0';
+    header("Location: {$URL}");
+} else {
+    //Validate Inputs
+    $applying = $_POST['applying'];
+    if ($applying == 'Y') {
+        $careerInterests = $_POST['careerInterests'];
+        $coursesMajors = $_POST['coursesMajors'];
+        $otherScores = $_POST['otherScores'];
+        $personalStatement = $_POST['personalStatement'];
+        $meetingNotes = $_POST['meetingNotes'];
+    } else {
+        $careerInterests = '';
+        $coursesMajors = '';
+        $otherScores = '';
+        $personalStatement = '';
+        $meetingNotes = '';
+    }
+
+    if ($higherEducationApplicationID == '') {
+        //Insert new record
+        try {
+            $data = array('gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID'], 'applying' => $applying, 'careerInterests' => $careerInterests, 'coursesMajors' => $coursesMajors, 'otherScores' => $otherScores, 'personalStatement' => $personalStatement, 'meetingNotes' => $meetingNotes);
+            $sql = 'INSERT INTO higherEducationApplication SET gibbonPersonID=:gibbonPersonID, applying=:applying, careerInterests=:careerInterests, coursesMajors=:coursesMajors, otherScores=:otherScores, personalStatement=:personalStatement, meetingNotes=:meetingNotes';
+            $result = $connection2->prepare($sql);
+            $result->execute($data);
+        } catch (PDOException $e) {
+            //Fail 2
+            $URL = $URL.'&return=error2';
+            header("Location: {$URL}");
+            exit();
+        }
+    } else {
+        //Update existing record
+        try {
+            $data = array('applying' => $applying, 'careerInterests' => $careerInterests, 'coursesMajors' => $coursesMajors, 'otherScores' => $otherScores, 'personalStatement' => $personalStatement, 'meetingNotes' => $meetingNotes, 'higherEducationApplicationID' => $higherEducationApplicationID);
+            $sql = 'UPDATE higherEducationApplication SET applying=:applying, careerInterests=:careerInterests, coursesMajors=:coursesMajors, otherScores=:otherScores, personalStatement=:personalStatement, meetingNotes=:meetingNotes WHERE higherEducationApplicationID=:higherEducationApplicationID';
+            $result = $connection2->prepare($sql);
+            $result->execute($data);
+        } catch (PDOException $e) {
+            //Fail 2
+            $URL = $URL.'&return=error2';
+            header("Location: {$URL}");
+            exit();
+        }
+    }
+
+    //Success 0
+    $URL = $URL.'&return=success0';
+    header("Location: {$URL}");
 }
-else {
-	//Validate Inputs
-	$applying=$_POST["applying"] ;
-	if ($applying=="Y") {
-		$careerInterests=$_POST["careerInterests"] ;
-		$coursesMajors=$_POST["coursesMajors"] ;
-		$otherScores=$_POST["otherScores"] ;
-		$personalStatement=$_POST["personalStatement"] ;
-		$meetingNotes=$_POST["meetingNotes"] ;
-	}
-	else {
-		$careerInterests="" ;
-		$coursesMajors="" ;
-		$otherScores="" ;
-		$personalStatement="" ;
-		$meetingNotes="" ;
-	}
-	
-	if ($higherEducationApplicationID=="") {
-		//Insert new record
-		try {
-			$data=array("gibbonPersonID"=>$_SESSION[$guid]["gibbonPersonID"], "applying"=>$applying, "careerInterests"=>$careerInterests, "coursesMajors"=>$coursesMajors, "otherScores"=>$otherScores, "personalStatement"=>$personalStatement, "meetingNotes"=>$meetingNotes); 
-			$sql="INSERT INTO higherEducationApplication SET gibbonPersonID=:gibbonPersonID, applying=:applying, careerInterests=:careerInterests, coursesMajors=:coursesMajors, otherScores=:otherScores, personalStatement=:personalStatement, meetingNotes=:meetingNotes" ;
-			$result=$connection2->prepare($sql);
-			$result->execute($data);
-		}
-		catch(PDOException $e) { 
-			//Fail 2
-			$URL=$URL . "&updateReturn=fail2" ;
-			header("Location: {$URL}");
-			exit() ;
-		}
-	}
-	else {
-		//Update existing record
-		try {
-			$data=array("applying"=>$applying, "careerInterests"=>$careerInterests, "coursesMajors"=>$coursesMajors, "otherScores"=>$otherScores, "personalStatement"=>$personalStatement, "meetingNotes"=>$meetingNotes, "higherEducationApplicationID"=>$higherEducationApplicationID); 
-			$sql="UPDATE higherEducationApplication SET applying=:applying, careerInterests=:careerInterests, coursesMajors=:coursesMajors, otherScores=:otherScores, personalStatement=:personalStatement, meetingNotes=:meetingNotes WHERE higherEducationApplicationID=:higherEducationApplicationID" ;
-			$result=$connection2->prepare($sql);
-			$result->execute($data);
-		}
-		catch(PDOException $e) { 
-			//Fail 2
-			print $e->getMessage() ;
-			exit() ;
-			$URL=$URL . "&updateReturn=fail2" ;
-			header("Location: {$URL}");
-			exit() ;
-		}
-	}
-			
-	//Success 0
-	$URL=$URL . "&updateReturn=success0" ;
-	header("Location: {$URL}");
-}
-?>

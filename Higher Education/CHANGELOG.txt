@@ -1,8 +1,14 @@
 CHANGELOG
 =========
+v1.0.14
+-------
+Beautified PHP code
+Improved error handling
+Edit link added to add return
+
 v1.0.13
 -------
-Gibbon Core v12 & PHP 7 Compatibility 
+Gibbon Core v12 & PHP 7 Compatibility
 
 v1.0.12
 -------
@@ -42,11 +48,11 @@ Fixed application tracking update issue.
 
 v1.0.03
 -------
-Fixed textarea width issue. 
+Fixed textarea width issue.
 
 v1.0.02
 -------
-Brought module up to visual refresh standard of Gibbon Core v7. 
+Brought module up to visual refresh standard of Gibbon Core v7.
 
 v1.0.01
 -------
@@ -65,6 +71,3 @@ Ability to manage lists of majors and institutions
 Ability to manage students and staff
 Ability for students to enter application information
 Ability for coordinators/advisors to view student application information
-
-	
-

@@ -17,63 +17,59 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@session_start() ;
+@session_start();
 
 //Module includes
-include "./modules/" . $_SESSION[$guid]["module"] . "/moduleFunctions.php" ;
+include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, "/modules/Higher Education/references_manage_edit.php")==FALSE) {
-	//Acess denied
-	print "<div class='error'>" ;
-		print "You do not have access to this action." ;
-	print "</div>" ;
-}
-else {
-	$role=staffHigherEducationRole($_SESSION[$guid]["gibbonPersonID"], $connection2) ;
-	if ($role!="Coordinator") {
-		print "<div class='error'>" ;
-			print "You do not have access to this action." ;
-		print "</div>" ;
-	}
-	else {
-		$higherEducationReferenceID=$_GET["higherEducationReferenceID"];
-	
-		//Proceed!
-		print "<h2 class='top'>" ;
-		print "Higher Education Reference" ;
-		print "</h2>" ;
-	
-		if ($higherEducationReferenceID!="") {
-			try {
-				$data=array("higherEducationReferenceID"=>$higherEducationReferenceID);  
-				$sql="SELECT preferredName, surname, higherEducationReference.* FROM higherEducationReference JOIN gibbonPerson ON (higherEducationReference.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReferenceID=:higherEducationReferenceID AND gibbonPerson.status='Full'" ; 
-				$result=$connection2->prepare($sql);
-				$result->execute($data); 
-			}
-			catch(PDOException $e) { 
-				print "<div class='error'>" . $e->getMessage() . "</div>" ; 
-			}
-	
-			if ($result->rowCount()!=1) {
-				print "<div class='error'>" ;
-					print "The selected reference does not exist." ;
-				print "</div>" ;
-			}
-			else {
-				//Let's go!
-				$row=$result->fetch() ;
-				
-				print "<div class='linkTop'>" ;
-				print "<a href='javascript:window.print()'><img title='Print' src='./themes/" . $_SESSION[$guid]["gibbonThemeName"] . "/img/print.png'/></a>" ;
-				print "</div>" ;
-				?>
+if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage_edit.php') == false) {
+    //Acess denied
+    echo "<div class='error'>";
+    echo 'You do not have access to this action.';
+    echo '</div>';
+} else {
+    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    if ($role != 'Coordinator') {
+        echo "<div class='error'>";
+        echo 'You do not have access to this action.';
+        echo '</div>';
+    } else {
+        $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
+
+        //Proceed!
+        echo "<h2 class='top'>";
+        echo 'Higher Education Reference';
+        echo '</h2>';
+
+        if ($higherEducationReferenceID != '') {
+            try {
+                $data = array('higherEducationReferenceID' => $higherEducationReferenceID);
+                $sql = "SELECT preferredName, surname, higherEducationReference.* FROM higherEducationReference JOIN gibbonPerson ON (higherEducationReference.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReferenceID=:higherEducationReferenceID AND gibbonPerson.status='Full'";
+                $result = $connection2->prepare($sql);
+                $result->execute($data);
+            } catch (PDOException $e) {
+                echo "<div class='error'>".$e->getMessage().'</div>';
+            }
+
+            if ($result->rowCount() != 1) {
+                echo "<div class='error'>";
+                echo 'The selected reference does not exist.';
+                echo '</div>';
+            } else {
+                //Let's go!
+                $row = $result->fetch();
+
+                echo "<div class='linkTop'>";
+                echo "<a href='javascript:window.print()'><img title='Print' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/print.png'/></a>";
+                echo '</div>';
+                ?>
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 					<tr>
 						<td> 
 							<b>Student</b><br/>
 						</td>
 						<td class="right">
-							<input readonly name="student" id="student" maxlength=255 value="<?php print formatName("", htmlPrep($row["preferredName"]), htmlPrep($row["surname"]), "Student", false, false) ?>" type="text" style="width: 300px">
+							<input readonly name="student" id="student" maxlength=255 value="<?php echo formatName('', htmlPrep($row['preferredName']), htmlPrep($row['surname']), 'Student', false, false) ?>" type="text" style="width: 300px">
 						</td>
 					</tr>
 					<tr>
@@ -81,52 +77,50 @@ else {
 							<b>Reference Type</b><br/>
 						</td>
 						<td class="right">
-							<input readonly name="type" id="type" maxlength=255 value="<?php print $row["type"] ?>" type="text" style="width: 300px">
+							<input readonly name="type" id="type" maxlength=255 value="<?php echo $row['type'] ?>" type="text" style="width: 300px">
 						</td>
 					</tr>
 					<?php
-					try {
-						$dataContributions=array("higherEducationReferenceID"=>$row["higherEducationReferenceID"]);  
-						$sqlContributions="SELECT higherEducationReferenceComponent.*, preferredName, surname FROM higherEducationReferenceComponent JOIN gibbonPerson ON (higherEducationReferenceComponent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReferenceID=:higherEducationReferenceID ORDER BY title" ; 
-						$resultContributions=$connection2->prepare($sqlContributions);
-						$resultContributions->execute($dataContributions); 
-					}
-					catch(PDOException $e) { }
-					if ($resultContributions->rowCount()<1) {
-						print "<tr>" ;
-							print "<td colspan=2>" ;
-								print "<i>Error: no referees requested, or a system error.</i>" ;
-							print "</td>" ;
-						print "</tr>" ;
-					}
-					else {
-						while ($rowContributions=$resultContributions->fetch()) {
-							print "<tr>" ;
-								print "<td colspan=2>" ;
-									print "<h4>" ;
-										if ($rowContributions["title"]=="") {
-											print $rowContributions["type"] . " Comment" ;
-											print "<span style='font-size: 75%; font-style: italic'>" ;
-												print " . by " . formatName("", $rowContributions["preferredName"], $rowContributions["surname"], "Staff", false, true) ;
-											print "</span>" ;
-										}
-										else {
-											print $rowContributions["title"] ;
-											print "<span style='font-size: 75%; font-style: italic'>" ;
-												print " . " . $rowContributions["type"] . " comment by " . formatName("", $rowContributions["preferredName"], $rowContributions["surname"], "Staff", false, true) ;
-											print "</span>" ;
-										}
-									print "</h4>" ;
-									print "<p>" ;
-										print $rowContributions["body"] ;
-									print "</p>" ;
-								print "</td>" ;
-							print "</tr>" ;
-						}
-					}
-				print "</table>" ;
-			}			
-		}
-	}
+                    try {
+                        $dataContributions = array('higherEducationReferenceID' => $row['higherEducationReferenceID']);
+                        $sqlContributions = 'SELECT higherEducationReferenceComponent.*, preferredName, surname FROM higherEducationReferenceComponent JOIN gibbonPerson ON (higherEducationReferenceComponent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReferenceID=:higherEducationReferenceID ORDER BY title';
+                        $resultContributions = $connection2->prepare($sqlContributions);
+                        $resultContributions->execute($dataContributions);
+                    } catch (PDOException $e) {
+                    }
+                if ($resultContributions->rowCount() < 1) {
+                    echo '<tr>';
+                    echo '<td colspan=2>';
+                    echo '<i>Error: no referees requested, or a system error.</i>';
+                    echo '</td>';
+                    echo '</tr>';
+                } else {
+                    while ($rowContributions = $resultContributions->fetch()) {
+                        echo '<tr>';
+                        echo '<td colspan=2>';
+                        echo '<h4>';
+                        if ($rowContributions['title'] == '') {
+                            echo $rowContributions['type'].' Comment';
+                            echo "<span style='font-size: 75%; font-style: italic'>";
+                            echo ' . by '.formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
+                            echo '</span>';
+                        } else {
+                            echo $rowContributions['title'];
+                            echo "<span style='font-size: 75%; font-style: italic'>";
+                            echo ' . '.$rowContributions['type'].' comment by '.formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
+                            echo '</span>';
+                        }
+                        echo '</h4>';
+                        echo '<p>';
+                        echo $rowContributions['body'];
+                        echo '</p>';
+                        echo '</td>';
+                        echo '</tr>';
+                    }
+                }
+                echo '</table>';
+            }
+        }
+    }
 }
 ?>

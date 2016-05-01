@@ -17,27 +17,25 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@session_start() ;
+@session_start();
 
 //Module includes
-include "./modules/" . $_SESSION[$guid]["module"] . "/moduleFunctions.php" ;
+include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 
-if (isModuleAccessible($guid, $connection2)==FALSE) {
-	//Acess denied
-	print "<div class='error'>" ;
-		print "You do not have access to this action." ;
-	print "</div>" ;
+if (isModuleAccessible($guid, $connection2) == false) {
+    //Acess denied
+    echo "<div class='error'>";
+    echo 'You do not have access to this action.';
+    echo '</div>';
+} else {
+    echo "<div class='trail'>";
+    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > </div><div class='trailEnd'>Welcome</div>";
+    echo '</div>';
+
+    echo '<h2>';
+    echo 'Higher Education';
+    echo '</h1>';
+    echo '<p>';
+    echo 'This module allows students to track their progress through the higher education application process, whilst keeping relevant teachers up to date on their progress.<br/>';
+    echo '</p>';
 }
-else {	
-	print "<div class='trail'>" ;
-	print "<div class='trailHead'><a href='" . $_SESSION[$guid]["absoluteURL"] . "'>Home</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/" . getModuleEntry($_GET["q"], $connection2, $guid) . "'>" . getModuleName($_GET["q"]) . "</a> > </div><div class='trailEnd'>Welcome</div>" ;
-	print "</div>" ;
-	
-	print "<h2>" ;
-		print "Higher Education" ;
-	print "</h1>" ;
-	print "<p>" ;
-		print "This module allows students to track their progress through the higher education application process, whilst keeping relevant teachers up to date on their progress.<br/>" ;
-	print "</p>" ;
-}	
-?>

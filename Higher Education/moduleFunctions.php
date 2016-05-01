@@ -17,43 +17,44 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function staffHigherEducationRole($gibbonPersonID, $connection2) {
-	$output=FALSE ;
-	
-	try {
-		$data=array("gibbonPersonID"=>$gibbonPersonID);  
-		$sql="SELECT * FROM higherEducationStaff WHERE gibbonPersonID=:gibbonPersonID" ;
-		$result=$connection2->prepare($sql);
-		$result->execute($data); 
-	}
-	catch(PDOException $e) { }
-	
-	if ($result->rowCount()==1) {
-		$row=$result->fetch() ;
-		if ($row["role"]=="Coordinator" OR $row["role"]=="Advisor") {
-			$output=$row["role"] ;
-		}
-	}
-	return $output ;
+function staffHigherEducationRole($gibbonPersonID, $connection2)
+{
+    $output = false;
+
+    try {
+        $data = array('gibbonPersonID' => $gibbonPersonID);
+        $sql = 'SELECT * FROM higherEducationStaff WHERE gibbonPersonID=:gibbonPersonID';
+        $result = $connection2->prepare($sql);
+        $result->execute($data);
+    } catch (PDOException $e) {
+    }
+
+    if ($result->rowCount() == 1) {
+        $row = $result->fetch();
+        if ($row['role'] == 'Coordinator' or $row['role'] == 'Advisor') {
+            $output = $row['role'];
+        }
+    }
+
+    return $output;
 }
 
 //Returns true if student is enrolled
-function studentEnrolment($gibbonPersonID, $connection2) {
-	$output=FALSE ;
-	
-	try {
-		$data=array("gibbonPersonID"=>$gibbonPersonID);  
-		$sql="SELECT * FROM higherEducationStudent WHERE gibbonPersonID=:gibbonPersonID" ;
-		$result=$connection2->prepare($sql);
-		$result->execute($data); 
-	}
-	catch(PDOException $e) { }
-	
-	if ($result->rowCount()==1) {
-		$output=TRUE ;
-	}
-	
-	return $output ;
-}
+function studentEnrolment($gibbonPersonID, $connection2)
+{
+    $output = false;
 
-?>
+    try {
+        $data = array('gibbonPersonID' => $gibbonPersonID);
+        $sql = 'SELECT * FROM higherEducationStudent WHERE gibbonPersonID=:gibbonPersonID';
+        $result = $connection2->prepare($sql);
+        $result->execute($data);
+    } catch (PDOException $e) {
+    }
+
+    if ($result->rowCount() == 1) {
+        $output = true;
+    }
+
+    return $output;
+}

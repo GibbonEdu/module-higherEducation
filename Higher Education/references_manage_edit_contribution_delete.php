@@ -17,70 +17,67 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@session_start() ;
+@session_start();
 
-if (isActionAccessible($guid, $connection2, "/modules/Higher Education/references_manage_edit.php")==FALSE) {
-	//Acess denied
-	print "<div class='error'>" ;
-		print "You do not have access to this action." ;
-	print "</div>" ;
-}
-else {
-	//Check if school year specified
-	$gibbonSchoolYearID=$_GET["gibbonSchoolYearID"];
-	$higherEducationReferenceComponentID=$_GET["higherEducationReferenceComponentID"] ;
-	$higherEducationReferenceID=$_GET["higherEducationReferenceID"] ;
-	if ($higherEducationReferenceComponentID=="" OR $higherEducationReferenceID=="" OR $gibbonSchoolYearID=="") {
-		print "<div class='error'>" ;
-			print "You have not specified a reference or component." ;
-		print "</div>" ;
-	}
-	else {
-		try {
-			$data=array("higherEducationReferenceComponentID"=>$higherEducationReferenceComponentID); 
-			$sql="SELECT * FROM higherEducationReferenceComponent WHERE higherEducationReferenceComponentID=:higherEducationReferenceComponentID" ;
-			$result=$connection2->prepare($sql);
-			$result->execute($data);
-		}
-		catch(PDOException $e) { 
-			print "<div class='error'>" . $e->getMessage() . "</div>" ; 
-		}
+if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage_edit.php') == false) {
+    //Acess denied
+    echo "<div class='error'>";
+    echo 'You do not have access to this action.';
+    echo '</div>';
+} else {
+    //Check if school year specified
+    $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
+    $higherEducationReferenceComponentID = $_GET['higherEducationReferenceComponentID'];
+    $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
+    if ($higherEducationReferenceComponentID == '' or $higherEducationReferenceID == '' or $gibbonSchoolYearID == '') {
+        echo "<div class='error'>";
+        echo 'You have not specified a reference or component.';
+        echo '</div>';
+    } else {
+        try {
+            $data = array('higherEducationReferenceComponentID' => $higherEducationReferenceComponentID);
+            $sql = 'SELECT * FROM higherEducationReferenceComponent WHERE higherEducationReferenceComponentID=:higherEducationReferenceComponentID';
+            $result = $connection2->prepare($sql);
+            $result->execute($data);
+        } catch (PDOException $e) {
+            echo "<div class='error'>".$e->getMessage().'</div>';
+        }
 
-		if ($result->rowCount()!=1) {
-			print "<div class='error'>" ;
-				print "The specified reference component cannot be found." ;
-			print "</div>" ;
-		}
-		else {
-			//Let's go!
-			$row=$result->fetch() ;
-			
-			print "<div class='trail'>" ;
-			print "<div class='trailHead'><a href='" . $_SESSION[$guid]["absoluteURL"] . "'>Home</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/" . getModuleEntry($_GET["q"], $connection2, $guid) . "'>" . getModuleName($_GET["q"]) . "</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/references_manage.php&gibbonSchoolYearID=$gibbonSchoolYearID'>Manage References</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/references_manage_edit.php&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID'>Edit Reference</a> > </div><div class='trailEnd'>Delete Contribution</div>" ;
-			print "</div>" ;
-			
-			if (isset($_GET["deleteReturn"])) { $deleteReturn=$_GET["deleteReturn"] ; } else { $deleteReturn="" ; }
-			$deleteReturnMessage ="" ;
-			$class="error" ;
-			if (!($deleteReturn=="")) {
-				if ($deleteReturn=="fail0") {
-					$deleteReturnMessage ="Update failed because you do not have access to this action." ;	
-				}
-				else if ($deleteReturn=="fail1") {
-					$deleteReturnMessage ="Update failed because a required parameter was not set." ;	
-				}
-				else if ($deleteReturn=="fail2") {
-					$deleteReturnMessage ="Update failed due to a database error." ;	
-				}
-				else if ($deleteReturn=="fail3") {
-					$deleteReturnMessage ="Update failed because your inputs were invalid." ;	
-				}
-				print "<div class='$class'>" ;
-					print $deleteReturnMessage;
-				print "</div>" ;
-			} 
-			?>
-			<form method="post" action="<?php print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/references_manage_edit_contribution_deleteProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
+        if ($result->rowCount() != 1) {
+            echo "<div class='error'>";
+            echo 'The specified reference component cannot be found.';
+            echo '</div>';
+        } else {
+            //Let's go!
+            $row = $result->fetch();
+
+            echo "<div class='trail'>";
+            echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/references_manage.php&gibbonSchoolYearID=$gibbonSchoolYearID'>Manage References</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/references_manage_edit.php&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID'>Edit Reference</a> > </div><div class='trailEnd'>Delete Contribution</div>";
+            echo '</div>';
+
+            if (isset($_GET['deleteReturn'])) {
+                $deleteReturn = $_GET['deleteReturn'];
+            } else {
+                $deleteReturn = '';
+            }
+            $deleteReturnMessage = '';
+            $class = 'error';
+            if (!($deleteReturn == '')) {
+                if ($deleteReturn == 'fail0') {
+                    $deleteReturnMessage = 'Update failed because you do not have access to this action.';
+                } elseif ($deleteReturn == 'fail1') {
+                    $deleteReturnMessage = 'Update failed because a required parameter was not set.';
+                } elseif ($deleteReturn == 'fail2') {
+                    $deleteReturnMessage = 'Update failed due to a database error.';
+                } elseif ($deleteReturn == 'fail3') {
+                    $deleteReturnMessage = 'Update failed because your inputs were invalid.';
+                }
+                echo "<div class='$class'>";
+                echo $deleteReturnMessage;
+                echo '</div>';
+            }
+            ?>
+			<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/references_manage_edit_contribution_deleteProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 					<tr>
 						<td> 
@@ -93,7 +90,7 @@ else {
 					</tr>
 					<tr>
 						<td> 
-							<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
+							<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
 							<input type="submit" value="Yes">
 						</td>
 						<td class="right">
@@ -103,7 +100,8 @@ else {
 				</table>
 			</form>
 			<?php
-		}
-	}
+
+        }
+    }
 }
 ?>

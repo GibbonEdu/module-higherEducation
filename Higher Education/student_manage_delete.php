@@ -17,97 +17,77 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-@session_start() ;
+@session_start();
 
 //Module includes
-include "./modules/" . $_SESSION[$guid]["module"] . "/moduleFunctions.php" ;
+include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, "/modules/Higher Education/student_manage_delete.php")==FALSE) {
+if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_manage_delete.php') == false) {
 
-	//Acess denied
-	print "<div class='error'>" ;
-		print "You do not have access to this action." ;
-	print "</div>" ;
-}
-else {
-	//Proceed!
-	print "<div class='trail'>" ;
-	print "<div class='trailHead'><a href='" . $_SESSION[$guid]["absoluteURL"] . "'>Home</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/" . getModuleEntry($_GET["q"], $connection2, $guid) . "'>" . getModuleName($_GET["q"]) . "</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/student_manage.php'>Student Enrolment</a> > </div><div class='trailEnd'>Delete Student Enrolment</div>" ;
-	print "</div>" ;
-	
-	if (isset($_GET["deleteReturn"])) { $deleteReturn=$_GET["deleteReturn"] ; } else { $deleteReturn="" ; }
-	$deleteReturnMessage ="" ;
-	$class="error" ;
-	if (!($deleteReturn=="")) {
-		if ($deleteReturn=="fail0") {
-			$deleteReturnMessage ="Update failed because you do not have access to this action." ;	
-		}
-		else if ($deleteReturn=="fail1") {
-			$deleteReturnMessage ="Update failed because a required parameter was not set." ;	
-		}
-		else if ($deleteReturn=="fail2") {
-			$deleteReturnMessage ="Update failed due to a database error." ;	
-		}
-		else if ($deleteReturn=="fail3") {
-			$deleteReturnMessage ="Update failed because your inputs were invalid." ;	
-		}
-		print "<div class='$class'>" ;
-			print $deleteReturnMessage;
-		print "</div>" ;
-	} 
-	
-	//Check if school year specified
-	$higherEducationStudentID=$_GET["higherEducationStudentID"];
-	if ($higherEducationStudentID=="") {
-		print "<div class='error'>" ;
-			print "You have not specified a student member." ;
-		print "</div>" ;
-	}
-	else {
-		try {
-			$data=array("gibbonSchoolYearID"=>$_SESSION[$guid]["gibbonSchoolYearID"], "higherEducationStudentID"=>$higherEducationStudentID);  
-			$sql="SELECT higherEducationStudentID, surname, preferredName, gibbonYearGroup.nameShort AS yearGroup, gibbonRollGroup.nameShort AS rollGroup FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonRollGroup ON (gibbonStudentEnrolment.gibbonRollGroupID=gibbonRollGroup.gibbonRollGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND higherEducationStudentID=:higherEducationStudentID" ; 
-			$result=$connection2->prepare($sql);
-			$result->execute($data); 
-		}
-		catch(PDOException $e) { 
-			print "<div class='error'>" . $e->getMessage() . "</div>" ; 
-		}
+    //Acess denied
+    echo "<div class='error'>";
+    echo 'You do not have access to this action.';
+    echo '</div>';
+} else {
+    //Proceed!
+    echo "<div class='trail'>";
+    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/student_manage.php'>Student Enrolment</a> > </div><div class='trailEnd'>Delete Student Enrolment</div>";
+    echo '</div>';
 
-		if ($result->rowCount()!=1) {
-			print "<div class='error'>" ;
-				print "The selected student member does not exist." ;
-			print "</div>" ;
-		}
-		else {
-			//Let's go!
-			$row=$result->fetch() ;
-			?>
-			<form method="post" action="<?php print $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/student_manage_deleteProcess.php?higherEducationStudentID=$higherEducationStudentID" ?>">
-				<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
+    if (isset($_GET['return'])) {
+        returnProcess($guid, $_GET['return'], null, null);
+    }
+
+    //Check if school year specified
+    $higherEducationStudentID = $_GET['higherEducationStudentID'];
+    if ($higherEducationStudentID == '') {
+        echo "<div class='error'>";
+        echo 'You have not specified a student member.';
+        echo '</div>';
+    } else {
+        try {
+            $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID'], 'higherEducationStudentID' => $higherEducationStudentID);
+            $sql = "SELECT higherEducationStudentID, surname, preferredName, gibbonYearGroup.nameShort AS yearGroup, gibbonRollGroup.nameShort AS rollGroup FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonRollGroup ON (gibbonStudentEnrolment.gibbonRollGroupID=gibbonRollGroup.gibbonRollGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND higherEducationStudentID=:higherEducationStudentID";
+            $result = $connection2->prepare($sql);
+            $result->execute($data);
+        } catch (PDOException $e) {
+            echo "<div class='error'>".$e->getMessage().'</div>';
+        }
+
+        if ($result->rowCount() != 1) {
+            echo "<div class='error'>";
+            echo 'The selected student member does not exist.';
+            echo '</div>';
+        } else {
+            //Let's go!
+            $row = $result->fetch();
+            ?>
+			<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/student_manage_deleteProcess.php?higherEducationStudentID=$higherEducationStudentID" ?>">
+				<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 					<tr>
-						<td> 
-							<b>Are you sure you want to delete "<?php print formatName("", $row["preferredName"], $row["surname"], "Student", true, true) ?>" from the Higher Education programme?</b><br/>
+						<td>
+							<b>Are you sure you want to delete "<?php echo formatName('', $row['preferredName'], $row['surname'], 'Student', true, true) ?>" from the Higher Education programme?</b><br/>
 							<span style="font-size: 90%; color: #cc0000"><i>This operation cannot be undone, and may lead to loss of vital data in your system.<br/>PROCEED WITH CAUTION!</i></span>
 						</td>
 						<td class="right">
-							
+
 						</td>
 					</tr>
 					<tr>
-						<td> 
-							<input name="higherEducationStudentID" id="higherEducationStudentID" value="<?php print $higherEducationStudentID ?>" type="hidden">
-							<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
+						<td>
+							<input name="higherEducationStudentID" id="higherEducationStudentID" value="<?php echo $higherEducationStudentID ?>" type="hidden">
+							<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
 							<input type="submit" value="Yes">
 						</td>
 						<td class="right">
-							
+
 						</td>
 					</tr>
 				</table>
 			</form>
 			<?php
-		}
-	}	
+
+        }
+    }
 }
 ?>
