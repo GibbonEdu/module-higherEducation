@@ -45,8 +45,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     } catch (PDOException $e) {
     }
 
-    if ($result->rowCount() != 1) {
-        echo "<div class='error'>";
+    if ($result->rowCount() != 1) { echo "<div class='error'>";
         echo 'You have not been enrolled for higher education applications.';
         echo '</div>';
     } else {

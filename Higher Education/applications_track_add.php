@@ -43,8 +43,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     }
 
     //Check for student enrolment
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
-        echo "<div class='error'>";
+    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) { echo "<div class='error'>";
         echo 'You have not been enrolled for higher education applications.';
         echo '</div>';
     } else {
@@ -80,17 +79,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 							<select name="higherEducationInstitutionID" id="higherEducationInstitutionID" style="width: 302px">
 								<?php
                                 echo "<option value='Please select...'>Please select...</option>";
-            try {
-                $dataSelect = array();
-                $sqlSelect = "SELECT * FROM higherEducationInstitution WHERE active='Y' ORDER BY name";
-                $resultSelect = $connection2->prepare($sqlSelect);
-                $resultSelect->execute($dataSelect);
-            } catch (PDOException $e) {
-            }
-            while ($rowSelect = $resultSelect->fetch()) {
-                echo "<option value='".$rowSelect['higherEducationInstitutionID']."'>".htmlPrep($rowSelect['name']).' ('.htmlPrep($rowSelect['country']).')</option>';
-            }
-            ?>
+								try {
+									$dataSelect = array();
+									$sqlSelect = "SELECT * FROM higherEducationInstitution WHERE active='Y' ORDER BY name";
+									$resultSelect = $connection2->prepare($sqlSelect);
+									$resultSelect->execute($dataSelect);
+								} catch (PDOException $e) {
+								}
+								while ($rowSelect = $resultSelect->fetch()) {
+									echo "<option value='".$rowSelect['higherEducationInstitutionID']."'>".htmlPrep($rowSelect['name']).' ('.htmlPrep($rowSelect['country']).')</option>';
+								}
+								?>
 							</select>
 							<script type="text/javascript">
 								var higherEducationInstitutionID=new LiveValidation('higherEducationInstitutionID');
@@ -106,17 +105,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 							<select name="higherEducationMajorID" id="higherEducationMajorID" style="width: 302px">
 								<?php
                                 echo "<option value='Please select...'>Please select...</option>";
-            try {
-                $dataSelect = array();
-                $sqlSelect = "SELECT * FROM higherEducationMajor WHERE active='Y' ORDER BY name";
-                $resultSelect = $connection2->prepare($sqlSelect);
-                $resultSelect->execute($dataSelect);
-            } catch (PDOException $e) {
-            }
-            while ($rowSelect = $resultSelect->fetch()) {
-                echo "<option value='".$rowSelect['higherEducationMajorID']."'>".htmlPrep($rowSelect['name']).'</option>';
-            }
-            ?>
+								try {
+									$dataSelect = array();
+									$sqlSelect = "SELECT * FROM higherEducationMajor WHERE active='Y' ORDER BY name";
+									$resultSelect = $connection2->prepare($sqlSelect);
+									$resultSelect->execute($dataSelect);
+								} catch (PDOException $e) {
+								}
+								while ($rowSelect = $resultSelect->fetch()) {
+									echo "<option value='".$rowSelect['higherEducationMajorID']."'>".htmlPrep($rowSelect['name']).'</option>';
+								}
+								?>
 							</select>
 							<script type="text/javascript">
 								var higherEducationMajorID=new LiveValidation('higherEducationMajorID');
@@ -142,10 +141,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 							<select name="rank" id="rank" style="width: 302px">
 								<?php
                                 echo "<option value=''></option>";
-            for ($i = 1; $i < 11; ++$i) {
-                echo "<option value='$i'>$i</option>";
-            }
-            ?>
+								for ($i = 1; $i < 11; ++$i) {
+									echo "<option value='$i'>$i</option>";
+								}
+								?>
 							</select>
 						</td>
 					</tr>

@@ -29,8 +29,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
     $higherEducationReferenceComponentID = $_GET['higherEducationReferenceComponentID'];
     $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
-    if ($higherEducationReferenceComponentID == '' or $higherEducationReferenceID == '' or $gibbonSchoolYearID == '') {
-        echo "<div class='error'>";
+    if ($higherEducationReferenceComponentID == '' or $higherEducationReferenceID == '' or $gibbonSchoolYearID == '') { echo "<div class='error'>";
         echo 'You have not specified a grade scale or grade.';
         echo '</div>';
     } else {
@@ -90,9 +89,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             if ($row['refType'] == 'US Reference') {
                                 echo 'Maximum limit of 10,000 characters.';
                             } else {
-                                echo 'Maximum limit of 2,000 characters.';
-                            }
-            ?>
+                                echo 'Maximum limit of 2,000 characters.'; } ?>
 							</i></span><br/>
 							<textarea name="body" id="body" rows=20 style="width:738px; margin: 5px 0px 0px 0px"><?php echo $row['body'] ?></textarea>
 							<script type="text/javascript">
@@ -104,7 +101,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                                 } else {
                                     echo 'body.add( Validate.Length, { maximum: 2000 } );';
                                 }
-            ?>
+            					?>
 							 </script>
 						</td>
 					</tr>
@@ -114,14 +111,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 						</td>
 						<td class="right">
 							<select name="status" id="status" style="width: 302px">
-								<option <?php if ($row['status'] == 'In Progress') {
-    echo 'selected';
-}
-            ?> value='In Progress'>In Progress</option> ;
-								<option <?php if ($row['status'] == 'Complete') {
-    echo 'selected';
-}
-            ?> value='Complete'>Complete</option> ;
+								<option <?php if ($row['status'] == 'In Progress') { echo 'selected'; } ?> value='In Progress'>In Progress</option> ;
+								<option <?php if ($row['status'] == 'Complete') { echo 'selected'; } ?> value='Complete'>Complete</option> ;
 							</select>
 						</td>
 					</tr>

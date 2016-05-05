@@ -33,8 +33,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
     echo '</div>';
 
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
-    if ($role != 'Coordinator') {
-        echo "<div class='error'>";
+    if ($role != 'Coordinator') { echo "<div class='error'>";
         echo 'You do not have access to this action.';
         echo '</div>';
     } else {
@@ -111,9 +110,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
                     $rowNum = 'error';
                 }
 
-                    //COLOR ROW BY STATUS!
-                    echo "<tr class=$rowNum>";
-                echo '<td>';
+				//COLOR ROW BY STATUS!
+				echo "<tr class=$rowNum>";
+				echo '<td>';
                 echo $row['name'];
                 echo '</td>';
                 echo '<td>';

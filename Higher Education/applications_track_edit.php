@@ -38,8 +38,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     }
 
     //Check for student enrolment
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
-        echo "<div class='error'>";
+    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) { echo "<div class='error'>";
         echo 'You have not been enrolled for higher education applications.';
         echo '</div>';
     } else {
@@ -82,8 +81,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     echo '</div>';
                 } else {
                     //Let's go!
-                    $row = $result->fetch();
-                    ?>
+                    $row = $result->fetch(); ?>
 					<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/applications_track_editProcess.php?higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID" ?>">
 						<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 							<tr class='break'>
@@ -99,21 +97,21 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 									<select name="higherEducationInstitutionID" id="higherEducationInstitutionID" style="width: 302px">
 										<?php
                                         echo "<option value='Please select...'>Please select...</option>";
-                    try {
-                        $dataSelect = array();
-                        $sqlSelect = "SELECT * FROM higherEducationInstitution WHERE active='Y' ORDER BY name";
-                        $resultSelect = $connection2->prepare($sqlSelect);
-                        $resultSelect->execute($dataSelect);
-                    } catch (PDOException $e) {
-                    }
-                    while ($rowSelect = $resultSelect->fetch()) {
-                        $selected = '';
-                        if ($rowSelect['higherEducationInstitutionID'] == $row['higherEducationInstitutionID']) {
-                            $selected = 'selected';
-                        }
-                        echo "<option $selected value='".$rowSelect['higherEducationInstitutionID']."'>".htmlPrep($rowSelect['name']).' ('.htmlPrep($rowSelect['country']).')</option>';
-                    }
-                    ?>
+										try {
+											$dataSelect = array();
+											$sqlSelect = "SELECT * FROM higherEducationInstitution WHERE active='Y' ORDER BY name";
+											$resultSelect = $connection2->prepare($sqlSelect);
+											$resultSelect->execute($dataSelect);
+										} catch (PDOException $e) {
+										}
+										while ($rowSelect = $resultSelect->fetch()) {
+											$selected = '';
+											if ($rowSelect['higherEducationInstitutionID'] == $row['higherEducationInstitutionID']) {
+												$selected = 'selected';
+											}
+											echo "<option $selected value='".$rowSelect['higherEducationInstitutionID']."'>".htmlPrep($rowSelect['name']).' ('.htmlPrep($rowSelect['country']).')</option>';
+										}
+										?>
 									</select>
 									<script type="text/javascript">
 										var higherEducationInstitutionID=new LiveValidation('higherEducationInstitutionID');
@@ -129,21 +127,21 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 									<select name="higherEducationMajorID" id="higherEducationMajorID" style="width: 302px">
 										<?php
                                         echo "<option value='Please select...'>Please select...</option>";
-                    try {
-                        $dataSelect = array();
-                        $sqlSelect = "SELECT * FROM higherEducationMajor WHERE active='Y' ORDER BY name";
-                        $resultSelect = $connection2->prepare($sqlSelect);
-                        $resultSelect->execute($dataSelect);
-                    } catch (PDOException $e) {
-                    }
-                    while ($rowSelect = $resultSelect->fetch()) {
-                        $selected = '';
-                        if ($rowSelect['higherEducationMajorID'] == $row['higherEducationMajorID']) {
-                            $selected = 'selected';
-                        }
-                        echo "<option $selected value='".$rowSelect['higherEducationMajorID']."'>".htmlPrep($rowSelect['name']).'</option>';
-                    }
-                    ?>
+										try {
+											$dataSelect = array();
+											$sqlSelect = "SELECT * FROM higherEducationMajor WHERE active='Y' ORDER BY name";
+											$resultSelect = $connection2->prepare($sqlSelect);
+											$resultSelect->execute($dataSelect);
+										} catch (PDOException $e) {
+										}
+										while ($rowSelect = $resultSelect->fetch()) {
+											$selected = '';
+											if ($rowSelect['higherEducationMajorID'] == $row['higherEducationMajorID']) {
+												$selected = 'selected';
+											}
+											echo "<option $selected value='".$rowSelect['higherEducationMajorID']."'>".htmlPrep($rowSelect['name']).'</option>';
+										}
+										?>
 									</select>
 									<script type="text/javascript">
 										var higherEducationMajorID=new LiveValidation('higherEducationMajorID');
@@ -169,14 +167,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 									<select name="rank" id="rank" style="width: 302px">
 										<?php
                                         echo "<option value=''></option>";
-                    for ($i = 1; $i < 11; ++$i) {
-                        $selected = '';
-                        if ($i == $row['rank']) {
-                            $selected = 'selected';
-                        }
-                        echo "<option $selected value='$i'>$i</option>";
-                    }
-                    ?>
+										for ($i = 1; $i < 11; ++$i) {
+											$selected = '';
+											if ($i == $row['rank']) {
+												$selected = 'selected';
+											}
+											echo "<option $selected value='$i'>$i</option>";
+										}
+										?>
 									</select>
 								</td>
 							</tr>
@@ -187,26 +185,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 								</td>
 								<td class="right">
 									<select name="rating" id="rating" style="width: 302px">
-										<option <?php if ($row['rating'] == '') {
-    echo 'selected';
-}
-                    ?> value=""></option>
-										<option <?php if ($row['rating'] == 'High Reach') {
-    echo 'selected';
-}
-                    ?> value="High Reach">High Reach</option>
-										<option <?php if ($row['rating'] == 'Reach') {
-    echo 'selected';
-}
-                    ?> value="Reach">Reach</option>
-										<option <?php if ($row['rating'] == 'Mid') {
-    echo 'selected';
-}
-                    ?> value="Mid">Mid</option>
-										<option <?php if ($row['rating'] == 'Safe') {
-    echo 'selected';
-}
-                    ?> value="Safe">Safe</option>
+										<option <?php if ($row['rating'] == '') { echo 'selected'; } ?> value=""></option>
+										<option <?php if ($row['rating'] == 'High Reach') { echo 'selected'; } ?> value="High Reach">High Reach</option>
+										<option <?php if ($row['rating'] == 'Reach') { echo 'selected'; } ?> value="Reach">Reach</option>
+										<option <?php if ($row['rating'] == 'Mid') { echo 'selected'; } ?> value="Mid">Mid</option>
+										<option <?php if ($row['rating'] == 'Safe') { echo 'selected'; } ?> value="Safe">Safe</option>
 									</select>
 								</td>
 							</tr>
@@ -244,54 +227,18 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 								</td>
 								<td class="right">
 									<select name="status" id="status" style="width: 302px">
-										<option <?php if ($row['status'] == '') {
-    echo 'selected';
-}
-                    ?> value=""></option>
-										<option <?php if ($row['status'] == 'Not Yet Started') {
-    echo 'selected';
-}
-                    ?> value="Not Yet Started">Not Yet Started</option>
-										<option <?php if ($row['status'] == 'Researching') {
-    echo 'selected';
-}
-                    ?> value="Researching">Researching</option>
-										<option <?php if ($row['status'] == 'Started') {
-    echo 'selected';
-}
-                    ?> value="Started">Started</option>
-										<option <?php if ($row['status'] == 'Passed To Careers Office') {
-    echo 'selected';
-}
-                    ?> value="Passed To Careers Office">Passed To Careers Office</option>
-										<option <?php if ($row['status'] == 'Completed') {
-    echo 'selected';
-}
-                    ?> value="Completed">Completed</option>
-										<option <?php if ($row['status'] == 'Application Sent') {
-    echo 'selected';
-}
-                    ?> value="Application Sent">Application Sent</option>
-										<option <?php if ($row['status'] == 'Offer/Acceptance Received') {
-    echo 'selected';
-}
-                    ?> value="Offer/Acceptance Received">Offer/Acceptance Received</option>
-										<option <?php if ($row['status'] == 'Rejection Received') {
-    echo 'selected';
-}
-                    ?> value="Rejection Received">Rejection Received</option>
-										<option <?php if ($row['status'] == 'Offer Denied') {
-    echo 'selected';
-}
-                    ?> value="Offer Denied">Offer Denied</option>
-										<option <?php if ($row['status'] == 'Deposit Paid/Offer Accepted') {
-    echo 'selected';
-}
-                    ?> value="Deposit Paid/Offer Accepted">Deposit Paid/Offer Accepted</option>
-										<option <?php if ($row['status'] == 'Enrolling') {
-    echo 'selected';
-}
-                    ?> value="Enrolling">Enrolling</option>
+										<option <?php if ($row['status'] == '') { echo 'selected'; } ?> value=""></option>
+										<option <?php if ($row['status'] == 'Not Yet Started') { echo 'selected'; } ?> value="Not Yet Started">Not Yet Started</option>
+										<option <?php if ($row['status'] == 'Researching') { echo 'selected'; } ?> value="Researching">Researching</option>
+										<option <?php if ($row['status'] == 'Started') { echo 'selected'; } ?> value="Started">Started</option>
+										<option <?php if ($row['status'] == 'Passed To Careers Office') { echo 'selected'; } ?> value="Passed To Careers Office">Passed To Careers Office</option>
+										<option <?php if ($row['status'] == 'Completed') { echo 'selected'; } ?> value="Completed">Completed</option>
+										<option <?php if ($row['status'] == 'Application Sent') { echo 'selected'; } ?> value="Application Sent">Application Sent</option>
+										<option <?php if ($row['status'] == 'Offer/Acceptance Received') { echo 'selected'; } ?> value="Offer/Acceptance Received">Offer/Acceptance Received</option>
+										<option <?php if ($row['status'] == 'Rejection Received') { echo 'selected'; } ?> value="Rejection Received">Rejection Received</option>
+										<option <?php if ($row['status'] == 'Offer Denied') { echo 'selected'; } ?> value="Offer Denied">Offer Denied</option>
+										<option <?php if ($row['status'] == 'Deposit Paid/Offer Accepted') { echo 'selected'; } ?> value="Deposit Paid/Offer Accepted">Deposit Paid/Offer Accepted</option>
+										<option <?php if ($row['status'] == 'Enrolling') { echo 'selected'; } ?> value="Enrolling">Enrolling</option>
 									</select>
 								</td>
 							</tr>
@@ -302,26 +249,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 								</td>
 								<td class="right">
 									<select name="offer" id="offer" style="width: 302px">
-										<option <?php if ($row['offer'] == '') {
-    echo 'selected';
-}
-                    ?> value=""></option>
-										<option <?php if ($row['offer'] == 'First Choice') {
-    echo 'selected';
-}
-                    ?> value="First Choice">Yes - First Choice</option>
-										<option <?php if ($row['offer'] == 'Backup') {
-    echo 'selected';
-}
-                    ?> value="Backup">Yes - Backup Choice</option>
-										<option <?php if ($row['offer'] == 'Y') {
-    echo 'selected';
-}
-                    ?> value="Y">Yes - Other</option>
-										<option <?php if ($row['offer'] == 'N') {
-    echo 'selected';
-}
-                    ?> value="N">No</option>
+										<option <?php if ($row['offer'] == '') { echo 'selected'; } ?> value=""></option>
+										<option <?php if ($row['offer'] == 'First Choice') { echo 'selected'; } ?> value="First Choice">Yes - First Choice</option>
+										<option <?php if ($row['offer'] == 'Backup') { echo 'selected'; } ?> value="Backup">Yes - Backup Choice</option>
+										<option <?php if ($row['offer'] == 'Y') { echo 'selected'; } ?> value="Y">Yes - Other</option>
+										<option <?php if ($row['offer'] == 'N') { echo 'selected'; } ?> value="N">No</option>
 									</select>
 								</td>
 							</tr>

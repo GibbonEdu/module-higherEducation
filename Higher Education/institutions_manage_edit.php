@@ -35,8 +35,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
     echo '</div>';
 
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
-    if ($role != 'Coordinator') {
-        echo "<div class='error'>";
+    if ($role != 'Coordinator') { echo "<div class='error'>";
         echo 'You do not have access to this action.';
         echo '</div>';
     } else {
@@ -94,21 +93,21 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
 								<select name="country" id="country" style="width: 302px">
 									<?php
                                     echo "<option value='Please select...'>Please select...</option>";
-                try {
-                    $dataSelect = array();
-                    $sqlSelect = 'SELECT printable_name FROM gibbonCountry ORDER BY printable_name';
-                    $resultSelect = $connection2->prepare($sqlSelect);
-                    $resultSelect->execute($dataSelect);
-                } catch (PDOException $e) {
-                }
-                while ($rowSelect = $resultSelect->fetch()) {
-                    $selected = '';
-                    if ($row['country'] == $rowSelect['printable_name']) {
-                        $selected = 'selected';
-                    }
-                    echo "<option $selected value='".$rowSelect['printable_name']."'>".htmlPrep($rowSelect['printable_name']).'</option>';
-                }
-                ?>
+									try {
+										$dataSelect = array();
+										$sqlSelect = 'SELECT printable_name FROM gibbonCountry ORDER BY printable_name';
+										$resultSelect = $connection2->prepare($sqlSelect);
+										$resultSelect->execute($dataSelect);
+									} catch (PDOException $e) {
+									}
+									while ($rowSelect = $resultSelect->fetch()) {
+										$selected = '';
+										if ($row['country'] == $rowSelect['printable_name']) {
+											$selected = 'selected';
+										}
+										echo "<option $selected value='".$rowSelect['printable_name']."'>".htmlPrep($rowSelect['printable_name']).'</option>';
+									}
+									?>
 								</select>
 								<script type="text/javascript">
 									var country=new LiveValidation('country');
@@ -122,14 +121,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
 							</td>
 							<td class="right">
 								<select name="active" id="active" style="width: 302px">
-									<option <?php if ($row['active'] == 'Y') {
-    echo ' selected ';
-}
-                ?>value="Y">Y</option>
-									<option <?php if ($row['active'] == 'N') {
-    echo ' selected ';
-}
-                ?>value="N">N</option>
+									<option <?php if ($row['active'] == 'Y') { echo ' selected '; } ?>value="Y">Y</option>
+									<option <?php if ($row['active'] == 'N') { echo ' selected '; } ?>value="N">N</option>
 								</select>
 							</td>
 						</tr>

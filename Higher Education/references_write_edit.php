@@ -39,8 +39,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 
     //Check if school year specified
     $higherEducationReferenceComponentID = $_GET['higherEducationReferenceComponentID'];
-    if ($higherEducationReferenceComponentID == '') {
-        echo "<div class='error'>";
+    if ($higherEducationReferenceComponentID == '') { echo "<div class='error'>";
         echo 'You have not specified a reference.';
         echo '</div>';
     } else {
@@ -115,25 +114,25 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 							<a target='_blank' href='<?php echo $_SESSION[$guid]['absoluteURL'] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php echo $row['gibbonPersonIDStudent'] ?>&subpage=Activities'>Activities</a>
 							<?php
                                 $gibbonModuleID = checkModuleReady('/modules/IB Diploma/index.php', $connection2);
-            if ($gibbonModuleID != false) {
-                try {
-                    $dataAction = array('gibbonModuleID' => $gibbonModuleID, 'actionName' => 'View CAS in Student Profile', 'gibbonRoleID' => $_SESSION[$guid]['gibbonRoleIDCurrent']);
-                    $sqlAction = 'SELECT gibbonAction.name FROM gibbonAction JOIN gibbonPermission ON (gibbonAction.gibbonActionID=gibbonPermission.gibbonActionID) JOIN gibbonRole ON (gibbonPermission.gibbonRoleID=gibbonRole.gibbonRoleID) WHERE (gibbonAction.name=:actionName) AND (gibbonPermission.gibbonRoleID=:gibbonRoleID) AND gibbonAction.gibbonModuleID=:gibbonModuleID';
-                    $resultAction = $connection2->prepare($sqlAction);
-                    $resultAction->execute($dataAction);
-                } catch (PDOException $e) {
-                }
-                if ($resultAction->rowCount() > 0) {
-                    try {
-                        $dataHooks = array();
-                        $sqlHooks = "SELECT * FROM gibbonHook WHERE type='Student Profile' AND name='IB Diploma CAS'";
-                        $resultHooks = $connection2->prepare($sqlHooks);
-                        $resultHooks->execute($dataHooks);
-                    } catch (PDOException $e) {
-                    }
-                    if ($resultHooks->rowCount() == 1) {
-                        $rowHooks = $resultHooks->fetch();
-                        $options = unserialize($rowHooks['options']);
+								if ($gibbonModuleID != false) {
+									try {
+										$dataAction = array('gibbonModuleID' => $gibbonModuleID, 'actionName' => 'View CAS in Student Profile', 'gibbonRoleID' => $_SESSION[$guid]['gibbonRoleIDCurrent']);
+										$sqlAction = 'SELECT gibbonAction.name FROM gibbonAction JOIN gibbonPermission ON (gibbonAction.gibbonActionID=gibbonPermission.gibbonActionID) JOIN gibbonRole ON (gibbonPermission.gibbonRoleID=gibbonRole.gibbonRoleID) WHERE (gibbonAction.name=:actionName) AND (gibbonPermission.gibbonRoleID=:gibbonRoleID) AND gibbonAction.gibbonModuleID=:gibbonModuleID';
+										$resultAction = $connection2->prepare($sqlAction);
+										$resultAction->execute($dataAction);
+									} catch (PDOException $e) {
+									}
+									if ($resultAction->rowCount() > 0) {
+										try {
+											$dataHooks = array();
+											$sqlHooks = "SELECT * FROM gibbonHook WHERE type='Student Profile' AND name='IB Diploma CAS'";
+											$resultHooks = $connection2->prepare($sqlHooks);
+											$resultHooks->execute($dataHooks);
+										} catch (PDOException $e) {
+										}
+										if ($resultHooks->rowCount() == 1) {
+											$rowHooks = $resultHooks->fetch();
+											$options = unserialize($rowHooks['options']);
                                             //Check for permission to hook
                                             try {
                                                 $dataHook = array('gibbonRoleIDCurrent' => $_SESSION[$guid]['gibbonRoleIDCurrent'], 'sourceModuleName' => $options['sourceModuleName']);
@@ -142,13 +141,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                                                 $resultHook->execute($dataHook);
                                             } catch (PDOException $e) {
                                             }
-                        if ($resultHook->rowCount() == 1) {
-                            echo " | <a target='_blank' href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID='.$row['gibbonPersonIDStudent'].'&hook='.$rowHooks['name'].'&module='.$options['sourceModuleName'].'&action='.$options['sourceModuleAction'].'&gibbonHookID='.$rowHooks['gibbonHookID']."'>".$rowHooks['name'].'</a>';
-                        }
-                    }
-                }
-            }
-            ?>
+											if ($resultHook->rowCount() == 1) {
+												echo " | <a target='_blank' href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID='.$row['gibbonPersonIDStudent'].'&hook='.$rowHooks['name'].'&module='.$options['sourceModuleName'].'&action='.$options['sourceModuleAction'].'&gibbonHookID='.$rowHooks['gibbonHookID']."'>".$rowHooks['name'].'</a>';
+											}
+										}
+									}
+								}
+							?>
 						</td>
 					</tr>
 					<tr>
@@ -172,9 +171,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                         echo '</td>';
                         echo '</tr>';
                     }
-            if ($resultNotes->rowCount() == 1) {
-                $rowNotes = $resultNotes->fetch();
-                ?>
+					if ($resultNotes->rowCount() == 1) {
+						$rowNotes = $resultNotes->fetch();
+						?>
 						<tr>
 							<td colspan=2 style='padding-top: 15px;'>
 								<b>Higher Education Notes</b><br/>
@@ -184,9 +183,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 						</tr>
 						<?php
 
-            }
-            ?>
-
+						}
+					?>
 
 					<tr class='break'>
 						<td colspan=2>
@@ -217,7 +215,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 						<?php
 
                     }
-            ?>
+            		?>
 					<tr>
 						<td colspan=2 style='padding-top: 15px;'>
 							<b>Reference *</b><br/>
@@ -226,9 +224,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             if ($row['refType'] == 'US Reference') {
                                 echo 'Maximum limit of 10,000 characters.';
                             } else {
-                                echo 'Maximum limit of 2,000 characters.';
-                            }
-            ?>
+                                echo 'Maximum limit of 2,000 characters.'; } ?>
 							</i></span><br/>
 							<textarea name="body" id="body" rows=20 style="width:738px; margin: 5px 0px 0px 0px"><?php echo $row['body'] ?></textarea>
 							<script type="text/javascript">
@@ -240,7 +236,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                                 } else {
                                     echo 'body.add( Validate.Length, { maximum: 2000 } );';
                                 }
-            ?>
+            					?>
 							 </script>
 						</td>
 					</tr>
@@ -251,14 +247,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 						</td>
 						<td class="right">
 							<select name="status" id="status" style="width: 302px">
-								<option <?php if ($row['status'] == 'In Progress') {
-    echo 'selected';
-}
-            ?> value='In Progress'>In Progress</option> ;
-								<option <?php if ($row['status'] == 'Complete') {
-    echo 'selected';
-}
-            ?> value='Complete'>Complete</option> ;
+								<option <?php if ($row['status'] == 'In Progress') { echo 'selected'; } ?> value='In Progress'>In Progress</option> ;
+								<option <?php if ($row['status'] == 'Complete') { echo 'selected'; } ?> value='Complete'>Complete</option> ;
 							</select>
 						</td>
 					</tr>
@@ -272,97 +262,96 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     } catch (PDOException $e) {
                     }
 
-            if ($resultContributions->rowCount() > 0) {
-                ?>
+					if ($resultContributions->rowCount() > 0) {
+						?>
 						<tr>
 							<td colspan=2>
 								<h3>Other Contributions</h3>
 								<?php
                                 echo "<table cellspacing='0' style='width: 100%'>";
-                echo "<tr class='head'>";
-                echo '<th>';
-                echo 'Name<br/>';
-                echo '</th>';
-                echo '<th colspan=2>';
-                echo 'Status<br/>';
-                echo '</th>';
-                echo '<th>';
-                echo 'Type';
-                echo '</th>';
-                echo '<th>';
-                echo 'Title';
-                echo '</th>';
-                echo '<th>';
-                echo 'Actions';
-                echo '</th>';
-                echo '</tr>';
+								echo "<tr class='head'>";
+								echo '<th>';
+								echo 'Name<br/>';
+								echo '</th>';
+								echo '<th colspan=2>';
+								echo 'Status<br/>';
+								echo '</th>';
+								echo '<th>';
+								echo 'Type';
+								echo '</th>';
+								echo '<th>';
+								echo 'Title';
+								echo '</th>';
+								echo '<th>';
+								echo 'Actions';
+								echo '</th>';
+								echo '</tr>';
 
-                $count = 0;
-                $rowNum = 'odd';
-                while ($rowContributions = $resultContributions->fetch()) {
-                    if ($count % 2 == 0) {
-                        $rowNum = 'even';
-                    } else {
-                        $rowNum = 'odd';
-                    }
-                    ++$count;
+								$count = 0;
+								$rowNum = 'odd';
+								while ($rowContributions = $resultContributions->fetch()) {
+									if ($count % 2 == 0) {
+										$rowNum = 'even';
+									} else {
+										$rowNum = 'odd';
+									}
+									++$count;
 
-                    echo "<tr class='$rowNum'>";
-                    echo '<td>';
-                    echo formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
-                    echo '</td>';
-                    echo "<td style='width: 25px'>";
-                    if ($rowContributions['status'] == 'Complete') {
-                        echo "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconTick.png'/> ";
-                    } else {
-                        echo "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconTick_light.png'/> ";
-                    }
-                    echo '</td>';
-                    echo '<td>';
-                    echo '<b>'.$rowContributions['status'].'</b>';
-                    echo '</td>';
-                    echo '<td>';
-                    echo $rowContributions['type'];
-                    echo '</td>';
-                    echo '<td>';
-                    if ($rowContributions['title'] == '') {
-                        echo '<i>NA</i>';
-                    } else {
-                        echo $rowContributions['title'];
-                    }
-                    echo '</td>';
-                    echo '<td>';
-                    echo "<script type='text/javascript'>";
-                    echo '$(document).ready(function(){';
-                    echo "\$(\".description-$count\").hide();";
-                    echo "\$(\".show_hide-$count\").fadeIn(1000);";
-                    echo "\$(\".show_hide-$count\").click(function(){";
-                    echo "\$(\".description-$count\").fadeToggle(1000);";
-                    echo '});';
-                    echo '});';
-                    echo '</script>';
-                    if ($rowContributions['status'] != 'Pending') {
-                        echo "<a class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='".$_SESSION[$guid]['absoluteURL']."/themes/Default/img/page_down.png' alt='Show Details' onclick='return false;' /></a>";
-                    }
-                    echo '</td>';
-                    echo '</tr>';
-                    if ($rowContributions['status'] != 'Pending') {
-                        echo "<tr class='description-$count' id='fields-$count' style='background-color: #fff; display: none'>";
-                        echo "<td style='border-bottom: 1px solid #333' colspan=6>";
-                        echo $rowContributions['body'];
-                        echo '</td>';
-                        echo '</tr>';
-                    }
-                }
-                echo '</table>';
-                ?>
+									echo "<tr class='$rowNum'>";
+									echo '<td>';
+									echo formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
+									echo '</td>';
+									echo "<td style='width: 25px'>";
+									if ($rowContributions['status'] == 'Complete') {
+										echo "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconTick.png'/> ";
+									} else {
+										echo "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconTick_light.png'/> ";
+									}
+									echo '</td>';
+									echo '<td>';
+									echo '<b>'.$rowContributions['status'].'</b>';
+									echo '</td>';
+									echo '<td>';
+									echo $rowContributions['type'];
+									echo '</td>';
+									echo '<td>';
+									if ($rowContributions['title'] == '') {
+										echo '<i>NA</i>';
+									} else {
+										echo $rowContributions['title'];
+									}
+									echo '</td>';
+									echo '<td>';
+									echo "<script type='text/javascript'>";
+									echo '$(document).ready(function(){';
+									echo "\$(\".description-$count\").hide();";
+									echo "\$(\".show_hide-$count\").fadeIn(1000);";
+									echo "\$(\".show_hide-$count\").click(function(){";
+									echo "\$(\".description-$count\").fadeToggle(1000);";
+									echo '});';
+									echo '});';
+									echo '</script>';
+									if ($rowContributions['status'] != 'Pending') {
+										echo "<a class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='".$_SESSION[$guid]['absoluteURL']."/themes/Default/img/page_down.png' alt='Show Details' onclick='return false;' /></a>";
+									}
+									echo '</td>';
+									echo '</tr>';
+									if ($rowContributions['status'] != 'Pending') {
+										echo "<tr class='description-$count' id='fields-$count' style='background-color: #fff; display: none'>";
+										echo "<td style='border-bottom: 1px solid #333' colspan=6>";
+										echo $rowContributions['body'];
+										echo '</td>';
+										echo '</tr>';
+									}
+								}
+								echo '</table>';
+								?>
 							</td>
 						</tr>
 						<?php
 
-            }
-            ?>
-
+						}
+					?>
 					<tr>
 						<td>
 							<span style="font-size: 90%"><i>* denotes a required field</i></span>

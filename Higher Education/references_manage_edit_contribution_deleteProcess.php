@@ -38,8 +38,7 @@ $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
 $higherEducationReferenceComponentID = $_GET['higherEducationReferenceComponentID'];
 $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
 
-if ($higherEducationReferenceID == '' or $gibbonSchoolYearID == '') {
-    echo 'Fatal error loading this page!';
+if ($higherEducationReferenceID == '' or $gibbonSchoolYearID == '') { echo 'Fatal error loading this page!';
 } else {
     $URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_manage_edit_contribution_delete.php&higherEducationReferenceID=$higherEducationReferenceID&higherEducationReferenceComponentID=$higherEducationReferenceComponentID&gibbonSchoolYearID=$gibbonSchoolYearID";
     $URLDelete = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_manage_edit.php&higherEducationReferenceID=$higherEducationReferenceID&higherEducationReferenceComponentID=$higherEducationReferenceComponentID&gibbonSchoolYearID=$gibbonSchoolYearID";

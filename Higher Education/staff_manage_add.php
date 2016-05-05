@@ -60,11 +60,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
                         } catch (PDOException $e) {
                         }
 
-    echo "<option value='Please select...'>Please select...</option>";
-    while ($row = $result->fetch()) {
-        echo "<option value='".$row['gibbonPersonID']."'>".formatName('', $row['preferredName'], $row['surname'], 'Staff', true, true).'</option>';
-    }
-    ?>
+						echo "<option value='Please select...'>Please select...</option>";
+						while ($row = $result->fetch()) {
+							echo "<option value='".$row['gibbonPersonID']."'>".formatName('', $row['preferredName'], $row['surname'], 'Staff', true, true).'</option>';
+						}
+						?>
 					</select>
 					<script type="text/javascript">
 						var gibbonPersonID=new LiveValidation('gibbonPersonID');

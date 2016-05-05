@@ -38,8 +38,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         returnProcess($guid, $_GET['return'], null, null);
     }
 
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
-        echo "<div class='error'>";
+    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) { echo "<div class='error'>";
         echo 'You have not been enrolled for higher education applications.';
         echo '</div>';
     } else {

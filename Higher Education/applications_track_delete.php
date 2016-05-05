@@ -38,8 +38,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     }
 
     //Check for student enrolment
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
-        echo "<div class='error'>";
+    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) { echo "<div class='error'>";
         echo 'You have not been enrolled for higher education applications.';
         echo '</div>';
     } else {
@@ -82,8 +81,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     echo '</div>';
                 } else {
                     //Let's go!
-                    $row = $result->fetch();
-                    ?>
+                    $row = $result->fetch(); ?>
 					<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/applications_track_deleteProcess.php?higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID" ?>">
 						<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 							<tr>

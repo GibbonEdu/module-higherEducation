@@ -29,8 +29,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
     $higherEducationReferenceComponentID = $_GET['higherEducationReferenceComponentID'];
     $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
-    if ($higherEducationReferenceComponentID == '' or $higherEducationReferenceID == '' or $gibbonSchoolYearID == '') {
-        echo "<div class='error'>";
+    if ($higherEducationReferenceComponentID == '' or $higherEducationReferenceID == '' or $gibbonSchoolYearID == '') { echo "<div class='error'>";
         echo 'You have not specified a reference or component.';
         echo '</div>';
     } else {

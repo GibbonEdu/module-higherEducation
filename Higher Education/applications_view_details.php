@@ -121,50 +121,35 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                         ?>
 						<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/applications_trackProcess.php?higherEducationApplicationID='.$row['higherEducationApplicationID'] ?>">
 						<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
-							<tr id='careerInterestsRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') {
-    echo "style='display: none;'";
-}
-                        ?>>
+							<tr id='careerInterestsRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
 								<td colspan=2 style='padding-top: 15px;'> 
 									<b>Career Interests</b><br/>
 									<span style="font-size: 90%"><i><b>Student asked</b>: What areas of work are you interested in? What are your ambitions?</i></span><br/>
 									<textarea readonly name="careerInterests" id="careerInterests" rows=12 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['careerInterests']) ?></textarea>
 								</td>
 							</tr>
-							<tr id='coursesMajorsRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') {
-    echo "style='display: none;'";
-}
-                        ?>>
+							<tr id='coursesMajorsRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
 								<td colspan=2 style='padding-top: 15px;'> 
 									<b>Courses/Majors</b><br/>
 									<span style="font-size: 90%"><i><b>Student asked</b>: What areas of study are you interested in? How do these relate to your career interests?</i></span><br/>
 									<textarea readonly name="coursesMajors" id="coursesMajors" rows=12 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['coursesMajors']) ?></textarea>
 								</td>
 							</tr>
-							<tr id='otherScoresRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') {
-    echo "style='display: none;'";
-}
-                        ?>>
+							<tr id='otherScoresRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
 								<td colspan=2 style='padding-top: 15px;'> 
 									<b>Scores</b><br/>
 									<span style="font-size: 90%"><i><b>Student asked</b>: Do you have any non-<?php echo $_SESSION[$guid]['organisationNameShort'] ?> exam scores?</i></span><br/>
 									<textarea readonly name="otherScores" id="otherScores" rows=12 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['otherScores']) ?></textarea>
 								</td>
 							</tr>
-							<tr id='personalStatementRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') {
-    echo "style='display: none;'";
-}
-                        ?>>
+							<tr id='personalStatementRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
 								<td colspan=2 style='padding-top: 15px;'> 
 									<b>Personal Statement</b><br/>
 									<span style="font-size: 90%"><i><b>Student asked</b>: Draft out ideas for your personal statement.</i></span><br/>
 									<textarea readonly name="personalStatement" id="personalStatement" rows=12 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['personalStatement']) ?></textarea>
 								</td>
 							</tr>
-							<tr id='meetingNotesRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') {
-    echo "style='display: none;'";
-}
-                        ?>>
+							<tr id='meetingNotesRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
 								<td colspan=2 style='padding-top: 15px;'> 
 									<b>Meeting notes</b><br/>
 									<span style="font-size: 90%"><i><b>Student asked</b>: Take notes on any meetings you have regarding your application process.</i></span><br/>
@@ -232,8 +217,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                                         $rowNum = 'odd';
                                     }
 
-                                            //COLOR ROW BY STATUS!
-                                            echo "<tr class=$rowNum>";
+									//COLOR ROW BY STATUS!
+									echo "<tr class=$rowNum>";
                                     echo '<td>';
                                     echo $rowApps['institution'];
                                     echo '</td>';

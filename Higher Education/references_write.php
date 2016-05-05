@@ -52,12 +52,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($page - 1) * $_SESSION[$guid]['pagination']);
         $result = $connection2->prepare($sql);
         $result->execute($data);
-    } catch (PDOException $e) {
-        echo "<div class='error'>".$e->getMessage().'</div>';
+    } catch (PDOException $e) { echo "<div class='error'>".$e->getMessage().'</div>';
     }
 
-    if ($result->rowCount() < 1) {
-        echo "<div class='success'>";
+    if ($result->rowCount() < 1) { echo "<div class='success'>";
         echo 'There are no reference requests at current.';
         echo '</div>';
     } else {

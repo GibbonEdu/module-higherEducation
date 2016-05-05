@@ -29,8 +29,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     echo '</div>';
 } else {
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
-    if ($role != 'Coordinator') {
-        echo "<div class='error'>";
+    if ($role != 'Coordinator') { echo "<div class='error'>";
         echo 'You do not have access to this action.';
         echo '</div>';
     } else {
@@ -61,8 +60,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 
                 echo "<div class='linkTop'>";
                 echo "<a href='javascript:window.print()'><img title='Print' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/print.png'/></a>";
-                echo '</div>';
-                ?>
+                echo '</div>'; ?>
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
 					<tr>
 						<td> 
@@ -88,37 +86,37 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                         $resultContributions->execute($dataContributions);
                     } catch (PDOException $e) {
                     }
-                if ($resultContributions->rowCount() < 1) {
-                    echo '<tr>';
-                    echo '<td colspan=2>';
-                    echo '<i>Error: no referees requested, or a system error.</i>';
-                    echo '</td>';
-                    echo '</tr>';
-                } else {
-                    while ($rowContributions = $resultContributions->fetch()) {
-                        echo '<tr>';
-                        echo '<td colspan=2>';
-                        echo '<h4>';
-                        if ($rowContributions['title'] == '') {
-                            echo $rowContributions['type'].' Comment';
-                            echo "<span style='font-size: 75%; font-style: italic'>";
-                            echo ' . by '.formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
-                            echo '</span>';
-                        } else {
-                            echo $rowContributions['title'];
-                            echo "<span style='font-size: 75%; font-style: italic'>";
-                            echo ' . '.$rowContributions['type'].' comment by '.formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
-                            echo '</span>';
-                        }
-                        echo '</h4>';
-                        echo '<p>';
-                        echo $rowContributions['body'];
-                        echo '</p>';
-                        echo '</td>';
-                        echo '</tr>';
-                    }
-                }
-                echo '</table>';
+					if ($resultContributions->rowCount() < 1) {
+						echo '<tr>';
+						echo '<td colspan=2>';
+						echo '<i>Error: no referees requested, or a system error.</i>';
+						echo '</td>';
+						echo '</tr>';
+					} else {
+						while ($rowContributions = $resultContributions->fetch()) {
+							echo '<tr>';
+							echo '<td colspan=2>';
+							echo '<h4>';
+							if ($rowContributions['title'] == '') {
+								echo $rowContributions['type'].' Comment';
+								echo "<span style='font-size: 75%; font-style: italic'>";
+								echo ' . by '.formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
+								echo '</span>';
+							} else {
+								echo $rowContributions['title'];
+								echo "<span style='font-size: 75%; font-style: italic'>";
+								echo ' . '.$rowContributions['type'].' comment by '.formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
+								echo '</span>';
+							}
+							echo '</h4>';
+							echo '<p>';
+							echo $rowContributions['body'];
+							echo '</p>';
+							echo '</td>';
+							echo '</tr>';
+						}
+					}
+				echo '</table>';
             }
         }
     }

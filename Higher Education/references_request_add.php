@@ -38,8 +38,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     }
 
     //Check for student enrolment
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
-        echo "<div class='error'>";
+    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) { echo "<div class='error'>";
         echo 'You have not been enrolled for higher education applications.';
         echo '</div>';
     } else {
@@ -90,17 +89,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 						<select name="gibbonPersonIDReferee" id="gibbonPersonIDReferee" style="width: 302px">
 							<?php
                             echo "<option value='Please select...'>Please select...</option>";
-        try {
-            $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID'], 'gibbonPersonID1' => $gibbonPersonID, 'gibbonPersonID2' => $gibbonPersonID);
-            $sql = "SELECT gibbonPerson.gibbonPersonID, surname, preferredName, title FROM gibbonPerson JOIN gibbonStaff ON (gibbonPerson.gibbonPersonID=gibbonStaff.gibbonPersonID) WHERE type='Teaching' AND gibbonPerson.status='Full' ORDER BY surname, preferredName";
-            $result = $connection2->prepare($sql);
-            $result->execute($data);
-        } catch (PDOException $e) {
-        }
-        while ($row = $result->fetch()) {
-            echo "<option value='".$row['gibbonPersonID']."'>".formatName($row['title'], $row['preferredName'], $row['surname'], 'Staff', true, true).'</option>';
-        }
-        ?>
+							try {
+								$data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID'], 'gibbonPersonID1' => $gibbonPersonID, 'gibbonPersonID2' => $gibbonPersonID);
+								$sql = "SELECT gibbonPerson.gibbonPersonID, surname, preferredName, title FROM gibbonPerson JOIN gibbonStaff ON (gibbonPerson.gibbonPersonID=gibbonStaff.gibbonPersonID) WHERE type='Teaching' AND gibbonPerson.status='Full' ORDER BY surname, preferredName";
+								$result = $connection2->prepare($sql);
+								$result->execute($data);
+							} catch (PDOException $e) {
+							}
+							while ($row = $result->fetch()) {
+								echo "<option value='".$row['gibbonPersonID']."'>".formatName($row['title'], $row['preferredName'], $row['surname'], 'Staff', true, true).'</option>';
+							}
+							?>
 						</select>
 						<script type="text/javascript">
 							var gibbonPersonIDReferee=new LiveValidation('gibbonPersonIDReferee');

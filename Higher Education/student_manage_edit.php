@@ -40,8 +40,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
 
     //Check if school year specified
     $higherEducationStudentID = $_GET['higherEducationStudentID'];
-    if ($higherEducationStudentID == 'Y') {
-        echo "<div class='error'>";
+    if ($higherEducationStudentID == 'Y') { echo "<div class='error'>";
         echo 'You have not specified an activity.';
         echo '</div>';
     } else {
@@ -88,21 +87,21 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
 							<select style="width: 302px" name="gibbonPersonIDAdvisor" id="gibbonPersonIDAdvisor">
 								<?php
                                 echo "<option value=''></option>";
-            try {
-                $data = array();
-                $sqlSelect = "SELECT * FROM gibbonPerson JOIN higherEducationStaff ON (gibbonPerson.gibbonPersonID=higherEducationStaff.gibbonPersonID) WHERE status='Full' ORDER BY surname, preferredName";
-                $resultSelect = $connection2->prepare($sqlSelect);
-                $resultSelect->execute($dataSelect);
-            } catch (PDOException $e) {
-            }
-            while ($rowSelect = $resultSelect->fetch()) {
-                $selected = '';
-                if ($row['gibbonPersonIDAdvisor'] == $rowSelect['gibbonPersonID']) {
-                    $selected = 'selected';
-                }
-                echo "<option $selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', $rowSelect['preferredName'], $rowSelect['surname'], 'Staff', true, true).'</option>';
-            }
-            ?>
+								try {
+									$data = array();
+									$sqlSelect = "SELECT * FROM gibbonPerson JOIN higherEducationStaff ON (gibbonPerson.gibbonPersonID=higherEducationStaff.gibbonPersonID) WHERE status='Full' ORDER BY surname, preferredName";
+									$resultSelect = $connection2->prepare($sqlSelect);
+									$resultSelect->execute($dataSelect);
+								} catch (PDOException $e) {
+								}
+								while ($rowSelect = $resultSelect->fetch()) {
+									$selected = '';
+									if ($row['gibbonPersonIDAdvisor'] == $rowSelect['gibbonPersonID']) {
+										$selected = 'selected';
+									}
+									echo "<option $selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', $rowSelect['preferredName'], $rowSelect['surname'], 'Staff', true, true).'</option>';
+								}
+								?>
 							</select>
 						</td>
 					</tr>

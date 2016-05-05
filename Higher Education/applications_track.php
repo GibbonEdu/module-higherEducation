@@ -38,8 +38,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
         returnProcess($guid, $_GET['return'], null, null);
     }
 
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
-        echo "<div class='error'>";
+    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) { echo "<div class='error'>";
         echo 'You have not been enrolled for higher education applications.';
         echo '</div>';
     } else {
@@ -94,7 +93,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 					<?php
 
                 }
-        ?>
+        		?>
 
 				$("#applying").change(function(){
 					if ($('#applying option:selected').val() == "Y" ) {
@@ -131,94 +130,46 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 				</td>
 				<td class="right">
 					<select style="width: 302px" name="applying" id="applying">
-						<option value='N' <?php if (isset($row['applying'])) {
-    if ($row['applying'] == 'N') {
-        echo 'selected';
-    }
-}
-        ?>>N</option>
-						<option value='Y' <?php if (isset($row['applying'])) {
-    if ($row['applying'] == 'Y') {
-        echo 'selected';
-    }
-}
-        ?>>Y</option>
+						<option value='N' <?php if (isset($row['applying'])) { if ($row['applying'] == 'N') { echo 'selected'; } } ?>>N</option>
+						<option value='Y' <?php if (isset($row['applying'])) { if ($row['applying'] == 'Y') { echo 'selected'; } } ?>>Y</option>
 					</select>
 				</td>
 			</tr>
 			<tr id='careerInterestsRow' <?php if (isset($row['applying'])) {
-    if ($row['applying'] == 'N' or $row['applying'] == '') {
-        echo "style='display: none;'";
-    }
-}
-        ?>>
+    			if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; }} ?>>
 				<td colspan=2 style='padding-top: 15px;'>
 					<b>Career Interests</b><br/>
 					<span style="font-size: 90%"><i>What areas of work are you interested in? What are your ambitions?</i></span><br/>
-					<textarea name="careerInterests" id="careerInterests" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['careerInterests'])) {
-    echo htmlPrep($row['careerInterests']);
-}
-        ?></textarea>
+					<textarea name="careerInterests" id="careerInterests" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['careerInterests'])) { echo htmlPrep($row['careerInterests']); } ?></textarea>
 				</td>
 			</tr>
 			<tr id='coursesMajorsRow' <?php if (isset($row['applying'])) {
-    if ($row['applying'] == 'N' or $row['applying'] == '') {
-        echo "style='display: none;'";
-    }
-}
-        ?>>
+    			if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; }} ?>>
 				<td colspan=2 style='padding-top: 15px;'>
 					<b>Courses/Majors</b><br/>
 					<span style="font-size: 90%"><i>What areas of study are you interested in? How do these relate to your career interests?</i></span><br/>
-					<textarea name="coursesMajors" id="coursesMajors" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['coursesMajors'])) {
-    echo htmlPrep($row['coursesMajors']);
-}
-        ?></textarea>
+					<textarea name="coursesMajors" id="coursesMajors" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['coursesMajors'])) { echo htmlPrep($row['coursesMajors']); } ?></textarea>
 				</td>
 			</tr>
-			<tr id='otherScoresRow' <?php if (isset($row['applying'])) {
-    if ($row['applying'] == 'N' or $row['applying'] == '') {
-        echo "style='display: none;'";
-    }
-}
-        ?>>
+			<tr id='otherScoresRow' <?php if (isset($row['applying'])) { if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; }} ?>>
 				<td colspan=2 style='padding-top: 15px;'>
 					<b>Scores</b><br/>
 					<span style="font-size: 90%"><i>Do you have any non-<?php echo $_SESSION[$guid]['organisationNameShort'] ?> exam scores?</i></span><br/>
-					<textarea name="otherScores" id="otherScores" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['otherScores'])) {
-    echo htmlPrep($row['otherScores']);
-}
-        ?></textarea>
+					<textarea name="otherScores" id="otherScores" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['otherScores'])) { echo htmlPrep($row['otherScores']); } ?></textarea>
 				</td>
 			</tr>
-			<tr id='personalStatementRow' <?php if (isset($row['applying'])) {
-    if ($row['applying'] == 'N' or $row['applying'] == '') {
-        echo "style='display: none;'";
-    }
-}
-        ?>>
+			<tr id='personalStatementRow' <?php if (isset($row['applying'])) { if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; }} ?>>
 				<td colspan=2 style='padding-top: 15px;'>
 					<b>Personal Statement</b><br/>
 					<span style="font-size: 90%"><i>Draft out ideas for your personal statement.</i></span><br/>
-					<textarea name="personalStatement" id="personalStatement" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['personalStatement'])) {
-    echo htmlPrep($row['personalStatement']);
-}
-        ?></textarea>
+					<textarea name="personalStatement" id="personalStatement" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['personalStatement'])) { echo htmlPrep($row['personalStatement']); } ?></textarea>
 				</td>
 			</tr>
-			<tr id='meetingNotesRow' <?php if (isset($row['applying'])) {
-    if ($row['applying'] == 'N' or $row['applying'] == '') {
-        echo "style='display: none;'";
-    }
-}
-        ?>>
+			<tr id='meetingNotesRow' <?php if (isset($row['applying'])) { if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; }} ?>>
 				<td colspan=2 style='padding-top: 15px;'>
 					<b>Meeting notes</b><br/>
 					<span style="font-size: 90%"><i>Take notes on any meetings you have regarding your application process.</i></span><br/>
-					<textarea name="meetingNotes" id="meetingNotes" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['meetingNotes'])) {
-    echo htmlPrep($row['meetingNotes']);
-}
-        ?></textarea>
+					<textarea name="meetingNotes" id="meetingNotes" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['meetingNotes'])) { echo htmlPrep($row['meetingNotes']); } ?></textarea>
 				</td>
 			</tr>
 

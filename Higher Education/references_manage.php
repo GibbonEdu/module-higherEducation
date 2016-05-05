@@ -95,12 +95,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     } else {
                         echo 'Previous Year ';
                     }
-                echo ' | ';
-                if (getNextSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-                    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/references_manage.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>Next Year</a> ";
-                } else {
-                    echo 'Next Year ';
-                }
+					echo ' | ';
+					if (getNextSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
+						echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/references_manage.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>Next Year</a> ";
+					} else {
+						echo 'Next Year ';
+					}
                 echo '</div>';
 
                 echo "<h3 class='top'>";
@@ -108,8 +108,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 echo '</h3>';
                 echo "<div class='linkTop'>";
                 echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/references_manage.php'>Clear Search</a>";
-                echo '</div>';
-                ?>
+                echo '</div>'; ?>
 				<form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
 					<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 						<tr>

@@ -40,8 +40,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
 
     //Check if school year specified
     $higherEducationStaffID = $_GET['higherEducationStaffID'];
-    if ($higherEducationStaffID == 'Y') {
-        echo "<div class='error'>";
+    if ($higherEducationStaffID == 'Y') { echo "<div class='error'>";
         echo 'You have not specified an activity.';
         echo '</div>';
     } else {
@@ -85,14 +84,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
 						<td class="right">
 							<select name="role" id="role" style="width: 302px">
 								<option value="Please select...">Please select...</option>
-								<option <?php if ($row['role'] == 'Coordinator') {
-    echo 'selected ';
-}
-            ?>value="Coordinator">Coordinator</option>
-								<option <?php if ($row['role'] == 'Advisor') {
-    echo 'selected ';
-}
-            ?>value="Advisor">Advisor</option>
+								<option <?php if ($row['role'] == 'Coordinator') { echo 'selected '; } ?>value="Coordinator">Coordinator</option>
+								<option <?php if ($row['role'] == 'Advisor') { echo 'selected '; } ?>value="Advisor">Advisor</option>
 							</select>
 							<script type="text/javascript">
 								var role=new LiveValidation('role');

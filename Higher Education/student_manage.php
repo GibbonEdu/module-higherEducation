@@ -37,8 +37,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
     }
 
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
-    if ($role != 'Coordinator') {
-        echo "<div class='error'>";
+    if ($role != 'Coordinator') { echo "<div class='error'>";
         echo 'You do not have access to this action.';
         echo '</div>';
     } else {

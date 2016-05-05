@@ -104,74 +104,74 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                         echo "<div class='error'>".$e->getMessage().'</div>';
                     }
 
-            while ($rowSelect = $resultSelect->fetch()) {
-                echo "<option value='".$rowSelect['gibbonRollGroupID']."'>".htmlPrep($rowSelect['rollGroup']).'</option>';
-            }
-            ?>
+					while ($rowSelect = $resultSelect->fetch()) {
+						echo "<option value='".$rowSelect['gibbonRollGroupID']."'>".htmlPrep($rowSelect['rollGroup']).'</option>';
+					}
+					?>
 				</select>
-			<?php	
-            echo '</div>';
+				<?php	
+				echo '</div>';
 
-            echo "<table cellspacing='0' style='width: 100%'>";
-            echo "<tr class='head'>";
-            echo '<th>';
-            echo 'Name';
-            echo '</th>';
-            echo '<th>';
-            echo 'Roll<br/>Group';
-            echo '</th>';
-            echo '<th>';
-            echo 'Applying';
-            echo '</th>';
-            echo '<th>';
-            echo 'Applications';
-            echo '</th>';
-            echo '<th>';
-            echo 'Actions';
-            echo '</th>';
-            echo '</tr>';
-            echo "<tbody class='body'>";
+				echo "<table cellspacing='0' style='width: 100%'>";
+				echo "<tr class='head'>";
+				echo '<th>';
+				echo 'Name';
+				echo '</th>';
+				echo '<th>';
+				echo 'Roll<br/>Group';
+				echo '</th>';
+				echo '<th>';
+				echo 'Applying';
+				echo '</th>';
+				echo '<th>';
+				echo 'Applications';
+				echo '</th>';
+				echo '<th>';
+				echo 'Actions';
+				echo '</th>';
+				echo '</tr>';
+				echo "<tbody class='body'>";
 
-            $count = 0;
-            $rowNum = 'odd';
-            while ($row = $result->fetch()) {
-                ++$count;
+				$count = 0;
+				$rowNum = 'odd';
+				while ($row = $result->fetch()) {
+					++$count;
 
-                        //COLOR ROW BY STATUS!
-                        echo "<tr class='".$row['gibbonRollGroupID']."' id='".$row['rollGroup']."' name='".$row['rollGroup']."'>";
-                echo '<td>';
-                echo formatName('', $row['preferredName'], $row['surname'], 'Student', true, true);
-                echo '</td>';
-                echo '<td>';
-                echo $row['rollGroup'];
-                echo '</td>';
-                echo '<td>';
-                try {
-                    $dataAdvisor = array('gibbonPersonID' => $row['gibbonPersonID']);
-                    $sqlAdvisor = 'SELECT * FROM higherEducationApplication LEFT JOIN higherEducationApplicationInstitution ON (higherEducationApplicationInstitution.higherEducationApplicationID=higherEducationApplication.higherEducationApplicationID) WHERE gibbonPersonID=:gibbonPersonID';
-                    $resultAdvisor = $connection2->prepare($sqlAdvisor);
-                    $resultAdvisor->execute($dataAdvisor);
-                } catch (PDOException $e) {
-                    echo "<div class='error'>".$e->getMessage().'</div>';
-                }
+					//COLOR ROW BY STATUS!
+					echo "<tr class='".$row['gibbonRollGroupID']."' id='".$row['rollGroup']."' name='".$row['rollGroup']."'>";
+					echo '<td>';
+					echo formatName('', $row['preferredName'], $row['surname'], 'Student', true, true);
+					echo '</td>';
+					echo '<td>';
+					echo $row['rollGroup'];
+					echo '</td>';
+					echo '<td>';
+					try {
+						$dataAdvisor = array('gibbonPersonID' => $row['gibbonPersonID']);
+						$sqlAdvisor = 'SELECT * FROM higherEducationApplication LEFT JOIN higherEducationApplicationInstitution ON (higherEducationApplicationInstitution.higherEducationApplicationID=higherEducationApplication.higherEducationApplicationID) WHERE gibbonPersonID=:gibbonPersonID';
+						$resultAdvisor = $connection2->prepare($sqlAdvisor);
+						$resultAdvisor->execute($dataAdvisor);
+					} catch (PDOException $e) {
+						echo "<div class='error'>".$e->getMessage().'</div>';
+					}
 
-                if ($resultAdvisor->rowCount() < 1) {
-                    echo '<i>Not yet indicated.</i>';
-                } else {
-                    $rowAdvisor = $resultAdvisor->fetch();
-                    echo $rowAdvisor['applying'];
-                }
-                echo '</td>';
-                echo '<td>';
-                echo $resultAdvisor->rowCount();
-                echo '</td>';
-                echo '<td>';
-                if ($resultAdvisor->rowCount() > 0 and $rowAdvisor['applying'] == 'Y') {
-                    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/applications_view_details.php&gibbonPersonID='.$row['gibbonPersonID']."'><img title='Details' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_right.png'/></a> ";
-                }
-                echo '</td>';
-                echo '</tr>';
-            }
+					if ($resultAdvisor->rowCount() < 1) {
+						echo '<i>Not yet indicated.</i>';
+					} else {
+						$rowAdvisor = $resultAdvisor->fetch();
+						echo $rowAdvisor['applying'];
+					}
+					echo '</td>';
+					echo '<td>';
+					echo $resultAdvisor->rowCount();
+					echo '</td>';
+					echo '<td>';
+					if ($resultAdvisor->rowCount() > 0 and $rowAdvisor['applying'] == 'Y') {
+						echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/applications_view_details.php&gibbonPersonID='.$row['gibbonPersonID']."'><img title='Details' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_right.png'/></a> ";
+					}
+					echo '</td>';
+					echo '</tr>';
+				}
             echo '</tbody>';
             echo '</table>';
         }

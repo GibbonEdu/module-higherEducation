@@ -40,8 +40,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
 
     //Check if school year specified
     $higherEducationStaffID = $_GET['higherEducationStaffID'];
-    if ($higherEducationStaffID == '') {
-        echo "<div class='error'>";
+    if ($higherEducationStaffID == '') { echo "<div class='error'>";
         echo 'You have not specified a staff member.';
         echo '</div>';
     } else {
