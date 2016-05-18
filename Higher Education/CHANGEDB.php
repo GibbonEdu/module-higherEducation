@@ -95,3 +95,10 @@ $sql[$count][1] = '';
 ++$count;
 $sql[$count][0] = '1.0.15';
 $sql[$count][1] = '';
+
+//v1.1.00
+++$count;
+$sql[$count][0] = '1.1.00';
+$sql[$count][1] = "
+UPDATE gibbonAction SET URLList='references_manage.php, references_manage_edit.php, references_manage_delete.php, references_manage_addMulti.php' WHERE name='Manage References' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Higher Education');end
+";

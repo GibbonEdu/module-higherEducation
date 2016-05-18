@@ -48,7 +48,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
     if ($role != 'Coordinator') {
         //Fail 0
-        $URL = $URL.'&addReturn=error0';
+        $URL = $URL.'&return=error0';
         header("Location: {$URL}");
     } else {
         //Proceed!

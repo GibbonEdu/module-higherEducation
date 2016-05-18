@@ -25,7 +25,7 @@ $description = 'A module to support students as they undertake the higher educat
 $entryURL = 'index.php';
 $type = 'Additional';
 $category = 'Other';
-$version = '1.0.15';
+$version = '1.1.00';
 $author = 'Ross Parker';
 $url = 'http://rossparker.org';
 
@@ -175,7 +175,7 @@ $actionRows[8]['name'] = 'Manage References';
 $actionRows[8]['precedence'] = '0';
 $actionRows[8]['category'] = 'References';
 $actionRows[8]['description'] = 'Allows coordinators to see, approve and edit all references.';
-$actionRows[8]['URLList'] = 'references_manage.php, references_manage_edit.php, references_manage_delete.php';
+$actionRows[8]['URLList'] = 'references_manage.php, references_manage_edit.php, references_manage_delete.php, references_manage_addMulti.php';
 $actionRows[8]['entryURL'] = 'references_manage.php';
 $actionRows[8]['defaultPermissionAdmin'] = 'Y';
 $actionRows[8]['defaultPermissionTeacher'] = 'N';
