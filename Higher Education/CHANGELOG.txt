@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.1.01
+-------
+Added ability to assign a reference component to another teacher
+
 v1.1.00
 -------
 Added ability for reference managers to add references on behalf of students

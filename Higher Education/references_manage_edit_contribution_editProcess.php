@@ -75,16 +75,17 @@ if ($higherEducationReferenceID == '' or $gibbonSchoolYearID == '') { echo 'Fata
                 $title = $_POST['title'];
                 $status = $_POST['status'];
                 $body = $_POST['body'];
+                $gibbonPersonID = $_POST['gibbonPersonID'];
 
-                if ($title == '' or $status == '' or $body == '') {
+                if ($title == '' or $status == '' or $gibbonPersonID == '') {
                     //Fail 3
                     $URL = $URL.'&return=error3';
                     header("Location: {$URL}");
                 } else {
                     //Write to database
                     try {
-                        $data = array('title' => $title, 'status' => $status, 'body' => $body, 'higherEducationReferenceComponentID' => $higherEducationReferenceComponentID);
-                        $sql = 'UPDATE higherEducationReferenceComponent SET title=:title, status=:status, body=:body WHERE higherEducationReferenceComponentID=:higherEducationReferenceComponentID';
+                        $data = array('title' => $title, 'status' => $status, 'body' => $body, 'gibbonPersonID' => $gibbonPersonID, 'higherEducationReferenceComponentID' => $higherEducationReferenceComponentID);
+                        $sql = 'UPDATE higherEducationReferenceComponent SET title=:title, status=:status, body=:body, gibbonPersonID=:gibbonPersonID WHERE higherEducationReferenceComponentID=:higherEducationReferenceComponentID';
                         $result = $connection2->prepare($sql);
                         $result->execute($data);
                     } catch (PDOException $e) {

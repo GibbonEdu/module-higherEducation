@@ -81,9 +81,40 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 							 </script>
 						</td>
 					</tr>
+                    <tr>
+						<td>
+							<b><?php echo __($guid, 'Author') ?></b><br/>
+							<span class="emphasis small"></span>
+						</td>
+						<td class="right">
+							<select class="standardWidth" name="gibbonPersonID" id="gibbonPersonID">
+								<?php
+                                echo "<option $selected value='Please select...'>".__($guid, 'Please select...').'</option>';
+								try {
+                                    $dataSelect = array('gibbonPersonID' => $row['gibbonPersonID']);
+                                    $sqlSelect = "SELECT gibbonPerson.gibbonPersonID, surname, preferredName FROM gibbonPerson JOIN gibbonStaff ON (gibbonPerson.gibbonPersonID=gibbonStaff.gibbonPersonID) WHERE (status='Full' or gibbonPerson.gibbonPersonID=:gibbonPersonID) ORDER BY surname, preferredName";
+                                    $resultSelect = $connection2->prepare($sqlSelect);
+                                    $resultSelect->execute($dataSelect);
+                                } catch (PDOException $e) {}
+                                while ($rowSelect = $resultSelect->fetch()) {
+									if ($row['gibbonPersonID'] == $rowSelect['gibbonPersonID']) {
+										echo "<option selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Staff', true, true).'</option>';
+									} else {
+										echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Staff', true, true).'</option>';
+									}
+								}
+								?>
+							</select>
+                            <script type="text/javascript">
+								var gibbonPersonID=new LiveValidation('gibbonPersonID');
+								gibbonPersonID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php echo __($guid, 'Select something!') ?>"});
+							</script>
+						</td>
+					</tr>
+
 					<tr>
 						<td colspan=2 style='padding-top: 15px;'>
-							<b>Reference *</b><br/>
+							<b>Reference</b><br/>
 							<span style="font-size: 90%"><i>
 							<?php
                             if ($row['refType'] == 'US Reference') {
@@ -94,7 +125,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 							<textarea name="body" id="body" rows=20 style="width:738px; margin: 5px 0px 0px 0px"><?php echo $row['body'] ?></textarea>
 							<script type="text/javascript">
 								var body=new LiveValidation('body');
-								body.add(Validate.Presence);
 								<?php
                                 if ($row['refType'] == 'US Reference') {
                                     echo 'body.add( Validate.Length, { maximum: 10000 } );';
