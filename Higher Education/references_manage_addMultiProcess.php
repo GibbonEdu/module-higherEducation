@@ -64,7 +64,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             } else {
                 $gibbonPersonIDMulti = null;
             }
-            $gibbonSchoolYearID = $_SESSION[$guid]['gibbonSchoolYearID'];
             $type = $_POST['type'];
             $gibbonPersonIDReferee = null;
             if (isset($_POST['gibbonPersonIDReferee'])) {
@@ -119,7 +118,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                                 while ($rowTeacher = $resultTeacher->fetch()) {
                                     try {
                                         $dataInsert = array('higherEducationReferenceID' => $AI, 'gibbonPersonID' => $rowTeacher['gibbonPersonID'], 'title' => $rowClass['course'].'.'.$rowClass['class']);
-                                        $sqlInsert = "INSERT INTO higherEducationReferenceComponent SET higherEducationReferenceID=:higherEducationReferenceID, gibbonPersonID=:gibbonPersonID, status='Pending', type='Academic', title=:title";
+                                        $sqlInsert = "INSERT INTO higherEducationReferenceComponent SET higherEducationReferenceID=:higherEducationReferenceID, gibbonPersonID=:gibbonPersonID, status='Pending', type='Academic', title=:title,body=''";
                                         $resultInsert = $connection2->prepare($sqlInsert);
                                         $resultInsert->execute($dataInsert);
                                     } catch (PDOException $e) {
@@ -142,7 +141,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                                 if ($rowForm['gibbonPersonIDTutor'] != '') {
                                     try {
                                         $dataInsert = array('higherEducationReferenceID' => $AI, 'gibbonPersonID' => $rowForm['gibbonPersonIDTutor'], 'title' => $rowForm['nameShort']);
-                                        $sqlInsert = "INSERT INTO higherEducationReferenceComponent SET higherEducationReferenceID=:higherEducationReferenceID, gibbonPersonID=:gibbonPersonID, status='Pending', type='Pastoral', title=:title";
+                                        $sqlInsert = "INSERT INTO higherEducationReferenceComponent SET higherEducationReferenceID=:higherEducationReferenceID, gibbonPersonID=:gibbonPersonID, status='Pending', type='Pastoral', title=:title,body=''";
                                         $resultInsert = $connection2->prepare($sqlInsert);
                                         $resultInsert->execute($dataInsert);
                                     } catch (PDOException $e) {
@@ -152,7 +151,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                                 if ($rowForm['gibbonPersonIDTutor2'] != '') {
                                     try {
                                         $dataInsert = array('higherEducationReferenceID' => $AI, 'gibbonPersonID' => $rowForm['gibbonPersonIDTutor2'], 'title' => $rowForm['nameShort']);
-                                        $sqlInsert = "INSERT INTO higherEducationReferenceComponent SET higherEducationReferenceID=:higherEducationReferenceID, gibbonPersonID=:gibbonPersonID, status='Pending', type='Pastoral', title=:title";
+                                        $sqlInsert = "INSERT INTO higherEducationReferenceComponent SET higherEducationReferenceID=:higherEducationReferenceID, gibbonPersonID=:gibbonPersonID, status='Pending', type='Pastoral', title=:title,body=''";
                                         $resultInsert = $connection2->prepare($sqlInsert);
                                         $resultInsert->execute($dataInsert);
                                     } catch (PDOException $e) {
@@ -162,7 +161,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                                 if ($rowForm['gibbonPersonIDTutor3'] != '') {
                                     try {
                                         $dataInsert = array('higherEducationReferenceID' => $AI, 'gibbonPersonID' => $rowForm['gibbonPersonIDTutor3'], 'title' => $rowForm['nameShort']);
-                                        $sqlInsert = "INSERT INTO higherEducationReferenceComponent SET higherEducationReferenceID=:higherEducationReferenceID, gibbonPersonID=:gibbonPersonID, status='Pending', type='Pastoral', title=:title";
+                                        $sqlInsert = "INSERT INTO higherEducationReferenceComponent SET higherEducationReferenceID=:higherEducationReferenceID, gibbonPersonID=:gibbonPersonID, status='Pending', type='Pastoral', title=:title,body=''";
                                         $resultInsert = $connection2->prepare($sqlInsert);
                                         $resultInsert->execute($dataInsert);
                                     } catch (PDOException $e) {
@@ -175,7 +174,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             if ($gibbonPersonIDReferee != '') {
                                 try {
                                     $dataInsert = array('higherEducationReferenceID' => $AI, 'gibbonPersonID' => $gibbonPersonIDReferee);
-                                    $sqlInsert = "INSERT INTO higherEducationReferenceComponent SET higherEducationReferenceID=:higherEducationReferenceID, gibbonPersonID=:gibbonPersonID, status='Pending', type='General', title=''";
+                                    $sqlInsert = "INSERT INTO higherEducationReferenceComponent SET higherEducationReferenceID=:higherEducationReferenceID, gibbonPersonID=:gibbonPersonID, status='Pending', type='General', title='',body=''";
                                     $resultInsert = $connection2->prepare($sqlInsert);
                                     $resultInsert->execute($dataInsert);
                                 } catch (PDOException $e) {

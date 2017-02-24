@@ -30,7 +30,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 } else {
     //Proceed!
     echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/references_write.php'>Write References</a> > </div><div class='trailEnd'>Write Reference</div>";
+    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/references_write.php&gibbonSchoolYearID=".$_GET['gibbonSchoolYearID']."'>Write References</a> > </div><div class='trailEnd'>Write Reference</div>";
     echo '</div>';
 
     if (isset($_GET['return'])) {
@@ -38,8 +38,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     }
 
     //Check if school year specified
+    $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
     $higherEducationReferenceComponentID = $_GET['higherEducationReferenceComponentID'];
-    if ($higherEducationReferenceComponentID == '') { echo "<div class='error'>";
+    if ($higherEducationReferenceComponentID == '' or $gibbonSchoolYearID == '') {
+        echo "<div class='error'>";
         echo 'You have not specified a reference.';
         echo '</div>';
     } else {
@@ -60,7 +62,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             //Let's go!
             $row = $result->fetch();
             ?>
-			<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/references_write_editProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID" ?>">
+			<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/references_write_editProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 					<tr class='break'>
 						<td colspan=2>

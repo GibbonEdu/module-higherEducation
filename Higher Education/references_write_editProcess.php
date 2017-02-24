@@ -37,15 +37,16 @@ include './moduleFunctions.php';
 //Set timezone from session variable
 date_default_timezone_set($_SESSION[$guid]['timezone']);
 
+$gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
 $higherEducationReferenceComponentID = $_GET['higherEducationReferenceComponentID'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_write_edit.php&higherEducationReferenceComponentID=$higherEducationReferenceComponentID";
+$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_write_edit.php&higherEducationReferenceComponentID=$higherEducationReferenceComponentID&gibbonSchoolYearID=$gibbonSchoolYearID";
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_write_edit.php') == false) {
     //Fail 0
     $URL = $URL.'&return=error0';
     header("Location: {$URL}");
 } else {
-    if ($higherEducationReferenceComponentID == '') {
+    if ($higherEducationReferenceComponentID == '' or $gibbonSchoolYearID == '') {
         //Fail1
         $URL = $URL.'&return=error1';
         header("Location: {$URL}");

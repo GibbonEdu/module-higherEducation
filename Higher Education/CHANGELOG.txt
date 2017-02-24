@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.1.02
+-------
+Added reference writing in non-current years without logging out
+
 v1.1.01
 -------
 Added ability to assign a reference component to another teacher
