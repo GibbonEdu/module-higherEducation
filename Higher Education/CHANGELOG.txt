@@ -1,5 +1,10 @@
 CHANGELOG
 =========
+v1.1.03
+-------
+Fixed Student add database issue
+Added honouring of reportable for classes and students
+
 v1.1.02
 -------
 Added reference writing in non-current years without logging out

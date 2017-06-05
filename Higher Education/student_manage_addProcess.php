@@ -75,7 +75,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
             if ($result->rowCount() == 0) {
                 try {
                     $data = array('gibbonPersonID' => $t, 'gibbonPersonIDAdvisor' => $gibbonPersonIDAdvisor);
-                    $sql = 'INSERT INTO higherEducationStudent SET gibbonPersonID=:gibbonPersonID, gibbonPersonIDAdvisor=:gibbonPersonIDAdvisor';
+                    $sql = 'INSERT INTO higherEducationStudent SET gibbonPersonID=:gibbonPersonID, gibbonPersonIDAdvisor=:gibbonPersonIDAdvisor, referenceNotes=\'\'';
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 } catch (PDOException $e) {

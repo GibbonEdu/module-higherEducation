@@ -91,7 +91,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 //Get subject teachers
                 try {
                     $dataClass = array('gibbonSchoolYearID' => $gibbonSchoolYearID, 'gibbonPersonID' => $gibbonPersonID);
-                    $sqlClass = "SELECT gibbonCourseClass.gibbonCourseClassID, gibbonCourseClass.nameShort AS class, gibbonCourse.nameShort AS course FROM gibbonCourse JOIN gibbonCourseClass ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID) JOIN gibbonCourseClassPerson ON (gibbonCourseClassPerson.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID) WHERE gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPersonID=:gibbonPersonID AND NOT role LIKE '%left' ORDER BY course, class";
+                    $sqlClass = "SELECT gibbonCourseClass.gibbonCourseClassID, gibbonCourseClass.nameShort AS class, gibbonCourse.nameShort AS course
+                        FROM gibbonCourse
+                            JOIN gibbonCourseClass ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID)
+                            JOIN gibbonCourseClassPerson ON (gibbonCourseClassPerson.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID)
+                        WHERE gibbonSchoolYearID=:gibbonSchoolYearID
+                            AND gibbonPersonID=:gibbonPersonID
+                            AND NOT role LIKE '%left'
+                            AND gibbonCourseClass.reportable='Y'
+                            AND gibbonCourseClassPerson.reportable='Y'
+                        ORDER BY course, class";
                     $resultClass = $connection2->prepare($sqlClass);
                     $resultClass->execute($dataClass);
                 } catch (PDOException $e) {
@@ -100,7 +109,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 while ($rowClass = $resultClass->fetch()) {
                     try {
                         $dataTeacher = array('gibbonCourseClassID' => $rowClass['gibbonCourseClassID']);
-                        $sqlTeacher = "SELECT gibbonPersonID FROM gibbonCourseClassPerson WHERE gibbonCourseClassID=:gibbonCourseClassID AND role='Teacher'";
+                        $sqlTeacher = "SELECT gibbonCourseClassPerson.gibbonPersonID
+                            FROM gibbonCourseClassPerson
+                                JOIN gibbonPerson ON (gibbonCourseClassPerson.gibbonPersonID=gibbonPerson.gibbonPersonID)
+                            WHERE gibbonCourseClassID=:gibbonCourseClassID
+                                AND role='Teacher'
+                                AND gibbonPerson.status='Full'";
                         $resultTeacher = $connection2->prepare($sqlTeacher);
                         $resultTeacher->execute($dataTeacher);
                     } catch (PDOException $e) {
