@@ -91,7 +91,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             echo "<option value='Please select...'>Please select...</option>";
 							try {
 								$data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID'], 'gibbonPersonID1' => $gibbonPersonID, 'gibbonPersonID2' => $gibbonPersonID);
-								$sql = "SELECT gibbonPerson.gibbonPersonID, surname, preferredName, title FROM gibbonPerson JOIN gibbonStaff ON (gibbonPerson.gibbonPersonID=gibbonStaff.gibbonPersonID) WHERE type='Teaching' AND gibbonPerson.status='Full' ORDER BY surname, preferredName";
+								$sql = "SELECT gibbonPerson.gibbonPersonID, surname, preferredName, title FROM gibbonPerson JOIN gibbonStaff ON (gibbonPerson.gibbonPersonID=gibbonStaff.gibbonPersonID) JOIN gibbonRole ON (gibbonPerson.gibbonRoleIDPrimary=gibbonRole.gibbonRoleID) WHERE (gibbonStaff.type='Teaching' OR gibbonRole.category='Staff') AND gibbonPerson.status='Full' ORDER BY surname, preferredName";
 								$result = $connection2->prepare($sql);
 								$result->execute($data);
 							} catch (PDOException $e) {
