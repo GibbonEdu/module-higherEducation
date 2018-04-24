@@ -17,6 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Forms\Form;
+use Gibbon\Forms\DatabaseFormFactory;
+
 //Module includes
 include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 
@@ -40,65 +43,25 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
         returnProcess($guid, $_GET['return'], $editLink, $returns);
     }
 
-    ?>
-	<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/staff_manage_addProcess.php' ?>">
-		<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-			<tr>
-				<td>
-					<b>Staff *</b><br/>
-				</td>
-				<td class="right">
-					<select style="width: 302px" name="gibbonPersonID" id="gibbonPersonID">
-						<?php
-                        try {
-                            $data = array();
-                            $sql = "SELECT * FROM gibbonPerson JOIN gibbonStaff ON (gibbonPerson.gibbonPersonID=gibbonStaff.gibbonPersonID) WHERE status='Full' ORDER BY surname, preferredName";
-                            $result = $connection2->prepare($sql);
-                            $result->execute($data);
-                        } catch (PDOException $e) {
-                        }
+    $form = Form::create('staff', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/staff_manage_addProcess.php');
+    $form->setFactory(DatabaseFormFactory::create($pdo));
+    $form->addHiddenValue('address', $_SESSION[$guid]['address']);
 
-						echo "<option value='Please select...'>Please select...</option>";
-						while ($row = $result->fetch()) {
-							echo "<option value='".$row['gibbonPersonID']."'>".formatName('', $row['preferredName'], $row['surname'], 'Staff', true, true).'</option>';
-						}
-						?>
-					</select>
-					<script type="text/javascript">
-						var gibbonPersonID=new LiveValidation('gibbonPersonID');
-						gibbonPersonID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
-					 </script>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<b>Role *</b><br/>
-					<span style="font-size: 90%"><i></i></span>
-				</td>
-				<td class="right">
-					<select name="role" id="role" style="width: 302px">
-						<option value="Please select...">Please select...</option>
-						<option value="Coordinator">Coordinator</option>
-						<option value="Advisor">Advisor</option>
-					</select>
-					<script type="text/javascript">
-						var role=new LiveValidation('role');
-						role.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
-					 </script>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<span style="font-size: 90%"><i>* denotes a required field</i></span>
-				</td>
-				<td class="right">
-					<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-					<input type="submit" value="Submit">
-				</td>
-			</tr>
-		</table>
-	</form>
-	<?php
+    $row = $form->addRow();
+        $row->addLabel('gibbonPersonID', __('Staff'));
+        $row->addSelectStaff('gibbonPersonID')->isRequired()->placeholder();
 
+    $roles = array(
+        'Coordinator' => __('Coordinator'),
+        'Advisor' => __('Advisor'),
+    );
+    $row = $form->addRow();
+        $row->addLabel('role', __('Role'));
+        $row->addSelect('role')->fromArray($roles)->isRequired()->placeholder();
+
+    $row = $form->addRow();
+        $row->addFooter();
+        $row->addSubmit();
+
+    echo $form->getOutput();
 }
-?>
