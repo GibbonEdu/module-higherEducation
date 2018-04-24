@@ -122,3 +122,8 @@ $sql[$count][1] = "";
 ++$count;
 $sql[$count][0] = '1.1.04';
 $sql[$count][1] = "";
+
+//v1.1.05
+++$count;
+$sql[$count][0] = '1.1.05';
+$sql[$count][1] = "";

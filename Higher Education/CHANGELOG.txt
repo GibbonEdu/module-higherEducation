@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.1.05
+-------
+Code cleanup
+
 v1.1.04
 -------
 Fixed bug causing teachers to not appear in the list of available referees
