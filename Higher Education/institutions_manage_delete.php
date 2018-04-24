@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Forms\Prefab\DeleteForm;
+
 //Module includes
 include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 
@@ -63,35 +65,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
                 echo '</div>';
             } else {
                 //Let's go!
-                $row = $result->fetch();
-                ?>
-				<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/institutions_manage_deleteProcess.php?higherEducationInstitutionID=$higherEducationInstitutionID" ?>">
-					<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-						<tr>
-							<td>
-								<b>Are you sure you want to delete "<?php echo $row['name'] ?>" from the Higher Education programme?</b><br/>
-								<span style="font-size: 90%; color: #cc0000"><i>This operation cannot be undone, and may lead to loss of vital data in your system.<br/>PROCEED WITH CAUTION!</i></span>
-							</td>
-							<td class="right">
-
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input name="higherEducationInstitutionID" id="higherEducationInstitutionID" value="<?php echo $higherEducationInstitutionID ?>" type="hidden">
-								<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-								<input type="submit" value="Yes">
-							</td>
-							<td class="right">
-
-							</td>
-						</tr>
-					</table>
-				</form>
-				<?php
-
+                $form = DeleteForm::createForm($_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/institutions_manage_deleteProcess.php?higherEducationInstitutionID=$higherEducationInstitutionID", true);
+                $form->addHiddenValue('higherEducationInstitutionID', $higherEducationInstitutionID);
+                echo $form->getOutput();
             }
         }
     }
 }
-?>

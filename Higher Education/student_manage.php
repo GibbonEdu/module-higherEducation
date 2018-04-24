@@ -140,7 +140,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
                 echo '</td>';
                 echo '<td>';
                 echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/student_manage_edit.php&higherEducationStudentID='.$row['higherEducationStudentID']."'><img title='Edit' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/config.png'/></a> ";
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/student_manage_delete.php&higherEducationStudentID='.$row['higherEducationStudentID']."'><img title='Delete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
+                echo "<a class='thickbox' href='".$_SESSION[$guid]['absoluteURL'].'/fullscreen.php?q=/modules/'.$_SESSION[$guid]['module'].'/student_manage_delete.php&higherEducationStudentID='.$row['higherEducationStudentID']."&width=650&height=135'><img title='Delete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
                 echo '</td>';
                 echo '</tr>';
             }
