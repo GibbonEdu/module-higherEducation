@@ -17,6 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Forms\Form;
+use Gibbon\Forms\DatabaseFormFactory;
+
 //Module includes
 include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 
@@ -65,80 +68,32 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
                 echo '</div>';
             } else {
                 //Let's go!
-                $row = $result->fetch();
-                ?>
-				<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/institutions_manage_editProcess.php?higherEducationInstitutionID=$higherEducationInstitutionID" ?>">
-					<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-						<tr>
-							<td>
-								<b>Name *</b><br/>
-								<span style="font-size: 90%"><i></i></span>
-							</td>
-							<td class="right">
-								<input name="name" id="uniname" maxlength=150 value="<?php echo $row['name'] ?>" type="text" style="width: 300px">
-								<script type="text/javascript">
-									var uniname=new LiveValidation('uniname');
-									uniname.add(Validate.Presence);
-								 </script>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<b>Country *</b><br/>
-								<span style="font-size: 90%"><i></i></span>
-							</td>
-							<td class="right">
-								<select name="country" id="country" style="width: 302px">
-									<?php
-                                    echo "<option value='Please select...'>Please select...</option>";
-									try {
-										$dataSelect = array();
-										$sqlSelect = 'SELECT printable_name FROM gibbonCountry ORDER BY printable_name';
-										$resultSelect = $connection2->prepare($sqlSelect);
-										$resultSelect->execute($dataSelect);
-									} catch (PDOException $e) {
-									}
-									while ($rowSelect = $resultSelect->fetch()) {
-										$selected = '';
-										if ($row['country'] == $rowSelect['printable_name']) {
-											$selected = 'selected';
-										}
-										echo "<option $selected value='".$rowSelect['printable_name']."'>".htmlPrep($rowSelect['printable_name']).'</option>';
-									}
-									?>
-								</select>
-								<script type="text/javascript">
-									var country=new LiveValidation('country');
-									country.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
-								 </script>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<b>Active *</b><br/>
-							</td>
-							<td class="right">
-								<select name="active" id="active" style="width: 302px">
-									<option <?php if ($row['active'] == 'Y') { echo ' selected '; } ?>value="Y">Y</option>
-									<option <?php if ($row['active'] == 'N') { echo ' selected '; } ?>value="N">N</option>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<span style="font-size: 90%"><i>* denotes a required field</i></span>
-							</td>
-							<td class="right">
-								<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-								<input type="submit" value="Submit">
-							</td>
-						</tr>
-					</table>
-				</form>
-				<?php
+                $values = $result->fetch();
 
+                $form = Form::create('institutions', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/institutions_manage_editProcess.php?higherEducationInstitutionID='.$higherEducationInstitutionID);
+                $form->setFactory(DatabaseFormFactory::create($pdo));
+                $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+
+                $row = $form->addRow();
+                    $row->addLabel('name', __('Name'));
+                    $row->addTextField('name')->isRequired()->maxLength(150);
+
+                $row = $form->addRow();
+                    $row->addLabel('country', __('Country'));
+                    $row->addSelectCountry('country')->isRequired();
+
+                $row = $form->addRow();
+                    $row->addLabel('active', __('Active'));
+                    $row->addYesNo('active')->isRequired();
+
+                $row = $form->addRow();
+                    $row->addFooter();
+                    $row->addSubmit();
+
+                $form->loadAllValuesFrom($values);
+
+                echo $form->getOutput();
             }
         }
     }
 }
-?>
