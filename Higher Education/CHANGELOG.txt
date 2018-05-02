@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.2.00
+-------
+Updated default database storage engine to InnoDB
+
 v1.1.05
 -------
 Code cleanup
