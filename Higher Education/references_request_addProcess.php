@@ -183,7 +183,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             } catch (PDOException $e) {
             }
             while ($rowNotify = $resultNotify->fetch()) {
-                $notificationText = sprintf(__($guid, 'Someone has created a new Higher Education reference request.'));
+                $notificationText = sprintf(__('Someone has created a new Higher Education reference request.'));
                 setNotification($connection2, $guid, $rowNotify['gibbonPersonID'], $notificationText, 'Higher Education', '/index.php?q=/modules/Higher Education/references_manage.php');
             }
 

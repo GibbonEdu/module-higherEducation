@@ -81,13 +81,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 					</tr>
                     <tr>
 						<td>
-							<b><?php echo __($guid, 'Author') ?></b><br/>
+							<b><?php echo __('Author') ?></b><br/>
 							<span class="emphasis small"></span>
 						</td>
 						<td class="right">
 							<select class="standardWidth" name="gibbonPersonID" id="gibbonPersonID">
 								<?php
-                                echo "<option $selected value='Please select...'>".__($guid, 'Please select...').'</option>';
+                                echo "<option $selected value='Please select...'>".__('Please select...').'</option>';
 								try {
                                     $dataSelect = array('gibbonPersonID' => $row['gibbonPersonID']);
                                     $sqlSelect = "SELECT gibbonPerson.gibbonPersonID, surname, preferredName FROM gibbonPerson JOIN gibbonStaff ON (gibbonPerson.gibbonPersonID=gibbonStaff.gibbonPersonID) WHERE (status='Full' or gibbonPerson.gibbonPersonID=:gibbonPersonID) ORDER BY surname, preferredName";
@@ -105,7 +105,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 							</select>
                             <script type="text/javascript">
 								var gibbonPersonID=new LiveValidation('gibbonPersonID');
-								gibbonPersonID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php echo __($guid, 'Select something!') ?>"});
+								gibbonPersonID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php echo __('Select something!') ?>"});
 							</script>
 						</td>
 					</tr>

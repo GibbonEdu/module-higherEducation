@@ -53,12 +53,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     			<table class='smallIntBorder' cellspacing='0' style="width: 100%">
         			<tr>
         				<td style='width: 275px'>
-        					<b><?php echo __($guid, 'Students') ?> *</b><br/>
-        					<span class="emphasis small"><?php echo __($guid, 'Use Control, Command and/or Shift to select multiple.') ?> </span>
+        					<b><?php echo __('Students') ?> *</b><br/>
+        					<span class="emphasis small"><?php echo __('Use Control, Command and/or Shift to select multiple.') ?> </span>
         				</td>
         				<td class="right">
         					<select multiple name="gibbonPersonIDMulti[]" id="gibbonPersonIDMulti[]" style="width: 302px; height:150px">
-        						<optgroup label='--<?php echo __($guid, 'Students by Roll Group') ?>--'>
+        						<optgroup label='--<?php echo __('Students by Roll Group') ?>--'>
         							<?php
                                     try {
                                         $dataSelect = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
@@ -72,7 +72,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         							}
         							?>
         						</optgroup>
-        						<optgroup label='--<?php echo __($guid, 'Students by Name') ?>--'>
+        						<optgroup label='--<?php echo __('Students by Name') ?>--'>
         							<?php
                                     try {
                                         $dataSelect = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);

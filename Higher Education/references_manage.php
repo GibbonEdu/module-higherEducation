@@ -160,7 +160,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 }
 
                 echo "<div class='linkTop'>";
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/references_manage_addMulti.php&gibbonSchoolYearID=$gibbonSchoolYearID&search=$search'>".__($guid, 'Add Multiple Records')."<img title='".__($guid, 'Add Multiple Records')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new_multi.png'/></a>";
+                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/references_manage_addMulti.php&gibbonSchoolYearID=$gibbonSchoolYearID&search=$search'>".__('Add Multiple Records')."<img title='".__('Add Multiple Records')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new_multi.png'/></a>";
                 echo '</div>';
 
                 if ($result->rowCount() < 1) {

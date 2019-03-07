@@ -93,7 +93,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             $partialFail = true;
                         }
                         while ($rowEmail = $resultEmail->fetch()) {
-                            $notificationText = sprintf(__($guid, 'Someone has requested your input on a Higher Education reference.'));
+                            $notificationText = sprintf(__('Someone has requested your input on a Higher Education reference.'));
                             setNotification($connection2, $guid, $rowEmail['gibbonPersonID'], $notificationText, 'Higher Education', '/index.php?q=/modules/Higher Education/references_write.php');
                         }
                     }
