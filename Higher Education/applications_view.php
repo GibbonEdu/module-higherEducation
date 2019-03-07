@@ -22,16 +22,12 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_view.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
     if ($role == false) {
         //Acess denied
-        echo "<div class='error'>";
-        echo 'You are not enroled in the Higher Education programme.';
-        echo '</div>';
+        $page->addError(__('You are not enroled in the Higher Education programme.'));
     } else {
         $page->breadcrumbs->add(__('View Applications'));
         echo '<p>';
@@ -49,13 +45,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
+            $page->addError($e->getMessage());
         }
 
         if ($result->rowCount() < 1) {
-            echo "<div class='error'>";
-            echo 'There are no students to display.';
-            echo '</div>';
+            $page->addError(__('There are no students to display.'));
         } else {
             echo "<div class='linkTop'>";
             echo 'Filter Roll Group: ';
@@ -97,7 +91,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                         $resultSelect = $connection2->prepare($sqlSelect);
                         $resultSelect->execute($dataSelect);
                     } catch (PDOException $e) {
-                        echo "<div class='error'>".$e->getMessage().'</div>';
+                        $page->addError($e->getMessage());
                     }
 
                     while ($rowSelect = $resultSelect->fetch()) {
@@ -148,7 +142,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                         $resultAdvisor = $connection2->prepare($sqlAdvisor);
                         $resultAdvisor->execute($dataAdvisor);
                     } catch (PDOException $e) {
-                        echo "<div class='error'>".$e->getMessage().'</div>';
+                        $page->addError($e->getMessage());
                     }
 
                     if ($resultAdvisor->rowCount() < 1) {

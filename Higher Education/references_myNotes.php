@@ -22,9 +22,7 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_myNotes.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
     $page->breadcrumbs->add(__('Edit My Reference Notes'));
@@ -41,9 +39,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     } catch (PDOException $e) {
     }
 
-    if ($result->rowCount() != 1) { echo "<div class='error'>";
-        echo 'You have not been enrolled for higher education applications.';
-        echo '</div>';
+    if ($result->rowCount() != 1) {
+        $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
         $row = $result->fetch();
 

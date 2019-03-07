@@ -19,17 +19,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage_edit.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Check if school year specified
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
     $higherEducationReferenceComponentID = $_GET['higherEducationReferenceComponentID'];
     $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
-    if ($higherEducationReferenceComponentID == '' or $higherEducationReferenceID == '' or $gibbonSchoolYearID == '') { echo "<div class='error'>";
-        echo 'You have not specified a grade scale or grade.';
-        echo '</div>';
+    if ($higherEducationReferenceComponentID == '' or $higherEducationReferenceID == '' or $gibbonSchoolYearID == '') {
+        $page->addError(__('You have not specified a grade scale or grade.'));
     } else {
         try {
             $data = array('higherEducationReferenceID' => $higherEducationReferenceID, 'higherEducationReferenceComponentID' => $higherEducationReferenceComponentID);
@@ -37,13 +34,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
+            $page->addError($e->getMessage());
         }
 
         if ($result->rowCount() != 1) {
-            echo "<div class='error'>";
-            echo 'The specified class cannot be found.';
-            echo '</div>';
+            $page->addError(__('The specified class cannot be found.'));
         } else {
             //Let's go!
             $row = $result->fetch();

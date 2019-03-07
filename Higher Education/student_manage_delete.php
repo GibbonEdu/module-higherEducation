@@ -23,9 +23,7 @@ include __DIR__.'/moduleFunctions.php';
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_manage_delete.php') == false) {
 
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
     $page->breadcrumbs->add(__('Student Enrolment'), 'student_manage.php');
@@ -37,9 +35,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
 
     //Check if school year specified
     $higherEducationStudentID = $_GET['higherEducationStudentID'];
-    if ($higherEducationStudentID == '') { echo "<div class='error'>";
-        echo 'You have not specified a student member.';
-        echo '</div>';
+    if ($higherEducationStudentID == '') {
+        $page->addError(__('You have not specified a student member.'));
     } else {
         try {
             $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID'], 'higherEducationStudentID' => $higherEducationStudentID);
@@ -47,13 +44,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
+            $page->addError($e->getMessage());
         }
 
         if ($result->rowCount() != 1) {
-            echo "<div class='error'>";
-            echo 'The selected student member does not exist.';
-            echo '</div>';
+            $page->addError(__('The selected student member does not exist.'));
         } else {
             //Let's go!
             $row = $result->fetch();

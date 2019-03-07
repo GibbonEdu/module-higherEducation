@@ -23,9 +23,7 @@ include __DIR__.'/moduleFunctions.php';
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_manage_edit.php') == false) {
 
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
     $page->breadcrumbs->add(__('Manage Staff'), 'staff_manage.php');
@@ -37,9 +35,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
 
     //Check if school year specified
     $higherEducationStaffID = $_GET['higherEducationStaffID'];
-    if ($higherEducationStaffID == 'Y') { echo "<div class='error'>";
-        echo 'You have not specified an activity.';
-        echo '</div>';
+    if ($higherEducationStaffID == 'Y') {
+        $page->addError(__('You have not specified an activity.'));
     } else {
         try {
             $data = array('higherEducationStaffID' => $higherEducationStaffID);
@@ -47,13 +44,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
+            $page->addError($e->getMessage());
         }
 
         if ($result->rowCount() != 1) {
-            echo "<div class='error'>";
-            echo 'The selected activity does not exist.';
-            echo '</div>';
+            $page->addError(__('The selected activity does not exist.'));
         } else {
             //Let's go!
             $row = $result->fetch();

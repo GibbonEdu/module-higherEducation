@@ -22,9 +22,7 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isModuleAccessible($guid, $connection2) == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     $page->breadcrumbs->add(__('Welcome'));
 

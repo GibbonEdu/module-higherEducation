@@ -22,16 +22,13 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_manage.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     $page->breadcrumbs->add(__('Manage Majors'));
 
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
-    if ($role != 'Coordinator') { echo "<div class='error'>";
-        echo 'You do not have access to this action.';
-        echo '</div>';
+    if ($role != 'Coordinator') {
+        $page->addError(__('You do not have access to this action.'));
     } else {
         if (isset($_GET['return'])) {
             returnProcess($guid, $_GET['return'], null, null);
@@ -53,10 +50,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>";
-            echo $e->getMEssagE();
-            echo 'Students cannot be displayed.';
-            echo '</div>';
+            $page->addError(__('Error: {error}. Students cannot be displayed.', ['error' => $e->getMessage()]));;
         }
 
         echo "<div class='linkTop'>";
@@ -64,9 +58,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
         echo '</div>';
 
         if ($result->rowCount() < 1) {
-            echo "<div class='error'>";
-            echo 'There are no students to display.';
-            echo '</div>';
+            $page->addError(__('There are no students to display.'));
         } else {
             if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
                 printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'top');
@@ -91,7 +83,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
                 $resultPage = $connection2->prepare($sqlPage);
                 $resultPage->execute($data);
             } catch (PDOException $e) {
-                echo "<div class='error'>".$e->getMessage().'</div>';
+                $page->addError($e->getMessage());
             }
 
             while ($row = $resultPage->fetch()) {

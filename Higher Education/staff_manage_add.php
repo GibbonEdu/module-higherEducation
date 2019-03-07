@@ -23,9 +23,7 @@ include __DIR__.'/moduleFunctions.php';
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_manage_add.php') == false) {
 
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     $page->breadcrumbs->add(__('Manage Staff'), 'staff_manage.php');
     $page->breadcrumbs->add(__('Add Staff'));

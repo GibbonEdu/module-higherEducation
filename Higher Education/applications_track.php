@@ -22,9 +22,7 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_track.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
 
     //Proceed!
@@ -34,9 +32,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
         returnProcess($guid, $_GET['return'], null, null);
     }
 
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) { echo "<div class='error'>";
-        echo 'You have not been enrolled for higher education applications.';
-        echo '</div>';
+    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
+        $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
         echo '<p>';
         echo 'Use this page to provide relevant information about your higher education application intentions and progress. This information will be used to guide you through this process.';
@@ -49,7 +46,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
+            $page->addError($e->getMessage());
         }
 
         if ($result->rowCount() != 1) {
@@ -204,7 +201,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                 $resultApps = $connection2->prepare($sqlApps);
                 $resultApps->execute($dataApps);
             } catch (PDOException $e) {
-                echo "<div class='error'>".$e->getMessage().'</div>';
+                $page->addError($e->getMessage());
             }
 
             echo "<div class='linkTop'>";
@@ -212,9 +209,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             echo '</div>';
 
             if ($resultApps->rowCount() < 1) {
-                echo "<div class='error'>";
-                echo 'There are no applications to display.';
-                echo '</div>';
+                $page->addError(__('There are no applications to display.'));
             } else {
                 echo "<table cellspacing='0' style='width: 100%'>";
                 echo "<tr class='head'>";

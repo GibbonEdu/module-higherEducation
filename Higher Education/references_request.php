@@ -22,9 +22,7 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_request.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
 
     //Proceed!
@@ -34,9 +32,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         returnProcess($guid, $_GET['return'], null, null);
     }
 
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) { echo "<div class='error'>";
-        echo 'You have not been enrolled for higher education applications.';
-        echo '</div>';
+    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
+        $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
         echo '<p>';
         echo 'Use the form below to request references for particular purposes, and then track the writing and completion of the reference. Please remember that your reference is a complex document written by several people, and so make take some time to create.';
@@ -48,7 +45,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
+            $page->addError($e->getMessage());
         }
 
         echo "<div class='linkTop'>";
@@ -56,9 +53,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         echo '</div>';
 
         if ($result->rowCount() < 1) {
-            echo "<div class='error'>";
-            echo 'There are no reference requests to display.';
-            echo '</div>';
+            $page->addError(__('There are no reference requests to display.'));
         } else {
             echo "<table cellspacing='0' style='width: 100%'>";
             echo "<tr class='head'>";
@@ -118,7 +113,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     $resultReferee = $connection2->prepare($sqlReferee);
                     $resultReferee->execute($dataReferee);
                 } catch (PDOException $e) {
-                    echo "<div class='error'>".$e->getMessage().'</div>';
+                    $page->addError($e->getMessage());
                 }
                 while ($rowReferee = $resultReferee->fetch()) {
                     echo formatName(htmlPrep($rowReferee['title']), htmlPrep($rowReferee['preferredName']), htmlPrep($rowReferee['surname']), 'Staff', false).'<br/>';

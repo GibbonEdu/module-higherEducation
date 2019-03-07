@@ -22,9 +22,7 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_track_add.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
     $page->breadcrumbs->add(__('Track Applications'), 'applications_track.php');
@@ -40,9 +38,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     }
 
     //Check for student enrolment
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) { echo "<div class='error'>";
-        echo 'You have not been enrolled for higher education applications.';
-        echo '</div>';
+    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
+        $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
         //Check for application record
         try {
@@ -51,13 +48,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
+            $page->addError($e->getMessage());
         }
 
         if ($result->rowCount() != 1) {
-            echo "<div class='error'>";
-            echo 'You have not saved your application process yet.';
-            echo '</div>';
+            $page->addError(__('You have not saved your application process yet.'));
         } else {
             $row = $result->fetch();
             ?>

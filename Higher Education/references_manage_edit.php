@@ -22,9 +22,7 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage_edit.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? '';
@@ -37,9 +35,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     $page->breadcrumbs->add(__('Edit Reference'));
 
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
-    if ($role != 'Coordinator') { echo "<div class='error'>";
-        echo 'You do not have access to this action.';
-        echo '</div>';
+    if ($role != 'Coordinator') {
+        $page->addError(__('You do not have access to this action.'));
     } else {
         if (isset($_GET['return'])) {
             returnProcess($guid, $_GET['return'], null, null);
@@ -49,9 +46,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
         $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
         if ($higherEducationReferenceID == '' or $gibbonSchoolYearID == '') {
-            echo "<div class='error'>";
-            echo 'You have not specified a reference.';
-            echo '</div>';
+            $page->addError(__('You have not specified a reference.'));
         } else {
             try {
                 $data = array('higherEducationReferenceID' => $higherEducationReferenceID);
@@ -59,13 +54,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 $result = $connection2->prepare($sql);
                 $result->execute($data);
             } catch (PDOException $e) {
-                echo "<div class='error'>".$e->getMessage().'</div>';
+                $page->addError($e->getMessage());
             }
 
             if ($result->rowCount() != 1) {
-                echo "<div class='error'>";
-                echo 'The selected reference does not exist.';
-                echo '</div>';
+                $page->addError(__('The selected reference does not exist.'));
             } else {
                 //Let's go!
                 $row = $result->fetch();

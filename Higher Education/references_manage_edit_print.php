@@ -22,14 +22,11 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage_edit.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
-    if ($role != 'Coordinator') { echo "<div class='error'>";
-        echo 'You do not have access to this action.';
-        echo '</div>';
+    if ($role != 'Coordinator') {
+        $page->addError(__('You do not have access to this action.'));
     } else {
         $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
 
@@ -45,13 +42,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 $result = $connection2->prepare($sql);
                 $result->execute($data);
             } catch (PDOException $e) {
-                echo "<div class='error'>".$e->getMessage().'</div>';
+                $page->addError($e->getMessage());
             }
 
             if ($result->rowCount() != 1) {
-                echo "<div class='error'>";
-                echo 'The selected reference does not exist.';
-                echo '</div>';
+                $page->addError(__('The selected reference does not exist.'));
             } else {
                 //Let's go!
                 $row = $result->fetch();
@@ -59,9 +54,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 echo "<div class='linkTop'>";
                 echo "<a href='javascript:window.print()'><img title='Print' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/print.png'/></a>";
                 echo '</div>'; ?>
-                <table class='smallIntBorder' cellspacing='0' style="width: 100%">    
+                <table class='smallIntBorder' cellspacing='0' style="width: 100%">
                     <tr>
-                        <td> 
+                        <td>
                             <b>Student</b><br/>
                         </td>
                         <td class="right">
@@ -69,7 +64,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                         </td>
                     </tr>
                     <tr>
-                        <td> 
+                        <td>
                             <b>Reference Type</b><br/>
                         </td>
                         <td class="right">

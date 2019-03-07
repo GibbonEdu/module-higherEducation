@@ -22,9 +22,7 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_request_add.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
     $page->breadcrumbs->add(__('Request References'), 'references_request.php');
@@ -35,9 +33,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     }
 
     //Check for student enrolment
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) { echo "<div class='error'>";
-        echo 'You have not been enrolled for higher education applications.';
-        echo '</div>';
+    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
+        $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
         ?>
         <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/references_request_addProcess.php' ?>">

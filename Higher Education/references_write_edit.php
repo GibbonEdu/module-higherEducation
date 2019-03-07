@@ -22,9 +22,7 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_write_edit.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
     $page->breadcrumbs->add(__('Write References'), 'references_write.php', [
@@ -40,9 +38,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
     $higherEducationReferenceComponentID = $_GET['higherEducationReferenceComponentID'];
     if ($higherEducationReferenceComponentID == '' or $gibbonSchoolYearID == '') {
-        echo "<div class='error'>";
-        echo 'You have not specified a reference.';
-        echo '</div>';
+        $page->addError(__('You have not specified a reference.'));
     } else {
         try {
             $data = array('higherEducationReferenceComponentID' => $higherEducationReferenceComponentID);
@@ -50,13 +46,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
+            $page->addError($e->getMessage());
         }
 
         if ($result->rowCount() != 1) {
-            echo "<div class='error'>";
-            echo 'The selected reference does not exist.';
-            echo '</div>';
+            $page->addError(__('The selected reference does not exist.'));
         } else {
             //Let's go!
             $row = $result->fetch();
@@ -168,7 +162,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     } catch (PDOException $e) {
                         echo '<tr>';
                         echo '<td colspan=2>';
-                        echo "<div class='error'>".$e->getMessage().'</div>';
+                        $page->addError($e->getMessage());
                         echo '</td>';
                         echo '</tr>';
                     }

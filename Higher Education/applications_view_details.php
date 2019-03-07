@@ -22,22 +22,16 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_view_details.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
     if ($role == false) {
         //Acess denied
-        echo "<div class='error'>";
-        echo 'You are not enroled in the Higher Education programme.';
-        echo '</div>';
+        $page->addError(__('You are not enroled in the Higher Education programme.'));
     } else {
         $gibbonPersonID = $_GET['gibbonPersonID'];
         if ($gibbonPersonID == '') {
-            echo "<div class='error'>";
-            echo 'You have not specified a student.';
-            echo '</div>';
+            $page->addError(__('You have not specified a student.'));
         } else {
             try {
                 if ($role == 'Coordinator') {
@@ -50,13 +44,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                 $result = $connection2->prepare($sql);
                 $result->execute($data);
             } catch (PDOException $e) {
-                echo "<div class='error'>".$e->getMessage().'</div>';
+                $page->addError($e->getMessage());
             }
 
             if ($result->rowCount() != 1) {
-                echo "<div class='error'>";
-                echo 'The specified student does not exist, or you do not have access to them.';
-                echo '</div>';
+                $page->addError(__('The specified student does not exist, or you do not have access to them.'));
             } else {
                 $row = $result->fetch();
                 $image_240 = $row['image_240'];
@@ -78,7 +70,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     $resultDetail = $connection2->prepare($sqlDetail);
                     $resultDetail->execute($dataDetail);
                 } catch (PDOException $e) {
-                    echo "<div class='error'>".$e->getMessage().'</div>';
+                    $page->addError($e->getMessage());
                 }
                 if ($resultDetail->rowCount() == 1) {
                     $rowDetail = $resultDetail->fetch();
@@ -98,7 +90,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 } catch (PDOException $e) {
-                    echo "<div class='error'>".$e->getMessage().'</div>';
+                    $page->addError($e->getMessage());
                 }
 
                 if ($result->rowCount() != 1) {
@@ -117,37 +109,37 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                         //Create application record
                         ?>
                         <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/applications_trackProcess.php?higherEducationApplicationID='.$row['higherEducationApplicationID'] ?>">
-                        <table class='smallIntBorder' cellspacing='0' style="width: 100%">    
+                        <table class='smallIntBorder' cellspacing='0' style="width: 100%">
                             <tr id='careerInterestsRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
-                                <td colspan=2 style='padding-top: 15px;'> 
+                                <td colspan=2 style='padding-top: 15px;'>
                                     <b>Career Interests</b><br/>
                                     <span style="font-size: 90%"><i><b>Student asked</b>: What areas of work are you interested in? What are your ambitions?</i></span><br/>
                                     <textarea readonly name="careerInterests" id="careerInterests" rows=12 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['careerInterests']) ?></textarea>
                                 </td>
                             </tr>
                             <tr id='coursesMajorsRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
-                                <td colspan=2 style='padding-top: 15px;'> 
+                                <td colspan=2 style='padding-top: 15px;'>
                                     <b>Courses/Majors</b><br/>
                                     <span style="font-size: 90%"><i><b>Student asked</b>: What areas of study are you interested in? How do these relate to your career interests?</i></span><br/>
                                     <textarea readonly name="coursesMajors" id="coursesMajors" rows=12 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['coursesMajors']) ?></textarea>
                                 </td>
                             </tr>
                             <tr id='otherScoresRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
-                                <td colspan=2 style='padding-top: 15px;'> 
+                                <td colspan=2 style='padding-top: 15px;'>
                                     <b>Scores</b><br/>
                                     <span style="font-size: 90%"><i><b>Student asked</b>: Do you have any non-<?php echo $_SESSION[$guid]['organisationNameShort'] ?> exam scores?</i></span><br/>
                                     <textarea readonly name="otherScores" id="otherScores" rows=12 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['otherScores']) ?></textarea>
                                 </td>
                             </tr>
                             <tr id='personalStatementRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
-                                <td colspan=2 style='padding-top: 15px;'> 
+                                <td colspan=2 style='padding-top: 15px;'>
                                     <b>Personal Statement</b><br/>
                                     <span style="font-size: 90%"><i><b>Student asked</b>: Draft out ideas for your personal statement.</i></span><br/>
                                     <textarea readonly name="personalStatement" id="personalStatement" rows=12 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['personalStatement']) ?></textarea>
                                 </td>
                             </tr>
                             <tr id='meetingNotesRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
-                                <td colspan=2 style='padding-top: 15px;'> 
+                                <td colspan=2 style='padding-top: 15px;'>
                                     <b>Meeting notes</b><br/>
                                     <span style="font-size: 90%"><i><b>Student asked</b>: Take notes on any meetings you have regarding your application process.</i></span><br/>
                                     <textarea readonly name="meetingNotes" id="meetingNotes" rows=12 style="width:738px; margin: 5px 0px 0px 0px;"><?php echo htmlPrep($row['meetingNotes']) ?></textarea>
@@ -177,13 +169,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                                 $resultApps = $connection2->prepare($sqlApps);
                                 $resultApps->execute($dataApps);
                             } catch (PDOException $e) {
-                                echo "<div class='error'>".$e->getMessage().'</div>';
+                                $page->addError($e->getMessage());
                             }
 
                             if ($resultApps->rowCount() < 1) {
-                                echo "<div class='error'>";
-                                echo 'There are no applications to display.';
-                                echo '</div>';
+                                $page->addError(__('There are no applications to display.'));
                             } else {
                                 echo "<table cellspacing='0' style='width: 100%'>";
                                 echo "<tr class='head'>";

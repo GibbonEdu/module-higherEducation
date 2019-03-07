@@ -22,22 +22,16 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
     if ($role == false) {
         //Acess denied
-        echo "<div class='error'>";
-        echo 'You are not enroled in the Higher Education programme.';
-        echo '</div>';
+        $page->addError(__('You are not enroled in the Higher Education programme.'));
     } else {
         if ($role != 'Coordinator') {
             //Acess denied
-            echo "<div class='error'>";
-            echo 'You do not have permission to access this page.';
-            echo '</div>';
+            $page->addError(__('You do not have permission to access this page.'));
         } else {
             //Proceed!
             $page->breadcrumbs->add(__('Manage References'));
@@ -61,12 +55,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 } catch (PDOException $e) {
-                    echo "<div class='error'>".$e->getMessage().'</div>';
+                    $page->addError($e->getMessage());
                 }
                 if ($result->rowcount() != 1) {
-                    echo "<div class='error'>";
-                    echo 'The specified year does not exist.';
-                    echo '</div>';
+                    $page->addError(__('The specified year does not exist.'));
                 } else {
                     $row = $result->fetch();
                     $gibbonSchoolYearID = $row['gibbonSchoolYearID'];
@@ -154,7 +146,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 } catch (PDOException $e) {
-                    echo "<div class='error'>".$e->getMessage().'</div>';
+                    $page->addError($e->getMessage());
                 }
 
                 echo "<div class='linkTop'>";
@@ -162,9 +154,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 echo '</div>';
 
                 if ($result->rowCount() < 1) {
-                    echo "<div class='error'>";
-                    echo 'There are no records to display.';
-                    echo '</div>';
+                    $page->addError(__('There are no records to display.'));
                 } else {
                     if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
                         printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'top', "gibbonSchoolYearID=$gibbonSchoolYearID&search=$search");
@@ -193,7 +183,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                         $resultPage = $connection2->prepare($sqlPage);
                         $resultPage->execute($data);
                     } catch (PDOException $e) {
-                        echo "<div class='error'>".$e->getMessage().'</div>';
+                        $page->addError($e->getMessage());
                     }
                     while ($row = $resultPage->fetch()) {
                         if ($count % 2 == 0) {

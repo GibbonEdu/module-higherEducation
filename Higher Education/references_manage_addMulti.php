@@ -22,9 +22,7 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage_addMulti.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
     $page->breadcrumbs->add(__('Manage References'), 'references_manage.php', [
@@ -40,15 +38,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
     if ($role == false) {
         //Acess denied
-        echo "<div class='error'>";
-        echo 'You are not enroled in the Higher Education programme.';
+        $page->addError(__('You are not enroled in the Higher Education programme.'));
         echo '</div>';
     } else {
         if ($role != 'Coordinator') {
             //Acess denied
-            echo "<div class='error'>";
-            echo 'You do not have permission to access this page.';
-            echo '</div>';
+            $page->addError(__('You do not have permission to access this page.'));
         } else {
             ?>
             <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/references_manage_addMultiProcess.php?gibbonSchoolYearID='.$_GET['gibbonSchoolYearID'].'&search='.$_GET['search'] ?>">

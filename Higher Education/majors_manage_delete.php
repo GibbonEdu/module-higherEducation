@@ -22,18 +22,15 @@ include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_manage_delete.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
     $page->breadcrumbs->add(__('Manage Majors'), 'majors_manage.php');
     $page->breadcrumbs->add(__('Delete Major'));
 
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
-    if ($role != 'Coordinator') { echo "<div class='error'>";
-        echo 'You do not have access to this action.';
-        echo '</div>';
+    if ($role != 'Coordinator') {
+        $page->addError(__('You do not have access to this action.'));
     } else {
         if (isset($_GET['return'])) {
             returnProcess($guid, $_GET['return'], null, null);
@@ -42,9 +39,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
         //Check if school year specified
         $higherEducationMajorID = $_GET['higherEducationMajorID'];
         if ($higherEducationMajorID == '') {
-            echo "<div class='error'>";
-            echo 'You have not specified a student member.';
-            echo '</div>';
+            $page->addError(__('You have not specified a student member.'));
         } else {
             try {
                 $data = array('higherEducationMajorID' => $higherEducationMajorID);
@@ -52,13 +47,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
                 $result = $connection2->prepare($sql);
                 $result->execute($data);
             } catch (PDOException $e) {
-                echo "<div class='error'>".$e->getMessage().'</div>';
+                $page->addError($e->getMessage());
             }
 
             if ($result->rowCount() != 1) {
-                echo "<div class='error'>";
-                echo 'The selected student member does not exist.';
-                echo '</div>';
+                $page->addError(__('The selected student member does not exist.'));
             } else {
                 //Let's go!
                 $row = $result->fetch();

@@ -19,17 +19,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage_edit.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Check if school year specified
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
     $higherEducationReferenceComponentID = $_GET['higherEducationReferenceComponentID'];
     $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
-    if ($higherEducationReferenceComponentID == '' or $higherEducationReferenceID == '' or $gibbonSchoolYearID == '') { echo "<div class='error'>";
-        echo 'You have not specified a reference or component.';
-        echo '</div>';
+    if ($higherEducationReferenceComponentID == '' or $higherEducationReferenceID == '' or $gibbonSchoolYearID == '') {
+        $page->addError(__('You have not specified a reference or component.'));
     } else {
         try {
             $data = array('higherEducationReferenceComponentID' => $higherEducationReferenceComponentID);
@@ -37,13 +34,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
+            $page->addError($e->getMessage());
         }
 
         if ($result->rowCount() != 1) {
-            echo "<div class='error'>";
-            echo 'The specified reference component cannot be found.';
-            echo '</div>';
+            $page->addError(__('The specified reference component cannot be found.'));
         } else {
             //Let's go!
             $row = $result->fetch();
@@ -78,23 +73,23 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             }
             ?>
             <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/references_manage_edit_contribution_deleteProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
-                <table class='smallIntBorder' cellspacing='0' style="width: 100%">    
+                <table class='smallIntBorder' cellspacing='0' style="width: 100%">
                     <tr>
-                        <td> 
+                        <td>
                             <b>Are you sure you want to delete this contribution?</b><br/>
                             <span style="font-size: 90%; color: #cc0000"><i>This operation cannot be undone, and may lead to loss of vital data in your system.<br/>PROCEED WITH CAUTION!</i></span>
                         </td>
                         <td class="right">
-                            
+
                         </td>
                     </tr>
                     <tr>
-                        <td> 
+                        <td>
                             <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
                             <input type="submit" value="Yes">
                         </td>
                         <td class="right">
-                            
+
                         </td>
                     </tr>
                 </table>
