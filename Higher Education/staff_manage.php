@@ -26,9 +26,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
     echo 'You do not have access to this action.';
     echo '</div>';
 } else {
-    echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > </div><div class='trailEnd'>Manage Staff</div>";
-    echo '</div>';
+    $page->breadcrumbs->add(__('Manage Staff'));
 
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);

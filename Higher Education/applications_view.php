@@ -33,9 +33,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
         echo 'You are not enroled in the Higher Education programme.';
         echo '</div>';
     } else {
-        echo "<div class='trail'>";
-        echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > </div><div class='trailEnd'>View Applications</div>";
-        echo '</div>';
+        $page->breadcrumbs->add(__('View Applications'));
         echo '<p>';
         echo "Your higher educatuion staff role is $role. The students listed below are determined by your role, and student-staff relationship assignment.";
         echo '</p>';

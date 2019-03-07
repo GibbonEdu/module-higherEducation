@@ -27,9 +27,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     echo '</div>';
 } else {
     //Proceed!
-    echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/references_manage.php&gibbonSchoolYearID='.$_GET['gibbonSchoolYearID'].'&higherEducationReferenceID='.$_GET['higherEducationReferenceID']."'>Manage References</a> > </div><div class='trailEnd'>Edit Reference</div>";
-    echo '</div>';
+    $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? '';
+    $higherEducationReferenceID = $_GET['higherEducationReferenceID'] ?? '';
+
+    $page->breadcrumbs->add(__('Edit Reference'), 'references_manage_edit.php', [
+        'higherEducationReferenceID' => $higherEducationReferenceID,
+        'gibbonSchoolYearID' => $gibbonSchoolYearID,
+    ]);
+    $page->breadcrumbs->add(__('Edit Reference'));
 
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
     if ($role != 'Coordinator') { echo "<div class='error'>";

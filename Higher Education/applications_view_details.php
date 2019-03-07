@@ -61,9 +61,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                 $row = $result->fetch();
                 $image_240 = $row['image_240'];
 
-                echo "<div class='trail'>";
-                echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/applications_view.php'>View Applications</a> > </div><div class='trailEnd'>Application Details</div>";
-                echo '</div>';
+                $page->breadcrumbs->add(__('View Applications'), 'applications_view.php');
+                $page->breadcrumbs->add(__('Application Details'));
 
                 echo "<table class='smallIntBorder' cellspacing='0' style='width: 100%'>";
                 echo '<tr>';

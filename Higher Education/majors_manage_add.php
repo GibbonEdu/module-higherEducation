@@ -26,9 +26,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
     echo 'You do not have access to this action.';
     echo '</div>';
 } else {
-    echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/majors_manage.php'>Manage Majors</a> > </div><div class='trailEnd'>Add Major</div>";
-    echo '</div>';
+    $page->breadcrumbs->add(__('Manage Majors'), 'majors_manage.php');
+    $page->breadcrumbs->add(__('Add Major'));
 
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
     if ($role != 'Coordinator') { echo "<div class='error'>";
