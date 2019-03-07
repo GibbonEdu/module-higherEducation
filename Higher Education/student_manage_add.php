@@ -36,15 +36,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
     }
 
     ?>
-	<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/student_manage_addProcess.php' ?>">
-		<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-			<tr>
-				<td>
-					<b>Students *</b><br/>
-				</td>
-				<td class="right">
-					<select name="Members[]" id="Members[]" multiple style="width: 302px; height: 150px">
-						<?php
+    <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/student_manage_addProcess.php' ?>">
+        <table class='smallIntBorder' cellspacing='0' style="width: 100%">
+            <tr>
+                <td>
+                    <b>Students *</b><br/>
+                </td>
+                <td class="right">
+                    <select name="Members[]" id="Members[]" multiple style="width: 302px; height: 150px">
+                        <?php
                         try {
                             $dataSelect = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
                             $sqlSelect = "SELECT gibbonPerson.gibbonPersonID, preferredName, surname, gibbonRollGroup.name AS name FROM gibbonPerson, gibbonStudentEnrolment, gibbonRollGroup WHERE gibbonPerson.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID AND gibbonStudentEnrolment.gibbonRollGroupID=gibbonRollGroup.gibbonRollGroupID AND status='FULL' AND gibbonRollGroup.gibbonSchoolYearID=:gibbonSchoolYearID ORDER BY name, surname, preferredName";
@@ -52,47 +52,47 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
                             $resultSelect->execute($dataSelect);
                         } catch (PDOException $e) {
                         }
-						while ($rowSelect = $resultSelect->fetch()) {
-							echo "<option value='".$rowSelect['gibbonPersonID']."'>".htmlPrep($rowSelect['name']).' - '.formatName('', $rowSelect['preferredName'], $rowSelect['surname'], 'Student', true, true).'</option>';
-						}
-						?>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<b>Advisor</b><br/>
-				</td>
-				<td class="right">
-					<select style="width: 302px" name="gibbonPersonIDAdvisor" id="gibbonPersonIDAdvisor">
-						<?php
+                        while ($rowSelect = $resultSelect->fetch()) {
+                            echo "<option value='".$rowSelect['gibbonPersonID']."'>".htmlPrep($rowSelect['name']).' - '.formatName('', $rowSelect['preferredName'], $rowSelect['surname'], 'Student', true, true).'</option>';
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Advisor</b><br/>
+                </td>
+                <td class="right">
+                    <select style="width: 302px" name="gibbonPersonIDAdvisor" id="gibbonPersonIDAdvisor">
+                        <?php
                         echo "<option value=''></option>";
-						try {
-							$data = array();
-							$sql = "SELECT * FROM gibbonPerson JOIN higherEducationStaff ON (gibbonPerson.gibbonPersonID=higherEducationStaff.gibbonPersonID) WHERE status='Full' ORDER BY surname, preferredName";
-							$result = $connection2->prepare($sql);
-							$result->execute($data);
-						} catch (PDOException $e) {
-						}
-						while ($row = $result->fetch()) {
-							echo "<option value='".$row['gibbonPersonID']."'>".formatName('', $row['preferredName'], $row['surname'], 'Staff', true, true).'</option>';
-						}
-						?>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<span style="font-size: 90%"><i>* denotes a required field</i></span>
-				</td>
-				<td class="right">
-					<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-					<input type="submit" value="Submit">
-				</td>
-			</tr>
-		</table>
-	</form>
-	<?php
+                        try {
+                            $data = array();
+                            $sql = "SELECT * FROM gibbonPerson JOIN higherEducationStaff ON (gibbonPerson.gibbonPersonID=higherEducationStaff.gibbonPersonID) WHERE status='Full' ORDER BY surname, preferredName";
+                            $result = $connection2->prepare($sql);
+                            $result->execute($data);
+                        } catch (PDOException $e) {
+                        }
+                        while ($row = $result->fetch()) {
+                            echo "<option value='".$row['gibbonPersonID']."'>".formatName('', $row['preferredName'], $row['surname'], 'Staff', true, true).'</option>';
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-size: 90%"><i>* denotes a required field</i></span>
+                </td>
+                <td class="right">
+                    <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
+                    <input type="submit" value="Submit">
+                </td>
+            </tr>
+        </table>
+    </form>
+    <?php
 
 }
 ?>

@@ -61,60 +61,60 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
             //Let's go!
             $row = $result->fetch();
             ?>
-			<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/student_manage_editProcess.php?higherEducationStudentID=$higherEducationStudentID" ?>">
-				<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-					<tr>
-						<td>
-							<b>Student *</b><br/>
-							<span style="font-size: 90%"><i>This value cannot be changed</i></span>
-						</td>
-						<td class="right">
-							<input readonly type='text' style='width: 302px' value='<?php echo formatName('', $row['preferredName'], $row['surname'], 'Student', true, true) ?>'>
-							<script type="text/javascript">
-								var gibbonPersonID=new LiveValidation('gibbonPersonID');
-								gibbonPersonID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
-							 </script>
-						</td>
-					</tr>
-					</tr>
-					<tr>
-						<td>
-							<b>Advisor</b><br/>
-						</td>
-						<td class="right">
-							<select style="width: 302px" name="gibbonPersonIDAdvisor" id="gibbonPersonIDAdvisor">
-								<?php
+            <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/student_manage_editProcess.php?higherEducationStudentID=$higherEducationStudentID" ?>">
+                <table class='smallIntBorder' cellspacing='0' style="width: 100%">
+                    <tr>
+                        <td>
+                            <b>Student *</b><br/>
+                            <span style="font-size: 90%"><i>This value cannot be changed</i></span>
+                        </td>
+                        <td class="right">
+                            <input readonly type='text' style='width: 302px' value='<?php echo formatName('', $row['preferredName'], $row['surname'], 'Student', true, true) ?>'>
+                            <script type="text/javascript">
+                                var gibbonPersonID=new LiveValidation('gibbonPersonID');
+                                gibbonPersonID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
+                             </script>
+                        </td>
+                    </tr>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Advisor</b><br/>
+                        </td>
+                        <td class="right">
+                            <select style="width: 302px" name="gibbonPersonIDAdvisor" id="gibbonPersonIDAdvisor">
+                                <?php
                                 echo "<option value=''></option>";
-								try {
-									$data = array();
-									$sqlSelect = "SELECT * FROM gibbonPerson JOIN higherEducationStaff ON (gibbonPerson.gibbonPersonID=higherEducationStaff.gibbonPersonID) WHERE status='Full' ORDER BY surname, preferredName";
-									$resultSelect = $connection2->prepare($sqlSelect);
-									$resultSelect->execute($dataSelect);
-								} catch (PDOException $e) {
-								}
-								while ($rowSelect = $resultSelect->fetch()) {
-									$selected = '';
-									if ($row['gibbonPersonIDAdvisor'] == $rowSelect['gibbonPersonID']) {
-										$selected = 'selected';
-									}
-									echo "<option $selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', $rowSelect['preferredName'], $rowSelect['surname'], 'Staff', true, true).'</option>';
-								}
-								?>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<span style="font-size: 90%"><i>* denotes a required field</i></span>
-						</td>
-						<td class="right">
-							<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-							<input type="submit" value="Submit">
-						</td>
-					</tr>
-				</table>
-			</form>
-			<?php
+                                try {
+                                    $data = array();
+                                    $sqlSelect = "SELECT * FROM gibbonPerson JOIN higherEducationStaff ON (gibbonPerson.gibbonPersonID=higherEducationStaff.gibbonPersonID) WHERE status='Full' ORDER BY surname, preferredName";
+                                    $resultSelect = $connection2->prepare($sqlSelect);
+                                    $resultSelect->execute($dataSelect);
+                                } catch (PDOException $e) {
+                                }
+                                while ($rowSelect = $resultSelect->fetch()) {
+                                    $selected = '';
+                                    if ($row['gibbonPersonIDAdvisor'] == $rowSelect['gibbonPersonID']) {
+                                        $selected = 'selected';
+                                    }
+                                    echo "<option $selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', $rowSelect['preferredName'], $rowSelect['surname'], 'Staff', true, true).'</option>';
+                                }
+                                ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-size: 90%"><i>* denotes a required field</i></span>
+                        </td>
+                        <td class="right">
+                            <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
+                            <input type="submit" value="Submit">
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <?php
 
         }
     }

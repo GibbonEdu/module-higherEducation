@@ -41,15 +41,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
     }
 
     ?>
-	<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/staff_manage_addProcess.php' ?>">
-		<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-			<tr>
-				<td>
-					<b>Staff *</b><br/>
-				</td>
-				<td class="right">
-					<select style="width: 302px" name="gibbonPersonID" id="gibbonPersonID">
-						<?php
+    <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/staff_manage_addProcess.php' ?>">
+        <table class='smallIntBorder' cellspacing='0' style="width: 100%">
+            <tr>
+                <td>
+                    <b>Staff *</b><br/>
+                </td>
+                <td class="right">
+                    <select style="width: 302px" name="gibbonPersonID" id="gibbonPersonID">
+                        <?php
                         try {
                             $data = array();
                             $sql = "SELECT * FROM gibbonPerson JOIN gibbonStaff ON (gibbonPerson.gibbonPersonID=gibbonStaff.gibbonPersonID) WHERE status='Full' ORDER BY surname, preferredName";
@@ -58,47 +58,47 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
                         } catch (PDOException $e) {
                         }
 
-						echo "<option value='Please select...'>Please select...</option>";
-						while ($row = $result->fetch()) {
-							echo "<option value='".$row['gibbonPersonID']."'>".formatName('', $row['preferredName'], $row['surname'], 'Staff', true, true).'</option>';
-						}
-						?>
-					</select>
-					<script type="text/javascript">
-						var gibbonPersonID=new LiveValidation('gibbonPersonID');
-						gibbonPersonID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
-					 </script>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<b>Role *</b><br/>
-					<span style="font-size: 90%"><i></i></span>
-				</td>
-				<td class="right">
-					<select name="role" id="role" style="width: 302px">
-						<option value="Please select...">Please select...</option>
-						<option value="Coordinator">Coordinator</option>
-						<option value="Advisor">Advisor</option>
-					</select>
-					<script type="text/javascript">
-						var role=new LiveValidation('role');
-						role.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
-					 </script>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<span style="font-size: 90%"><i>* denotes a required field</i></span>
-				</td>
-				<td class="right">
-					<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-					<input type="submit" value="Submit">
-				</td>
-			</tr>
-		</table>
-	</form>
-	<?php
+                        echo "<option value='Please select...'>Please select...</option>";
+                        while ($row = $result->fetch()) {
+                            echo "<option value='".$row['gibbonPersonID']."'>".formatName('', $row['preferredName'], $row['surname'], 'Staff', true, true).'</option>';
+                        }
+                        ?>
+                    </select>
+                    <script type="text/javascript">
+                        var gibbonPersonID=new LiveValidation('gibbonPersonID');
+                        gibbonPersonID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
+                     </script>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Role *</b><br/>
+                    <span style="font-size: 90%"><i></i></span>
+                </td>
+                <td class="right">
+                    <select name="role" id="role" style="width: 302px">
+                        <option value="Please select...">Please select...</option>
+                        <option value="Coordinator">Coordinator</option>
+                        <option value="Advisor">Advisor</option>
+                    </select>
+                    <script type="text/javascript">
+                        var role=new LiveValidation('role');
+                        role.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
+                     </script>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-size: 90%"><i>* denotes a required field</i></span>
+                </td>
+                <td class="right">
+                    <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
+                    <input type="submit" value="Submit">
+                </td>
+            </tr>
+        </table>
+    </form>
+    <?php
 
 }
 ?>

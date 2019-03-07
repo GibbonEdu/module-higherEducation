@@ -108,9 +108,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
                     $rowNum = 'error';
                 }
 
-				//COLOR ROW BY STATUS!
-				echo "<tr class=$rowNum>";
-				echo '<td>';
+                //COLOR ROW BY STATUS!
+                echo "<tr class=$rowNum>";
+                echo '<td>';
                 echo $row['name'];
                 echo '</td>';
                 echo '<td>';

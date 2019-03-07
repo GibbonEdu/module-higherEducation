@@ -96,8 +96,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
             }
             ++$count;
 
-			//COLOR ROW BY STATUS!
-			echo "<tr class=$rowNum>";
+            //COLOR ROW BY STATUS!
+            echo "<tr class=$rowNum>";
             echo '<td>';
             echo formatName('', $row['preferredName'], $row['surname'], 'Staff', true, true);
             echo '</td>';

@@ -44,44 +44,44 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
         }
 
         ?>
-		<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/majors_manage_addProcess.php' ?>">
-			<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-				<tr>
-					<td>
-						<b>Name *</b><br/>
-						<span style="font-size: 90%"><i></i></span>
-					</td>
-					<td class="right">
-						<input name="name" id="uniname" maxlength=150 value="" type="text" style="width: 300px">
-						<script type="text/javascript">
-							var uniname=new LiveValidation('uniname');
-							uniname.add(Validate.Presence);
-						 </script>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<b>Active *</b><br/>
-					</td>
-					<td class="right">
-						<select name="active" id="active" style="width: 302px">
-							<option value="Y">Y</option>
-							<option value="N">N</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<span style="font-size: 90%"><i>* denotes a required field</i></span>
-					</td>
-					<td class="right">
-						<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-						<input type="submit" value="Submit">
-					</td>
-				</tr>
-			</table>
-		</form>
-		<?php
+        <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/majors_manage_addProcess.php' ?>">
+            <table class='smallIntBorder' cellspacing='0' style="width: 100%">
+                <tr>
+                    <td>
+                        <b>Name *</b><br/>
+                        <span style="font-size: 90%"><i></i></span>
+                    </td>
+                    <td class="right">
+                        <input name="name" id="uniname" maxlength=150 value="" type="text" style="width: 300px">
+                        <script type="text/javascript">
+                            var uniname=new LiveValidation('uniname');
+                            uniname.add(Validate.Presence);
+                         </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Active *</b><br/>
+                    </td>
+                    <td class="right">
+                        <select name="active" id="active" style="width: 302px">
+                            <option value="Y">Y</option>
+                            <option value="N">N</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span style="font-size: 90%"><i>* denotes a required field</i></span>
+                    </td>
+                    <td class="right">
+                        <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
+                        <input type="submit" value="Submit">
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <?php
 
     }
 }

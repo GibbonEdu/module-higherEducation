@@ -93,12 +93,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     } else {
                         echo 'Previous Year ';
                     }
-					echo ' | ';
-					if (getNextSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-						echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/references_manage.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>Next Year</a> ";
-					} else {
-						echo 'Next Year ';
-					}
+                    echo ' | ';
+                    if (getNextSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
+                        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/references_manage.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>Next Year</a> ";
+                    } else {
+                        echo 'Next Year ';
+                    }
                 echo '</div>';
 
                 echo "<h3 class='top'>";
@@ -107,27 +107,27 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 echo "<div class='linkTop'>";
                 echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/references_manage.php'>Clear Search</a>";
                 echo '</div>'; ?>
-				<form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
-					<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-						<tr>
-							<td>
-								<b>Search For</b><br/>
-								<span style="font-size: 90%"><i>Preferred, surname, username.</i></span>
-							</td>
-							<td class="right">
-								<input name="search" id="search" maxlength=20 value="<?php echo $search ?>" type="text" style="width: 300px">
-							</td>
-						</tr>
-						<tr>
-							<td colspan=2 class="right">
-								<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/references_manage.php">
-								<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-								<input type="submit" value="Submit">
-							</td>
-						</tr>
-					</table>
-				</form>
-				<?php
+                <form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
+                    <table class='smallIntBorder' cellspacing='0' style="width: 100%">
+                        <tr>
+                            <td>
+                                <b>Search For</b><br/>
+                                <span style="font-size: 90%"><i>Preferred, surname, username.</i></span>
+                            </td>
+                            <td class="right">
+                                <input name="search" id="search" maxlength=20 value="<?php echo $search ?>" type="text" style="width: 300px">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=2 class="right">
+                                <input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/references_manage.php">
+                                <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
+                                <input type="submit" value="Submit">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <?php
 
                 echo "<h3 class='top'>";
                 echo 'View';

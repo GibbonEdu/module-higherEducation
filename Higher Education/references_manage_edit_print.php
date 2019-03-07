@@ -59,24 +59,24 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 echo "<div class='linkTop'>";
                 echo "<a href='javascript:window.print()'><img title='Print' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/print.png'/></a>";
                 echo '</div>'; ?>
-				<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
-					<tr>
-						<td> 
-							<b>Student</b><br/>
-						</td>
-						<td class="right">
-							<input readonly name="student" id="student" maxlength=255 value="<?php echo formatName('', htmlPrep($row['preferredName']), htmlPrep($row['surname']), 'Student', false, false) ?>" type="text" style="width: 300px">
-						</td>
-					</tr>
-					<tr>
-						<td> 
-							<b>Reference Type</b><br/>
-						</td>
-						<td class="right">
-							<input readonly name="type" id="type" maxlength=255 value="<?php echo $row['type'] ?>" type="text" style="width: 300px">
-						</td>
-					</tr>
-					<?php
+                <table class='smallIntBorder' cellspacing='0' style="width: 100%">    
+                    <tr>
+                        <td> 
+                            <b>Student</b><br/>
+                        </td>
+                        <td class="right">
+                            <input readonly name="student" id="student" maxlength=255 value="<?php echo formatName('', htmlPrep($row['preferredName']), htmlPrep($row['surname']), 'Student', false, false) ?>" type="text" style="width: 300px">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> 
+                            <b>Reference Type</b><br/>
+                        </td>
+                        <td class="right">
+                            <input readonly name="type" id="type" maxlength=255 value="<?php echo $row['type'] ?>" type="text" style="width: 300px">
+                        </td>
+                    </tr>
+                    <?php
                     try {
                         $dataContributions = array('higherEducationReferenceID' => $row['higherEducationReferenceID']);
                         $sqlContributions = 'SELECT higherEducationReferenceComponent.*, preferredName, surname FROM higherEducationReferenceComponent JOIN gibbonPerson ON (higherEducationReferenceComponent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReferenceID=:higherEducationReferenceID ORDER BY title';
@@ -84,37 +84,37 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                         $resultContributions->execute($dataContributions);
                     } catch (PDOException $e) {
                     }
-					if ($resultContributions->rowCount() < 1) {
-						echo '<tr>';
-						echo '<td colspan=2>';
-						echo '<i>Error: no referees requested, or a system error.</i>';
-						echo '</td>';
-						echo '</tr>';
-					} else {
-						while ($rowContributions = $resultContributions->fetch()) {
-							echo '<tr>';
-							echo '<td colspan=2>';
-							echo '<h4>';
-							if ($rowContributions['title'] == '') {
-								echo $rowContributions['type'].' Comment';
-								echo "<span style='font-size: 75%; font-style: italic'>";
-								echo ' . by '.formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
-								echo '</span>';
-							} else {
-								echo $rowContributions['title'];
-								echo "<span style='font-size: 75%; font-style: italic'>";
-								echo ' . '.$rowContributions['type'].' comment by '.formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
-								echo '</span>';
-							}
-							echo '</h4>';
-							echo '<p>';
-							echo $rowContributions['body'];
-							echo '</p>';
-							echo '</td>';
-							echo '</tr>';
-						}
-					}
-				echo '</table>';
+                    if ($resultContributions->rowCount() < 1) {
+                        echo '<tr>';
+                        echo '<td colspan=2>';
+                        echo '<i>Error: no referees requested, or a system error.</i>';
+                        echo '</td>';
+                        echo '</tr>';
+                    } else {
+                        while ($rowContributions = $resultContributions->fetch()) {
+                            echo '<tr>';
+                            echo '<td colspan=2>';
+                            echo '<h4>';
+                            if ($rowContributions['title'] == '') {
+                                echo $rowContributions['type'].' Comment';
+                                echo "<span style='font-size: 75%; font-style: italic'>";
+                                echo ' . by '.formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
+                                echo '</span>';
+                            } else {
+                                echo $rowContributions['title'];
+                                echo "<span style='font-size: 75%; font-style: italic'>";
+                                echo ' . '.$rowContributions['type'].' comment by '.formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
+                                echo '</span>';
+                            }
+                            echo '</h4>';
+                            echo '<p>';
+                            echo $rowContributions['body'];
+                            echo '</p>';
+                            echo '</td>';
+                            echo '</tr>';
+                        }
+                    }
+                echo '</table>';
             }
         }
     }

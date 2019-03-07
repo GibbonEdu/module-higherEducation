@@ -67,75 +67,75 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
                 //Let's go!
                 $row = $result->fetch();
                 ?>
-				<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/institutions_manage_editProcess.php?higherEducationInstitutionID=$higherEducationInstitutionID" ?>">
-					<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-						<tr>
-							<td>
-								<b>Name *</b><br/>
-								<span style="font-size: 90%"><i></i></span>
-							</td>
-							<td class="right">
-								<input name="name" id="uniname" maxlength=150 value="<?php echo $row['name'] ?>" type="text" style="width: 300px">
-								<script type="text/javascript">
-									var uniname=new LiveValidation('uniname');
-									uniname.add(Validate.Presence);
-								 </script>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<b>Country *</b><br/>
-								<span style="font-size: 90%"><i></i></span>
-							</td>
-							<td class="right">
-								<select name="country" id="country" style="width: 302px">
-									<?php
+                <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/institutions_manage_editProcess.php?higherEducationInstitutionID=$higherEducationInstitutionID" ?>">
+                    <table class='smallIntBorder' cellspacing='0' style="width: 100%">
+                        <tr>
+                            <td>
+                                <b>Name *</b><br/>
+                                <span style="font-size: 90%"><i></i></span>
+                            </td>
+                            <td class="right">
+                                <input name="name" id="uniname" maxlength=150 value="<?php echo $row['name'] ?>" type="text" style="width: 300px">
+                                <script type="text/javascript">
+                                    var uniname=new LiveValidation('uniname');
+                                    uniname.add(Validate.Presence);
+                                 </script>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Country *</b><br/>
+                                <span style="font-size: 90%"><i></i></span>
+                            </td>
+                            <td class="right">
+                                <select name="country" id="country" style="width: 302px">
+                                    <?php
                                     echo "<option value='Please select...'>Please select...</option>";
-									try {
-										$dataSelect = array();
-										$sqlSelect = 'SELECT printable_name FROM gibbonCountry ORDER BY printable_name';
-										$resultSelect = $connection2->prepare($sqlSelect);
-										$resultSelect->execute($dataSelect);
-									} catch (PDOException $e) {
-									}
-									while ($rowSelect = $resultSelect->fetch()) {
-										$selected = '';
-										if ($row['country'] == $rowSelect['printable_name']) {
-											$selected = 'selected';
-										}
-										echo "<option $selected value='".$rowSelect['printable_name']."'>".htmlPrep($rowSelect['printable_name']).'</option>';
-									}
-									?>
-								</select>
-								<script type="text/javascript">
-									var country=new LiveValidation('country');
-									country.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
-								 </script>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<b>Active *</b><br/>
-							</td>
-							<td class="right">
-								<select name="active" id="active" style="width: 302px">
-									<option <?php if ($row['active'] == 'Y') { echo ' selected '; } ?>value="Y">Y</option>
-									<option <?php if ($row['active'] == 'N') { echo ' selected '; } ?>value="N">N</option>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<span style="font-size: 90%"><i>* denotes a required field</i></span>
-							</td>
-							<td class="right">
-								<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-								<input type="submit" value="Submit">
-							</td>
-						</tr>
-					</table>
-				</form>
-				<?php
+                                    try {
+                                        $dataSelect = array();
+                                        $sqlSelect = 'SELECT printable_name FROM gibbonCountry ORDER BY printable_name';
+                                        $resultSelect = $connection2->prepare($sqlSelect);
+                                        $resultSelect->execute($dataSelect);
+                                    } catch (PDOException $e) {
+                                    }
+                                    while ($rowSelect = $resultSelect->fetch()) {
+                                        $selected = '';
+                                        if ($row['country'] == $rowSelect['printable_name']) {
+                                            $selected = 'selected';
+                                        }
+                                        echo "<option $selected value='".$rowSelect['printable_name']."'>".htmlPrep($rowSelect['printable_name']).'</option>';
+                                    }
+                                    ?>
+                                </select>
+                                <script type="text/javascript">
+                                    var country=new LiveValidation('country');
+                                    country.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
+                                 </script>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Active *</b><br/>
+                            </td>
+                            <td class="right">
+                                <select name="active" id="active" style="width: 302px">
+                                    <option <?php if ($row['active'] == 'Y') { echo ' selected '; } ?>value="Y">Y</option>
+                                    <option <?php if ($row['active'] == 'N') { echo ' selected '; } ?>value="N">N</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-size: 90%"><i>* denotes a required field</i></span>
+                            </td>
+                            <td class="right">
+                                <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
+                                <input type="submit" value="Submit">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <?php
 
             }
         }

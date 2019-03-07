@@ -59,30 +59,30 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
             //Let's go!
             $row = $result->fetch();
             ?>
-			<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/student_manage_deleteProcess.php?higherEducationStudentID=$higherEducationStudentID" ?>">
-				<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-					<tr>
-						<td>
-							<b>Are you sure you want to delete "<?php echo formatName('', $row['preferredName'], $row['surname'], 'Student', true, true) ?>" from the Higher Education programme?</b><br/>
-							<span style="font-size: 90%; color: #cc0000"><i>This operation cannot be undone, and may lead to loss of vital data in your system.<br/>PROCEED WITH CAUTION!</i></span>
-						</td>
-						<td class="right">
+            <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/student_manage_deleteProcess.php?higherEducationStudentID=$higherEducationStudentID" ?>">
+                <table class='smallIntBorder' cellspacing='0' style="width: 100%">
+                    <tr>
+                        <td>
+                            <b>Are you sure you want to delete "<?php echo formatName('', $row['preferredName'], $row['surname'], 'Student', true, true) ?>" from the Higher Education programme?</b><br/>
+                            <span style="font-size: 90%; color: #cc0000"><i>This operation cannot be undone, and may lead to loss of vital data in your system.<br/>PROCEED WITH CAUTION!</i></span>
+                        </td>
+                        <td class="right">
 
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<input name="higherEducationStudentID" id="higherEducationStudentID" value="<?php echo $higherEducationStudentID ?>" type="hidden">
-							<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-							<input type="submit" value="Yes">
-						</td>
-						<td class="right">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input name="higherEducationStudentID" id="higherEducationStudentID" value="<?php echo $higherEducationStudentID ?>" type="hidden">
+                            <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
+                            <input type="submit" value="Yes">
+                        </td>
+                        <td class="right">
 
-						</td>
-					</tr>
-				</table>
-			</form>
-			<?php
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <?php
 
         }
     }

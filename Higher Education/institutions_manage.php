@@ -108,8 +108,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
                     $rowNum = 'error';
                 }
 
-				//COLOR ROW BY STATUS!
-				echo "<tr class=$rowNum>";
+                //COLOR ROW BY STATUS!
+                echo "<tr class=$rowNum>";
                 echo '<td>';
                 echo $row['name'].', '.$row['country'];
                 echo '</td>';
