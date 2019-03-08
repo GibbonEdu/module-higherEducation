@@ -83,7 +83,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
                 $resultPage = $connection2->prepare($sqlPage);
                 $resultPage->execute($data);
             } catch (PDOException $e) {
-                $page->addError($e->getMessage());
+                echo "<div class='warning'>";
+                    echo $e->getMessage();
+                echo '</div>';
             }
 
             while ($row = $resultPage->fetch()) {

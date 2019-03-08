@@ -45,7 +45,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            $page->addError($e->getMessage());
+            echo "<div class='warning'>";
+                echo $e->getMessage();
+            echo '</div>';
         }
 
         echo "<div class='linkTop'>";
@@ -53,7 +55,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         echo '</div>';
 
         if ($result->rowCount() < 1) {
-            $page->addError(__('There are no reference requests to display.'));
+            echo "<div class='warning'>";
+                echo __('There are no reference requests to display.');
+            echo '</div>';
         } else {
             echo "<table cellspacing='0' style='width: 100%'>";
             echo "<tr class='head'>";
@@ -113,7 +117,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     $resultReferee = $connection2->prepare($sqlReferee);
                     $resultReferee->execute($dataReferee);
                 } catch (PDOException $e) {
-                    $page->addError($e->getMessage());
+                    echo "<div class='warning'>";
+                        echo $e->getMessage();
+                    echo '</div>';
                 }
                 while ($rowReferee = $resultReferee->fetch()) {
                     echo formatName(htmlPrep($rowReferee['title']), htmlPrep($rowReferee['preferredName']), htmlPrep($rowReferee['surname']), 'Staff', false).'<br/>';

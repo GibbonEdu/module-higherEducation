@@ -60,7 +60,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     $('.searchInput').val(1);
                     $('.body').find("tr:odd").addClass('odd');
                     $('.body').find("tr:even").addClass('even');
-                        
+
                     $(".searchInput").change(function(){
                         $('.body').find("tr").hide() ;
                         if ($('.searchInput :selected').val() == "" ) {
@@ -69,7 +69,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                         else {
                             $('.body').find('.' + $('.searchInput :selected').val()).show();
                         }
-                                    
+
                         $('.body').find("tr").removeClass('odd even');
                         $('.body').find('tr:visible:odd').addClass('odd');
                         $('.body').find('tr:visible:even').addClass('even');
@@ -99,7 +99,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     }
                     ?>
                 </select>
-                <?php    
+                <?php
                 echo '</div>';
 
                 echo "<table cellspacing='0' style='width: 100%'>";
@@ -142,7 +142,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                         $resultAdvisor = $connection2->prepare($sqlAdvisor);
                         $resultAdvisor->execute($dataAdvisor);
                     } catch (PDOException $e) {
-                        $page->addError($e->getMessage());
+                        echo "<div class='warning'>";
+                            echo $e->getMessage();
+                        echo '</div>';
                     }
 
                     if ($resultAdvisor->rowCount() < 1) {

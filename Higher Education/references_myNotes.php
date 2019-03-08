@@ -43,7 +43,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
         $row = $result->fetch();
-
         ?>
         <p>
             On this page you can store some notes that will help your referee write about you. You might want to include some highlights of your achievements in and out of school, community service work you have done and activities you have taken part in.

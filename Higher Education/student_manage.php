@@ -58,7 +58,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
         echo '</div>';
 
         if ($result->rowCount() < 1) {
-            $page->addError(__('There are no students to display.'));
+            echo "<div class='warning'>";
+                echo __('There are no students to display.');
+            echo '</div>';
         } else {
             if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
                 printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'top');
@@ -89,7 +91,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
                 $resultPage = $connection2->prepare($sqlPage);
                 $resultPage->execute($data);
             } catch (PDOException $e) {
-                $page->addError($e->getMessage());
+                echo "<div class='warning'>";
+                    echo $e->getMessage();
+                echo '</div>';
             }
 
             while ($row = $resultPage->fetch()) {
@@ -119,7 +123,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
                         $resultAdvisor = $connection2->prepare($sqlAdvisor);
                         $resultAdvisor->execute($dataAdvisor);
                     } catch (PDOException $e) {
-                        $page->addError($e->getMessage());
+                        echo "<div class='warning'>";
+                            echo $e->getMessage();
+                        echo '</div>';
                     }
 
                     if ($resultAdvisor->rowCount() == 1) {

@@ -162,7 +162,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     } catch (PDOException $e) {
                         echo '<tr>';
                         echo '<td colspan=2>';
-                        $page->addError($e->getMessage());
+                        echo "<div class='warning'>";
+                            echo $e->getMessage();
+                        echo '</div>';
                         echo '</td>';
                         echo '</tr>';
                     }

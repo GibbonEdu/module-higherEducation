@@ -42,11 +42,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 $result = $connection2->prepare($sql);
                 $result->execute($data);
             } catch (PDOException $e) {
-                $page->addError($e->getMessage());
+                echo "<div class='warning'>";
+                    echo $e->getMessage();
+                echo '</div>';
             }
 
             if ($result->rowCount() != 1) {
-                $page->addError(__('The selected reference does not exist.'));
+                echo "<div class='warning'>";
+                    echo __('The selected reference does not exist.');
+                echo '</div>';
             } else {
                 //Let's go!
                 $row = $result->fetch();

@@ -70,7 +70,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     $resultDetail = $connection2->prepare($sqlDetail);
                     $resultDetail->execute($dataDetail);
                 } catch (PDOException $e) {
-                    $page->addError($e->getMessage());
+                    echo "<div class='warning'>";
+                        echo $e->getMessage();
+                    echo '</div>';
                 }
                 if ($resultDetail->rowCount() == 1) {
                     $rowDetail = $resultDetail->fetch();
@@ -90,7 +92,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 } catch (PDOException $e) {
-                    $page->addError($e->getMessage());
+                    echo "<div class='warning'>";
+                        echo $e->getMessage();
+                    echo '</div>';
                 }
 
                 if ($result->rowCount() != 1) {
@@ -169,11 +173,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                                 $resultApps = $connection2->prepare($sqlApps);
                                 $resultApps->execute($dataApps);
                             } catch (PDOException $e) {
-                                $page->addError($e->getMessage());
+                                echo "<div class='warning'>";
+                                    echo $e->getMessage();
+                                echo '</div>';
                             }
 
                             if ($resultApps->rowCount() < 1) {
-                                $page->addError(__('There are no applications to display.'));
+                                echo "<div class='warning'>";
+                                    echo __('There are no applications to display.');
+                                echo '</div>';
                             } else {
                                 echo "<table cellspacing='0' style='width: 100%'>";
                                 echo "<tr class='head'>";

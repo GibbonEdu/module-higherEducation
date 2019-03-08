@@ -94,10 +94,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            $page->addError($e->getMessage());
+            echo "<div class='warning'>";
+                echo $e->getMessage();
+            echo '</div>';
         }
 
-        if ($result->rowCount() < 1) { echo "<div class='success'>";
+        if ($result->rowCount() < 1) {
+            echo "<div class='success'>";
             echo 'There are no reference requests at current.';
             echo '</div>';
         } else {
@@ -131,7 +134,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 $resultPage = $connection2->prepare($sqlPage);
                 $resultPage->execute($data);
             } catch (PDOException $e) {
-                $page->addError($e->getMessage());
+                echo "<div class='warning'>";
+                    echo $e->getMessage();
+                echo '</div>';
             }
             while ($row = $resultPage->fetch()) {
                 if ($count % 2 == 0) {

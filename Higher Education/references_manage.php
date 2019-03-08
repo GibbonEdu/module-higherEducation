@@ -146,7 +146,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 } catch (PDOException $e) {
-                    $page->addError($e->getMessage());
+                    echo "<div class='warning'>";
+                        echo $e->getMessage();
+                    echo '</div>';
                 }
 
                 echo "<div class='linkTop'>";
@@ -154,7 +156,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 echo '</div>';
 
                 if ($result->rowCount() < 1) {
-                    $page->addError(__('There are no records to display.'));
+                    echo "<div class='warning'>";
+                        echo __('There are no records to display.');
+                    echo '</div>';
                 } else {
                     if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
                         printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'top', "gibbonSchoolYearID=$gibbonSchoolYearID&search=$search");
@@ -183,7 +187,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                         $resultPage = $connection2->prepare($sqlPage);
                         $resultPage->execute($data);
                     } catch (PDOException $e) {
-                        $page->addError($e->getMessage());
+                        echo "<div class='warning'>";
+                            echo $e->getMessage();
+                        echo '</div>';
                     }
                     while ($row = $resultPage->fetch()) {
                         if ($count % 2 == 0) {

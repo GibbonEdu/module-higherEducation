@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_manage_delete.php') == false) {
-
     //Acess denied
     $page->addError(__('You do not have access to this action.'));
 } else {

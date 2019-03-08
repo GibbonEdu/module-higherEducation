@@ -201,7 +201,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                 $resultApps = $connection2->prepare($sqlApps);
                 $resultApps->execute($dataApps);
             } catch (PDOException $e) {
-                $page->addError($e->getMessage());
+                echo "<div class='warning'>";
+                    echo $e->getMessage();
+                echo '</div>';
             }
 
             echo "<div class='linkTop'>";
@@ -209,7 +211,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             echo '</div>';
 
             if ($resultApps->rowCount() < 1) {
-                $page->addError(__('There are no applications to display.'));
+                echo "<div class='warning'>";
+                    echo __('There are no applications to display.');
+                echo '</div>';
             } else {
                 echo "<table cellspacing='0' style='width: 100%'>";
                 echo "<tr class='head'>";
