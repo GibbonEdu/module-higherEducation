@@ -79,18 +79,18 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         echo '<p>';
 
         //Set pagination variable
-        $page = null;
+        $pagination = null;
         if (isset($_GET['page'])) {
-            $page = $_GET['page'];
+            $pagination = $_GET['page'];
         }
-        if ((!is_numeric($page)) or $page < 1) {
-            $page = 1;
+        if ((!is_numeric($pagination)) or $pagination < 1) {
+            $pagination = 1;
         }
 
         try {
             $data = array('gibbonSchoolYearID' => $gibbonSchoolYearID, 'gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
             $sql = "SELECT higherEducationReference.timestamp, higherEducationReference.type AS typeReference, higherEducationReferenceComponent.*, surname, preferredName FROM higherEducationReferenceComponent JOIN higherEducationReference ON (higherEducationReferenceComponent.higherEducationReferenceID=higherEducationReference.higherEducationReferenceID) JOIN gibbonPerson ON (higherEducationReference.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReference.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND higherEducationReference.status='In Progress' AND higherEducationReferenceComponent.gibbonPersonID=:gibbonPersonID ORDER BY higherEducationReferenceComponent.status, timestamp DESC";
-            $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($page - 1) * $_SESSION[$guid]['pagination']);
+            $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($pagination - 1) * $_SESSION[$guid]['pagination']);
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
@@ -102,7 +102,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             echo '</div>';
         } else {
             if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-                printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'top', 'gibbonSchoolYearID=$gibbonSchoolYearID');
+                printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'top', 'gibbonSchoolYearID=$gibbonSchoolYearID');
             }
 
             echo "<table cellspacing='0' style='width: 100%'>";
@@ -178,7 +178,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             echo '</table>';
 
             if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-                printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'bottom', "gibbonSchoolYearID=$gibbonSchoolYearID");
+                printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'bottom', "gibbonSchoolYearID=$gibbonSchoolYearID");
             }
         }
     }
