@@ -18,18 +18,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_write.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
-    echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > </div><div class='trailEnd'>Write References</div>";
-    echo '</div>';
+    $page->breadcrumbs->add(__('Write References'));
 
     $gibbonSchoolYearID = null;
     if (isset($_GET['gibbonSchoolYearID'])) {
@@ -46,12 +42,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
+            $page->addError($e->getMessage());
         }
         if ($result->rowcount() != 1) {
-            echo "<div class='error'>";
-            echo 'The specified year does not exist.';
-            echo '</div>';
+            $page->addError(__('The specified year does not exist.'));
         } else {
             $row = $result->fetch();
             $gibbonSchoolYearID = $row['gibbonSchoolYearID'];
@@ -99,7 +93,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($page - 1) * $_SESSION[$guid]['pagination']);
             $result = $connection2->prepare($sql);
             $result->execute($data);
-        } catch (PDOException $e) { echo "<div class='error'>".$e->getMessage().'</div>';
+        } catch (PDOException $e) {
+            $page->addError($e->getMessage());
         }
 
         if ($result->rowCount() < 1) { echo "<div class='success'>";
@@ -136,7 +131,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 $resultPage = $connection2->prepare($sqlPage);
                 $resultPage->execute($data);
             } catch (PDOException $e) {
-                echo "<div class='error'>".$e->getMessage().'</div>';
+                $page->addError($e->getMessage());
             }
             while ($row = $resultPage->fetch()) {
                 if ($count % 2 == 0) {

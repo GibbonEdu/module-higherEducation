@@ -18,31 +18,23 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
     if ($role == false) {
         //Acess denied
-        echo "<div class='error'>";
-        echo 'You are not enroled in the Higher Education programme.';
-        echo '</div>';
+        $page->addError(__('You are not enroled in the Higher Education programme.'));
     } else {
         if ($role != 'Coordinator') {
             //Acess denied
-            echo "<div class='error'>";
-            echo 'You do not have permission to access this page.';
-            echo '</div>';
+            $page->addError(__('You do not have permission to access this page.'));
         } else {
             //Proceed!
-            echo "<div class='trail'>";
-            echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > </div><div class='trailEnd'>Manage References</div>";
-            echo '</div>';
+            $page->breadcrumbs->add(__('Manage References'));
 
             if (isset($_GET['return'])) {
                 returnProcess($guid, $_GET['return'], null, null);
@@ -63,12 +55,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 } catch (PDOException $e) {
-                    echo "<div class='error'>".$e->getMessage().'</div>';
+                    $page->addError($e->getMessage());
                 }
                 if ($result->rowcount() != 1) {
-                    echo "<div class='error'>";
-                    echo 'The specified year does not exist.';
-                    echo '</div>';
+                    $page->addError(__('The specified year does not exist.'));
                 } else {
                     $row = $result->fetch();
                     $gibbonSchoolYearID = $row['gibbonSchoolYearID'];
@@ -93,12 +83,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     } else {
                         echo 'Previous Year ';
                     }
-					echo ' | ';
-					if (getNextSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-						echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/references_manage.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>Next Year</a> ";
-					} else {
-						echo 'Next Year ';
-					}
+                    echo ' | ';
+                    if (getNextSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
+                        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/references_manage.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>Next Year</a> ";
+                    } else {
+                        echo 'Next Year ';
+                    }
                 echo '</div>';
 
                 echo "<h3 class='top'>";
@@ -107,27 +97,27 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 echo "<div class='linkTop'>";
                 echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/references_manage.php'>Clear Search</a>";
                 echo '</div>'; ?>
-				<form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
-					<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-						<tr>
-							<td>
-								<b>Search For</b><br/>
-								<span style="font-size: 90%"><i>Preferred, surname, username.</i></span>
-							</td>
-							<td class="right">
-								<input name="search" id="search" maxlength=20 value="<?php echo $search ?>" type="text" style="width: 300px">
-							</td>
-						</tr>
-						<tr>
-							<td colspan=2 class="right">
-								<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/references_manage.php">
-								<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-								<input type="submit" value="Submit">
-							</td>
-						</tr>
-					</table>
-				</form>
-				<?php
+                <form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
+                    <table class='smallIntBorder' cellspacing='0' style="width: 100%">
+                        <tr>
+                            <td>
+                                <b>Search For</b><br/>
+                                <span style="font-size: 90%"><i>Preferred, surname, username.</i></span>
+                            </td>
+                            <td class="right">
+                                <input name="search" id="search" maxlength=20 value="<?php echo $search ?>" type="text" style="width: 300px">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=2 class="right">
+                                <input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/references_manage.php">
+                                <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
+                                <input type="submit" value="Submit">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <?php
 
                 echo "<h3 class='top'>";
                 echo 'View';
@@ -156,17 +146,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 } catch (PDOException $e) {
-                    echo "<div class='error'>".$e->getMessage().'</div>';
+                    $page->addError($e->getMessage());
                 }
 
                 echo "<div class='linkTop'>";
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/references_manage_addMulti.php&gibbonSchoolYearID=$gibbonSchoolYearID&search=$search'>".__($guid, 'Add Multiple Records')."<img title='".__($guid, 'Add Multiple Records')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new_multi.png'/></a>";
+                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/references_manage_addMulti.php&gibbonSchoolYearID=$gibbonSchoolYearID&search=$search'>".__('Add Multiple Records')."<img title='".__('Add Multiple Records')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new_multi.png'/></a>";
                 echo '</div>';
 
                 if ($result->rowCount() < 1) {
-                    echo "<div class='error'>";
-                    echo 'There are no records to display.';
-                    echo '</div>';
+                    $page->addError(__('There are no records to display.'));
                 } else {
                     if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
                         printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'top', "gibbonSchoolYearID=$gibbonSchoolYearID&search=$search");
@@ -195,7 +183,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                         $resultPage = $connection2->prepare($sqlPage);
                         $resultPage->execute($data);
                     } catch (PDOException $e) {
-                        echo "<div class='error'>".$e->getMessage().'</div>';
+                        $page->addError($e->getMessage());
                     }
                     while ($row = $resultPage->fetch()) {
                         if ($count % 2 == 0) {

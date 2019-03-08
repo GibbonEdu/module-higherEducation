@@ -18,22 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/institutions_manage.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
-    echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > </div><div class='trailEnd'>Manage Institutions</div>";
-    echo '</div>';
+    $page->breadcrumbs->add(__('Manage Institutions'));
 
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
-    if ($role != 'Coordinator') { echo "<div class='error'>";
-        echo 'You do not have access to this action.';
-        echo '</div>';
+    if ($role != 'Coordinator') {
+        $page->addError(__('You do not have access to this action.'));
     } else {
         if (isset($_GET['return'])) {
             returnProcess($guid, $_GET['return'], null, null);
@@ -55,10 +50,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>";
-            echo $e->getMEssagE();
-            echo 'Students cannot be displayed.';
-            echo '</div>';
+            $page->addError(__('Error: {error}. Students cannot be displayed.', ['error' => $e->getMessage()]));
         }
 
         echo "<div class='linkTop'>";
@@ -66,9 +58,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
         echo '</div>';
 
         if ($result->rowCount() < 1) {
-            echo "<div class='error'>";
-            echo 'There are no students to display.';
-            echo '</div>';
+            $page->addError(__('There are no students to display.'));
         } else {
             if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
                 printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'top');
@@ -93,7 +83,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
                 $resultPage = $connection2->prepare($sqlPage);
                 $resultPage->execute($data);
             } catch (PDOException $e) {
-                echo "<div class='error'>".$e->getMessage().'</div>';
+                $page->addError($e->getMessage());
             }
 
             while ($row = $resultPage->fetch()) {
@@ -108,8 +98,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
                     $rowNum = 'error';
                 }
 
-				//COLOR ROW BY STATUS!
-				echo "<tr class=$rowNum>";
+                //COLOR ROW BY STATUS!
+                echo "<tr class=$rowNum>";
                 echo '<td>';
                 echo $row['name'].', '.$row['country'];
                 echo '</td>';

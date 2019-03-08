@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-include '../../gibbon.php';
+include __DIR__.'/../../gibbon.php';
 
 $higherEducationStaffID = $_GET['higherEducationStaffID'];
 $URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/staff_manage_edit.php&higherEducationStaffID=$higherEducationStaffID";
