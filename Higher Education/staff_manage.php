@@ -18,51 +18,49 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_manage.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
-    echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > </div><div class='trailEnd'>Manage Staff</div>";
-    echo '</div>';
+    $page->breadcrumbs->add(__('Manage Staff'));
 
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
     }
 
     //Set pagination variable
-    $page = null;
+    $pagination = null;
     if (isset($_GET['page'])) {
-        $page = $_GET['page'];
+        $pagination = $_GET['page'];
     }
-    if ((!is_numeric($page)) or $page < 1) {
-        $page = 1;
+    if ((!is_numeric($pagination)) or $pagination < 1) {
+        $pagination = 1;
     }
 
     //SELECT NAMED
     try {
         $data = array();
         $sql = "SELECT higherEducationStaffID, higherEducationStaff.role, surname, preferredName FROM higherEducationStaff JOIN gibbonPerson ON (higherEducationStaff.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE status='Full' ORDER BY role, surname, preferredName";
-        $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($page - 1) * $_SESSION[$guid]['pagination']);
+        $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($pagination - 1) * $_SESSION[$guid]['pagination']);
         $result = $connection2->prepare($sql);
         $result->execute($data);
-    } catch (PDOException $e) { echo "<div class='error'>".$e->getMessage().'</div>';
+    } catch (PDOException $e) {
+        $page->addError($e->getMessage());
     }
 
     echo "<div class='linkTop'>";
     echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/staff_manage_add.php'><img title='New' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new.png'/></a>";
     echo '</div>';
 
-    if ($result->rowCount() < 1) { echo "<div class='error'>";
-        echo 'There are no staff to display.';
+    if ($result->rowCount() < 1) {
+        echo "<div class='warning'>";
+            echo __('There are no staff to display.');
         echo '</div>';
     } else {
         if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-            printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'top');
+            printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'top');
         }
 
         echo "<table cellspacing='0' style='width: 100%'>";
@@ -85,7 +83,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
             $resultPage = $connection2->prepare($sqlPage);
             $resultPage->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
+            echo "<div class='warning'>";
+                echo $e->getMessage();
+            echo '</div>';
         }
 
         while ($row = $resultPage->fetch()) {
@@ -96,8 +96,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
             }
             ++$count;
 
-			//COLOR ROW BY STATUS!
-			echo "<tr class=$rowNum>";
+            //COLOR ROW BY STATUS!
+            echo "<tr class=$rowNum>";
             echo '<td>';
             echo formatName('', $row['preferredName'], $row['surname'], 'Staff', true, true);
             echo '</td>';
@@ -113,7 +113,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
         echo '</table>';
 
         if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-            printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'bottom');
+            printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'bottom');
         }
     }
 }

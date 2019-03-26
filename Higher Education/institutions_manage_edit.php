@@ -21,24 +21,19 @@ use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
 
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/institutions_manage_edit.php') == false) {
-
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
-    echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/institutions_manage.php'>Manage Institutions</a> > </div><div class='trailEnd'>Edit Institution</div>";
-    echo '</div>';
+    $page->breadcrumbs->add(__('Manage Institutions'), 'institutions_manage.php');
+    $page->breadcrumbs->add(__('Edit Institution'));
 
     $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
-    if ($role != 'Coordinator') { echo "<div class='error'>";
-        echo 'You do not have access to this action.';
-        echo '</div>';
+    if ($role != 'Coordinator') {
+        $page->addError(__('You do not have access to this action.'));
     } else {
         if (isset($_GET['return'])) {
             returnProcess($guid, $_GET['return'], null, null);
@@ -47,9 +42,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
         //Check if school year specified
         $higherEducationInstitutionID = $_GET['higherEducationInstitutionID'];
         if ($higherEducationInstitutionID == 'Y') {
-            echo "<div class='error'>";
-            echo 'You have not specified an activity.';
-            echo '</div>';
+            $page->addError(__('You have not specified an activity.'));
         } else {
             try {
                 $data = array('higherEducationInstitutionID' => $higherEducationInstitutionID);
@@ -57,15 +50,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
                 $result = $connection2->prepare($sql);
                 $result->execute($data);
             } catch (PDOException $e) {
-                echo "<div class='error'>";
-                echo 'The student cannot be edited due to a database error.';
-                echo '</div>';
+                $page->addError(__('The student cannot be edited due to a database error.'));
             }
 
             if ($result->rowCount() != 1) {
-                echo "<div class='error'>";
-                echo 'The selected activity does not exist.';
-                echo '</div>';
+                $page->addError(__('The selected activity does not exist.'));
             } else {
                 //Let's go!
                 $values = $result->fetch();

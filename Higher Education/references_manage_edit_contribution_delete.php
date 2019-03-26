@@ -21,17 +21,14 @@ use Gibbon\Forms\Prefab\DeleteForm;
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage_edit.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Check if school year specified
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
     $higherEducationReferenceComponentID = $_GET['higherEducationReferenceComponentID'];
     $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
-    if ($higherEducationReferenceComponentID == '' or $higherEducationReferenceID == '' or $gibbonSchoolYearID == '') { echo "<div class='error'>";
-        echo 'You have not specified a reference or component.';
-        echo '</div>';
+    if ($higherEducationReferenceComponentID == '' or $higherEducationReferenceID == '' or $gibbonSchoolYearID == '') {
+        $page->addError(__('You have not specified a reference or component.'));
     } else {
         try {
             $data = array('higherEducationReferenceComponentID' => $higherEducationReferenceComponentID);
@@ -39,20 +36,20 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
         }
 
         if ($result->rowCount() != 1) {
-            echo "<div class='error'>";
-            echo 'The specified reference component cannot be found.';
-            echo '</div>';
+            $page->addError(__('The specified reference component cannot be found.'));
         } else {
             //Let's go!
             $row = $result->fetch();
 
-            echo "<div class='trail'>";
-            echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/references_manage.php&gibbonSchoolYearID=$gibbonSchoolYearID'>Manage References</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/references_manage_edit.php&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID'>Edit Reference</a> > </div><div class='trailEnd'>Delete Contribution</div>";
-            echo '</div>';
+            $page->breadcrumbs->add(__('Manage References'), 'references_manage.php', ['gibbonSchoolYearID' => $gibbonSchoolYearID]);
+            $page->breadcrumbs->add(__('Edit Reference'), 'references_manage_edit.php', [
+                'higherEducationReferenceID' => $higherEducationReferenceID,
+                'gibbonSchoolYearID' => $gibbonSchoolYearID,
+            ]);
+            $page->breadcrumbs->add(__('Delete Contribution'));
 
             if (isset($_GET['deleteReturn'])) {
                 $deleteReturn = $_GET['deleteReturn'];

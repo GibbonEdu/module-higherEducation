@@ -18,18 +18,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_write.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
-    echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > </div><div class='trailEnd'>Write References</div>";
-    echo '</div>';
+    $page->breadcrumbs->add(__('Write References'));
 
     $gibbonSchoolYearID = null;
     if (isset($_GET['gibbonSchoolYearID'])) {
@@ -46,12 +42,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
+            $page->addError($e->getMessage());
         }
         if ($result->rowcount() != 1) {
-            echo "<div class='error'>";
-            echo 'The specified year does not exist.';
-            echo '</div>';
+            $page->addError(__('The specified year does not exist.'));
         } else {
             $row = $result->fetch();
             $gibbonSchoolYearID = $row['gibbonSchoolYearID'];
@@ -85,29 +79,33 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         echo '<p>';
 
         //Set pagination variable
-        $page = null;
+        $pagination = null;
         if (isset($_GET['page'])) {
-            $page = $_GET['page'];
+            $pagination = $_GET['page'];
         }
-        if ((!is_numeric($page)) or $page < 1) {
-            $page = 1;
+        if ((!is_numeric($pagination)) or $pagination < 1) {
+            $pagination = 1;
         }
 
         try {
             $data = array('gibbonSchoolYearID' => $gibbonSchoolYearID, 'gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
             $sql = "SELECT higherEducationReference.timestamp, higherEducationReference.type AS typeReference, higherEducationReferenceComponent.*, surname, preferredName FROM higherEducationReferenceComponent JOIN higherEducationReference ON (higherEducationReferenceComponent.higherEducationReferenceID=higherEducationReference.higherEducationReferenceID) JOIN gibbonPerson ON (higherEducationReference.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReference.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND higherEducationReference.status='In Progress' AND higherEducationReferenceComponent.gibbonPersonID=:gibbonPersonID ORDER BY higherEducationReferenceComponent.status, timestamp DESC";
-            $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($page - 1) * $_SESSION[$guid]['pagination']);
+            $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($pagination - 1) * $_SESSION[$guid]['pagination']);
             $result = $connection2->prepare($sql);
             $result->execute($data);
-        } catch (PDOException $e) { echo "<div class='error'>".$e->getMessage().'</div>';
+        } catch (PDOException $e) {
+            echo "<div class='warning'>";
+                echo $e->getMessage();
+            echo '</div>';
         }
 
-        if ($result->rowCount() < 1) { echo "<div class='success'>";
+        if ($result->rowCount() < 1) {
+            echo "<div class='success'>";
             echo 'There are no reference requests at current.';
             echo '</div>';
         } else {
             if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-                printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'top', 'gibbonSchoolYearID=$gibbonSchoolYearID');
+                printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'top', 'gibbonSchoolYearID=$gibbonSchoolYearID');
             }
 
             echo "<table cellspacing='0' style='width: 100%'>";
@@ -136,7 +134,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 $resultPage = $connection2->prepare($sqlPage);
                 $resultPage->execute($data);
             } catch (PDOException $e) {
-                echo "<div class='error'>".$e->getMessage().'</div>';
+                echo "<div class='warning'>";
+                    echo $e->getMessage();
+                echo '</div>';
             }
             while ($row = $resultPage->fetch()) {
                 if ($count % 2 == 0) {
@@ -183,7 +183,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             echo '</table>';
 
             if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-                printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'bottom', "gibbonSchoolYearID=$gibbonSchoolYearID");
+                printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'bottom', "gibbonSchoolYearID=$gibbonSchoolYearID");
             }
         }
     }

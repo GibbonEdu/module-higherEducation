@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-include '../../gibbon.php';
+include __DIR__.'/../../gibbon.php';
 
 //Module includes
-include './moduleFunctions.php';
+include __DIR__.'/moduleFunctions.php';
 
 
 $URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/references_request_add.php';
@@ -183,7 +183,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             } catch (PDOException $e) {
             }
             while ($rowNotify = $resultNotify->fetch()) {
-                $notificationText = sprintf(__($guid, 'Someone has created a new Higher Education reference request.'));
+                $notificationText = sprintf(__('Someone has created a new Higher Education reference request.'));
                 setNotification($connection2, $guid, $rowNotify['gibbonPersonID'], $notificationText, 'Higher Education', '/index.php?q=/modules/Higher Education/references_manage.php');
             }
 

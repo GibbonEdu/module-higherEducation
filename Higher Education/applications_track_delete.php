@@ -20,27 +20,23 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\Forms\Prefab\DeleteForm;
 
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_track_delete.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
-    echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/applications_track.php'>Track Applications</a> > </div><div class='trailEnd'>Delete Application</div>";
-    echo '</div>';
+    $page->breadcrumbs->add(__('Track Applications'), 'applications_track.php');
+    $page->breadcrumbs->add(__('Delete Application'));
 
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
     }
 
     //Check for student enrolment
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) { echo "<div class='error'>";
-        echo 'You have not been enrolled for higher education applications.';
-        echo '</div>';
+    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
+        $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
         //Check for application record
         try {
@@ -49,22 +45,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
         }
 
         if ($result->rowCount() != 1) {
-            echo "<div class='error'>";
-            echo 'You have not saved your application process yet.';
-            echo '</div>';
+            $page->addError(__('You have not saved your application process yet.'));
         } else {
             $row = $result->fetch();
 
             //Check if school year specified
             $higherEducationApplicationInstitutionID = $_GET['higherEducationApplicationInstitutionID'];
             if ($higherEducationApplicationInstitutionID == '') {
-                echo "<div class='error'>";
-                echo 'You have not specified an application.';
-                echo '</div>';
+                $page->addError(__('You have not specified an application.'));
             } else {
                 try {
                     $data = array('higherEducationApplicationInstitutionID' => $higherEducationApplicationInstitutionID);
@@ -72,13 +63,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 } catch (PDOException $e) {
-                    echo "<div class='error'>".$e->getMessage().'</div>';
                 }
 
                 if ($result->rowCount() != 1) {
-                    echo "<div class='error'>";
-                    echo 'The specified application cannot be found.';
-                    echo '</div>';
+                    $page->addError(__('The specified application cannot be found.'));
                 } else {
                     //Let's go!
                     $form = DeleteForm::createForm($_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/applications_track_deleteProcess.php?higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID");

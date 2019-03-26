@@ -1,5 +1,13 @@
 CHANGELOG
 =========
+v1.3.00
+-------
+Refactoring of breadcrumbs and error messages, translation improvements
+
+v1.2.00
+-------
+Updated default database storage engine to InnoDB
+
 v1.1.05
 -------
 Code cleanup
