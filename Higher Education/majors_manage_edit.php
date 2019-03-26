@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Forms\Form;
+
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
@@ -54,49 +56,27 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
                 $page->addError(__('The selected activity does not exist.'));
             } else {
                 //Let's go!
-                $row = $result->fetch();
-                ?>
-                <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/majors_manage_editProcess.php?higherEducationMajorID=$higherEducationMajorID" ?>">
-                    <table class='smallIntBorder' cellspacing='0' style="width: 100%">
-                        <tr>
-                            <td>
-                                <b>Name *</b><br/>
-                                <span style="font-size: 90%"><i></i></span>
-                            </td>
-                            <td class="right">
-                                <input name="name" id="uniname" maxlength=150 value="<?php echo $row['name'] ?>" type="text" style="width: 300px">
-                                <script type="text/javascript">
-                                    var uniname=new LiveValidation('uniname');
-                                    uniname.add(Validate.Presence);
-                                 </script>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Active *</b><br/>
-                            </td>
-                            <td class="right">
-                                <select name="active" id="active" style="width: 302px">
-                                    <option <?php if ($row['active'] == 'Y') { echo ' selected '; } ?>value="Y">Y</option>
-                                    <option <?php if ($row['active'] == 'N') { echo ' selected '; } ?>value="N">N</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span style="font-size: 90%"><i>* denotes a required field</i></span>
-                            </td>
-                            <td class="right">
-                                <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-                                <input type="submit" value="Submit">
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-                <?php
+                $values = $result->fetch();
 
+                $form = Form::create('majors', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/majors_manage_editProcess.php?higherEducationMajorID='.$higherEducationMajorID);
+                $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+
+                $row = $form->addRow();
+                    $row->addLabel('name', __('Name'));
+                    $row->addTextField('name')->isRequired()->maxLength(100);
+
+                $row = $form->addRow();
+                    $row->addLabel('active', __('Active'));
+                    $row->addYesNo('active')->isRequired();
+
+                $row = $form->addRow();
+                    $row->addFooter();
+                    $row->addSubmit();
+
+                $form->loadAllValuesFrom($values);
+
+                echo $form->getOutput();
             }
         }
     }
 }
-?>

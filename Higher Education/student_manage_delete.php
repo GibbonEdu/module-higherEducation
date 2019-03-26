@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Forms\Prefab\DeleteForm;
+
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
@@ -43,41 +45,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            $page->addError($e->getMessage());
         }
 
         if ($result->rowCount() != 1) {
             $page->addError(__('The selected student member does not exist.'));
         } else {
             //Let's go!
-            $row = $result->fetch();
-            ?>
-            <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/student_manage_deleteProcess.php?higherEducationStudentID=$higherEducationStudentID" ?>">
-                <table class='smallIntBorder' cellspacing='0' style="width: 100%">
-                    <tr>
-                        <td>
-                            <b>Are you sure you want to delete "<?php echo formatName('', $row['preferredName'], $row['surname'], 'Student', true, true) ?>" from the Higher Education programme?</b><br/>
-                            <span style="font-size: 90%; color: #cc0000"><i>This operation cannot be undone, and may lead to loss of vital data in your system.<br/>PROCEED WITH CAUTION!</i></span>
-                        </td>
-                        <td class="right">
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input name="higherEducationStudentID" id="higherEducationStudentID" value="<?php echo $higherEducationStudentID ?>" type="hidden">
-                            <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-                            <input type="submit" value="Yes">
-                        </td>
-                        <td class="right">
-
-                        </td>
-                    </tr>
-                </table>
-            </form>
-            <?php
-
+            $form = DeleteForm::createForm($_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/student_manage_deleteProcess.php?higherEducationStudentID=$higherEducationStudentID");
+            $form->addHiddenValue('higherEducationStudentID', $higherEducationStudentID);
+            echo $form->getOutput();
         }
     }
 }
-?>

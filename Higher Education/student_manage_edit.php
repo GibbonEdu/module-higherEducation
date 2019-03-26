@@ -17,6 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Forms\Form;
+use Gibbon\Forms\DatabaseFormFactory;
+
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
@@ -50,64 +53,27 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
             $page->addError(__('The selected activity does not exist.'));
         } else {
             //Let's go!
-            $row = $result->fetch();
-            ?>
-            <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/student_manage_editProcess.php?higherEducationStudentID=$higherEducationStudentID" ?>">
-                <table class='smallIntBorder' cellspacing='0' style="width: 100%">
-                    <tr>
-                        <td>
-                            <b>Student *</b><br/>
-                            <span style="font-size: 90%"><i>This value cannot be changed</i></span>
-                        </td>
-                        <td class="right">
-                            <input readonly type='text' style='width: 302px' value='<?php echo formatName('', $row['preferredName'], $row['surname'], 'Student', true, true) ?>'>
-                            <script type="text/javascript">
-                                var gibbonPersonID=new LiveValidation('gibbonPersonID');
-                                gibbonPersonID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
-                             </script>
-                        </td>
-                    </tr>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Advisor</b><br/>
-                        </td>
-                        <td class="right">
-                            <select style="width: 302px" name="gibbonPersonIDAdvisor" id="gibbonPersonIDAdvisor">
-                                <?php
-                                echo "<option value=''></option>";
-                                try {
-                                    $data = array();
-                                    $sqlSelect = "SELECT * FROM gibbonPerson JOIN higherEducationStaff ON (gibbonPerson.gibbonPersonID=higherEducationStaff.gibbonPersonID) WHERE status='Full' ORDER BY surname, preferredName";
-                                    $resultSelect = $connection2->prepare($sqlSelect);
-                                    $resultSelect->execute($dataSelect);
-                                } catch (PDOException $e) {
-                                }
-                                while ($rowSelect = $resultSelect->fetch()) {
-                                    $selected = '';
-                                    if ($row['gibbonPersonIDAdvisor'] == $rowSelect['gibbonPersonID']) {
-                                        $selected = 'selected';
-                                    }
-                                    echo "<option $selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', $rowSelect['preferredName'], $rowSelect['surname'], 'Staff', true, true).'</option>';
-                                }
-                                ?>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span style="font-size: 90%"><i>* denotes a required field</i></span>
-                        </td>
-                        <td class="right">
-                            <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-                            <input type="submit" value="Submit">
-                        </td>
-                    </tr>
-                </table>
-            </form>
-            <?php
+            $values = $result->fetch();
 
+            $form = Form::create('students', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/student_manage_editProcess.php?higherEducationStudentID='.$higherEducationStudentID);
+            $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+
+            $row = $form->addRow();
+                $row->addLabel('name', __('Student'));
+                $row->addTextField('name')->isRequired()->readonly()->setValue(formatName('', $values['preferredName'], $values['surname'], 'Student', true, true));
+
+            $sql = "SELECT gibbonPerson.gibbonPersonID as value, CONCAT(surname, ', ', preferredName) as name FROM gibbonPerson JOIN higherEducationStaff ON (gibbonPerson.gibbonPersonID=higherEducationStaff.gibbonPersonID) WHERE status='Full' ORDER BY surname, preferredName";
+            $row = $form->addRow();
+                $row->addLabel('gibbonPersonIDAdvisor', __('Advisor'));
+                $row->addSelect('gibbonPersonIDAdvisor')->fromQuery($pdo, $sql)->placeholder();
+
+            $row = $form->addRow();
+                $row->addFooter();
+                $row->addSubmit();
+
+            $form->loadAllValuesFrom($values);
+
+            echo $form->getOutput();
         }
     }
 }
-?>

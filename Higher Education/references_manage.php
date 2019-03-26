@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Forms\Form;
+
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
@@ -92,35 +94,25 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 echo '</div>';
 
                 echo "<h3 class='top'>";
-                echo 'Search';
+                echo __('Search');
                 echo '</h3>';
-                echo "<div class='linkTop'>";
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/references_manage.php'>Clear Search</a>";
-                echo '</div>'; ?>
-                <form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
-                    <table class='smallIntBorder' cellspacing='0' style="width: 100%">
-                        <tr>
-                            <td>
-                                <b>Search For</b><br/>
-                                <span style="font-size: 90%"><i>Preferred, surname, username.</i></span>
-                            </td>
-                            <td class="right">
-                                <input name="search" id="search" maxlength=20 value="<?php echo $search ?>" type="text" style="width: 300px">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan=2 class="right">
-                                <input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/references_manage.php">
-                                <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-                                <input type="submit" value="Submit">
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-                <?php
+                
+                $form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
+                $form->setClass('noIntBorder fullWidth');
+
+                $form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/references_manage.php');
+
+                $row = $form->addRow();
+                    $row->addLabel('search', __('Search For'))->description(__('Preferred, surname, username.'));
+                    $row->addTextField('search')->setValue($search);
+
+                $row = $form->addRow();
+                    $row->addSearchSubmit($gibbon->session, __('Clear Search'));
+
+                echo $form->getOutput();
 
                 echo "<h3 class='top'>";
-                echo 'View';
+                echo __('View');
                 echo '</h3>';
                 echo '<p>';
                 echo 'The table below shows all references request in the selected school year. Use the "Previous Year" and "Next Year" links to navigate to other years.';
@@ -146,9 +138,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 } catch (PDOException $e) {
-                    echo "<div class='warning'>";
-                        echo $e->getMessage();
-                    echo '</div>';
                 }
 
                 echo "<div class='linkTop'>";
@@ -224,7 +213,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                         echo '</td>';
                         echo '<td>';
                         echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/references_manage_edit.php&higherEducationReferenceID='.$row['higherEducationReferenceID']."&gibbonSchoolYearID=$gibbonSchoolYearID'><img title='Edit' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/config.png'/></a> ";
-                        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/references_manage_delete.php&higherEducationReferenceID='.$row['higherEducationReferenceID']."&gibbonSchoolYearID=$gibbonSchoolYearID'><img title='Delete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a>";
+                        echo "<a class='thickbox' href='".$_SESSION[$guid]['absoluteURL'].'/fullscreen.php?q=/modules/'.$_SESSION[$guid]['module'].'/references_manage_delete.php&higherEducationReferenceID='.$row['higherEducationReferenceID']."&gibbonSchoolYearID=$gibbonSchoolYearID&width=650&height=135'><img title='Delete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a>";
                         echo "<a target='_blank' href='".$_SESSION[$guid]['absoluteURL'].'/report.php?q=/modules/'.$_SESSION[$guid]['module'].'/references_manage_edit_print.php&higherEducationReferenceID='.$row['higherEducationReferenceID']."'><img title='Print' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/print.png'/></a>";
                         echo '</td>';
                         echo '</tr>';

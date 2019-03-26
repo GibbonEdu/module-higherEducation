@@ -110,7 +110,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
                 echo '</td>';
                 echo '<td>';
                 echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/majors_manage_edit.php&higherEducationMajorID='.$row['higherEducationMajorID']."'><img title='Edit' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/config.png'/></a> ";
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/majors_manage_delete.php&higherEducationMajorID='.$row['higherEducationMajorID']."'><img title='Delete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
+                echo "<a class='thickbox' href='".$_SESSION[$guid]['absoluteURL'].'/fullscreen.php?q=/modules/'.$_SESSION[$guid]['module'].'/majors_manage_delete.php&higherEducationMajorID='.$row['higherEducationMajorID']."&width=650&height=135'><img title='Delete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
                 echo '</td>';
                 echo '</tr>';
             }

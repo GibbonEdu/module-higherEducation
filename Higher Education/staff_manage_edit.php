@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Forms\Form;
+
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
@@ -43,61 +45,36 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
-            $page->addError($e->getMessage());
         }
 
         if ($result->rowCount() != 1) {
             $page->addError(__('The selected activity does not exist.'));
         } else {
             //Let's go!
-            $row = $result->fetch();
-            ?>
-            <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/staff_manage_editProcess.php?higherEducationStaffID=$higherEducationStaffID" ?>">
-                <table class='smallIntBorder' cellspacing='0' style="width: 100%">
-                    <tr>
-                        <td>
-                            <b>Staff *</b><br/>
-                            <span style="font-size: 90%"><i>This value cannot be changed</i></span>
-                        </td>
-                        <td class="right">
-                            <input readonly type='text' style='width: 302px' value='<?php echo formatName('', $row['preferredName'], $row['surname'], 'Staff', true, true) ?>'>
-                            <script type="text/javascript">
-                                var gibbonPersonID=new LiveValidation('gibbonPersonID');
-                                gibbonPersonID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
-                             </script>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Role *</b><br/>
-                            <span style="font-size: 90%"><i></i></span>
-                        </td>
-                        <td class="right">
-                            <select name="role" id="role" style="width: 302px">
-                                <option value="Please select...">Please select...</option>
-                                <option <?php if ($row['role'] == 'Coordinator') { echo 'selected '; } ?>value="Coordinator">Coordinator</option>
-                                <option <?php if ($row['role'] == 'Advisor') { echo 'selected '; } ?>value="Advisor">Advisor</option>
-                            </select>
-                            <script type="text/javascript">
-                                var role=new LiveValidation('role');
-                                role.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
-                             </script>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span style="font-size: 90%"><i>* denotes a required field</i></span>
-                        </td>
-                        <td class="right">
-                            <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-                            <input type="submit" value="Submit">
-                        </td>
-                    </tr>
-                </table>
-            </form>
-            <?php
+            $values = $result->fetch();
 
+            $form = Form::create('staff', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/staff_manage_editProcess.php?higherEducationStaffID='.$higherEducationStaffID);
+            $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+
+            $row = $form->addRow();
+                $row->addLabel('name', __('Staff'));
+                $row->addTextField('name')->readonly()->setValue(formatName('', $values['preferredName'], $values['surname'], 'Staff', true, true));
+
+            $roles = array(
+                'Coordinator' => __('Coordinator'),
+                'Advisor' => __('Advisor'),
+            );
+            $row = $form->addRow();
+                $row->addLabel('role', __('Role'));
+                $row->addSelect('role')->fromArray($roles)->isRequired()->placeholder();
+
+            $row = $form->addRow();
+                $row->addFooter();
+                $row->addSubmit();
+
+            $form->loadAllValuesFrom($values);
+
+            echo $form->getOutput();
         }
     }
 }
-?>
