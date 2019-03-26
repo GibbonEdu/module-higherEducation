@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.3.01
+-------
+Refactoring forms
+
 v1.3.00
 -------
 Refactoring of breadcrumbs and error messages, translation improvements
