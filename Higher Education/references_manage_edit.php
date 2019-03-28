@@ -28,9 +28,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? '';
     $higherEducationReferenceID = $_GET['higherEducationReferenceID'] ?? '';
 
-    $page->breadcrumbs->add(__('Edit Reference'), 'references_manage_edit.php', [
-        'higherEducationReferenceID' => $higherEducationReferenceID,
-        'gibbonSchoolYearID' => $gibbonSchoolYearID,
+    $page->breadcrumbs->add(__('Manage References'), 'references_manage.php', [
+        'gibbonSchoolYearID' => $_GET['gibbonSchoolYearID'] ?? '',
+        'search' => $_GET['search'] ?? '',
     ]);
     $page->breadcrumbs->add(__('Edit Reference'));
 

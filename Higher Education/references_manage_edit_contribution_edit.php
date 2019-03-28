@@ -85,7 +85,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                         <td class="right">
                             <select class="standardWidth" name="gibbonPersonID" id="gibbonPersonID">
                                 <?php
-                                echo "<option $selected value='Please select...'>".__('Please select...').'</option>';
+                                echo "<option value='Please select...'>".__('Please select...').'</option>';
                                 try {
                                     $dataSelect = array('gibbonPersonID' => $row['gibbonPersonID']);
                                     $sqlSelect = "SELECT gibbonPerson.gibbonPersonID, surname, preferredName FROM gibbonPerson JOIN gibbonStaff ON (gibbonPerson.gibbonPersonID=gibbonStaff.gibbonPersonID) WHERE (status='Full' or gibbonPerson.gibbonPersonID=:gibbonPersonID) ORDER BY surname, preferredName";
