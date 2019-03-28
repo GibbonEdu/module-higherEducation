@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.3.02
+-------
+Minor fixes to breadcrumbs
+
 v1.3.01
 -------
 Refactoring forms
