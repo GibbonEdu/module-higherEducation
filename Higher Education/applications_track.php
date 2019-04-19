@@ -20,6 +20,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
+use Gibbon\Forms\Form;
+
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_track.php') == false) {
     //Acess denied
     $page->addError(__('You do not have access to this action.'));
@@ -54,134 +56,57 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             echo 'It appears that you are new to application tracking via the Higher Education module. Please enter your details below, and press the Submit button once you are done. You can reenter details into this page at any time.';
             echo '</div>';
         } else {
-            $row = $result->fetch();
+            $values = $result->fetch();
         }
 
-        //Create application record
-        ?>
-        <script type="text/javascript">
-            /* Controls for showing/hiding fields */
-            $(document).ready(function(){
-                <?php
-                if (isset($row['applying'])) {
-                    if ($row['applying'] == 'N') {
-                        ?>
-                        $("#applicationsDiv").css("display", "none");
-                        $("#careerInterestsRow").css("display", "none");
-                        $("#coursesMajorsRow").css("display", "none");
-                        $("#otherScoresRow").css("display", "none");
-                        $("#personalStatementRow").css("display", "none");
-                        $("#meetingNotesRow").css("display", "none");
-                        <?php
-
-                    }
-                } elseif (isset($row['applying']) == false) {
-                    ?>
-                    $("#applicationsDiv").css("display", "none");
-                    $("#careerInterestsRow").css("display", "none");
-                    $("#coursesMajorsRow").css("display", "none");
-                    $("#otherScoresRow").css("display", "none");
-                    $("#personalStatementRow").css("display", "none");
-                    $("#meetingNotesRow").css("display", "none");
-                    <?php
-
-                }
-                ?>
-
-                $("#applying").change(function(){
-                    if ($('#applying option:selected').val() == "Y" ) {
-                        $("#applicationsDiv").slideDown("fast", $("#applicationsDiv").css("{'display' : 'table-row'}")); //Slide Down Effect
-                        $("#careerInterestsRow").slideDown("fast", $("#careerInterestsRow").css("{'display' : 'table-row'}")); //Slide Down Effect
-                        $("#coursesMajorsRow").slideDown("fast", $("#coursesMajorsRow").css("{'display' : 'table-row'}")); //Slide Down Effect
-                        $("#otherScoresRow").slideDown("fast", $("#otherScoresRow").css("{'display' : 'table-row'}")); //Slide Down Effect
-                        $("#personalStatementRow").slideDown("fast", $("#personalStatementRow").css("{'display' : 'table-row'}")); //Slide Down Effect
-                        $("#meetingNotesRow").slideDown("fast", $("#meetingNotesRow").css("{'display' : 'table-row'}")); //Slide Down Effect
-                    }
-                    else {
-                        $("#applicationsDiv").slideUp("fast"); //Slide Down Effect
-                        $("#careerInterestsRow").slideUp("fast"); //Slide Down Effect
-                        $("#coursesMajorsRow").slideUp("fast"); //Slide Down Effect
-                        $("#otherScoresRow").slideUp("fast"); //Slide Down Effect
-                        $("#personalStatementRow").slideUp("fast"); //Slide Down Effect
-                        $("#meetingNotesRow").slideUp("fast"); //Slide Down Effect
-                    }
-                 });
-            });
-        </script>
-        <?php
         $higherEducationApplicationID = null;
-        if (isset($row['higherEducationApplicationID'])) {
-            $higherEducationApplicationID = $row['higherEducationApplicationID'];
+        if (isset($values['higherEducationApplicationID'])) {
+            $higherEducationApplicationID = $values['higherEducationApplicationID'];
         }
-        ?>
-        <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/applications_trackProcess.php?higherEducationApplicationID='.$higherEducationApplicationID ?>">
-        <table class='smallIntBorder' cellspacing='0' style="width: 100%">
-            <tr>
-                <td>
-                    <b>Applying?</b><br/>
-                    <span style="font-size: 90%"><i>Are you intending on applying for entry to higher education?</i></span>
-                </td>
-                <td class="right">
-                    <select style="width: 302px" name="applying" id="applying">
-                        <option value='N' <?php if (isset($row['applying'])) { if ($row['applying'] == 'N') { echo 'selected'; } } ?>>N</option>
-                        <option value='Y' <?php if (isset($row['applying'])) { if ($row['applying'] == 'Y') { echo 'selected'; } } ?>>Y</option>
-                    </select>
-                </td>
-            </tr>
-            <tr id='careerInterestsRow' <?php if (isset($row['applying'])) {
-                if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; }} ?>>
-                <td colspan=2 style='padding-top: 15px;'>
-                    <b>Career Interests</b><br/>
-                    <span style="font-size: 90%"><i>What areas of work are you interested in? What are your ambitions?</i></span><br/>
-                    <textarea name="careerInterests" id="careerInterests" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['careerInterests'])) { echo htmlPrep($row['careerInterests']); } ?></textarea>
-                </td>
-            </tr>
-            <tr id='coursesMajorsRow' <?php if (isset($row['applying'])) {
-                if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; }} ?>>
-                <td colspan=2 style='padding-top: 15px;'>
-                    <b>Courses/Majors</b><br/>
-                    <span style="font-size: 90%"><i>What areas of study are you interested in? How do these relate to your career interests?</i></span><br/>
-                    <textarea name="coursesMajors" id="coursesMajors" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['coursesMajors'])) { echo htmlPrep($row['coursesMajors']); } ?></textarea>
-                </td>
-            </tr>
-            <tr id='otherScoresRow' <?php if (isset($row['applying'])) { if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; }} ?>>
-                <td colspan=2 style='padding-top: 15px;'>
-                    <b>Scores</b><br/>
-                    <span style="font-size: 90%"><i>Do you have any non-<?php echo $_SESSION[$guid]['organisationNameShort'] ?> exam scores?</i></span><br/>
-                    <textarea name="otherScores" id="otherScores" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['otherScores'])) { echo htmlPrep($row['otherScores']); } ?></textarea>
-                </td>
-            </tr>
-            <tr id='personalStatementRow' <?php if (isset($row['applying'])) { if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; }} ?>>
-                <td colspan=2 style='padding-top: 15px;'>
-                    <b>Personal Statement</b><br/>
-                    <span style="font-size: 90%"><i>Draft out ideas for your personal statement.</i></span><br/>
-                    <textarea name="personalStatement" id="personalStatement" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['personalStatement'])) { echo htmlPrep($row['personalStatement']); } ?></textarea>
-                </td>
-            </tr>
-            <tr id='meetingNotesRow' <?php if (isset($row['applying'])) { if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; }} ?>>
-                <td colspan=2 style='padding-top: 15px;'>
-                    <b>Meeting notes</b><br/>
-                    <span style="font-size: 90%"><i>Take notes on any meetings you have regarding your application process.</i></span><br/>
-                    <textarea name="meetingNotes" id="meetingNotes" rows=8 style="width:738px; margin: 5px 0px 0px 0px"><?php if (isset($row['meetingNotes'])) { echo htmlPrep($row['meetingNotes']); } ?></textarea>
-                </td>
-            </tr>
 
-            <tr>
-                <td>
-                    <span style="font-size: 90%"><i>* denotes a required field</i></span>
-                </td>
-                <td class="right">
-                    <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-                    <input type="submit" value="Submit">
-                </td>
-            </tr>
-        </table>
-        </form>
-        <?php
+        $form = Form::create('applicationStatus', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/applications_trackProcess.php?higherEducationApplicationID='.$higherEducationApplicationID);        
+        $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+
+        $row = $form->addRow();
+            $row->addLabel('applying', __('Applying?'))->description(__('Are you intending on applying for entry to higher education?'));
+            $row->addYesNo('applying')->selected($values['applying']);
+        
+        $form->toggleVisibilityByClass('visibility')->onSelect('applying')->when('Y');
+        
+        $row = $form->addRow();
+            $column = $row->addColumn()->addClass('visibility');
+                $column->addLabel('careerInterests', __('Career Interests'))->description(__('What areas of work are you interested in? What are your ambitions?'));
+                $column->addTextArea('careerInterests')->setRows(8)->setClass('fullWidth')->setValue($values['careerInterests']);
+        
+        $row = $form->addRow();
+            $column = $row->addColumn()->addClass('visibility');
+                $column->addLabel('coursesMajors', __('Courses/Majors'))->description(__('What areas of study are you interested in? How do these relate to your career interests?'));
+                $column->addTextArea('coursesMajors')->setRows(8)->setClass('fullWidth')->setValue($values['coursesMajors']);
+        
+        $row = $form->addRow();
+            $column = $row->addColumn()->addClass('visibility');
+                $column->addLabel('otherScores', __('Scores'))->description(__('Do you have any non-'.$_SESSION[$guid]['organisationNameShort'].' exam scores?'));
+                $column->addTextArea('otherScores')->setRows(8)->setClass('fullWidth')->setValue($values['otherScores']);
+        
+        $row = $form->addRow();
+            $column = $row->addColumn()->addClass('visibility');
+                $column->addLabel('personalStatement', __('Personal Statement'))->description(__('Draft out ideas for your personal statement.'));
+                $column->addTextArea('personalStatement')->setRows(8)->setClass('fullWidth')->setValue($values['personalStatement']);
+        
+        $row = $form->addRow();
+            $column = $row->addColumn()->addClass('visibility');
+                $column->addLabel('meetingNotes', __('Meeting Notes'))->description(__('Take notes on any meetings you have regarding your application process'));
+                $column->addTextArea('meetingNotes')->setRows(8)->setClass('fullWidth')->setValue($values['meetingNotes']);
+        
+        $row = $form->addRow();
+            $row->addFooter();
+            $row->addSubmit();
+
+echo $form->getOutput();
 
         $style = '';
-        if (isset($row['applying'])) {
-            if ($row['applying'] == 'N' or $row['applying'] == '') {
+        if (isset($values['applying'])) {
+            if ($values['applying'] == 'N' or $values['applying'] == '') {
                 $style = 'display: none;';
             }
         }
@@ -190,13 +115,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
         echo 'Application To Institutions';
         echo '</h2>';
 
-        if (isset($row['higherEducationApplicationID']) == false) {
+        if (isset($values['higherEducationApplicationID']) == false) {
             echo "<div class='warning'>";
             echo 'You need to save the information above (press the Submit button) before you can start adding applications.';
             echo '</div>';
         } else {
             try {
-                $dataApps = array('higherEducationApplicationID' => $row['higherEducationApplicationID']);
+                $dataApps = array('higherEducationApplicationID' => $values['higherEducationApplicationID']);
                 $sqlApps = 'SELECT higherEducationApplicationInstitution.higherEducationApplicationInstitutionID, higherEducationInstitution.name as institution, higherEducationMajor.name as major, rank, rating FROM higherEducationApplicationInstitution JOIN higherEducationInstitution ON (higherEducationApplicationInstitution.higherEducationInstitutionID=higherEducationInstitution.higherEducationInstitutionID) JOIN higherEducationMajor ON (higherEducationApplicationInstitution.higherEducationMajorID=higherEducationMajor.higherEducationMajorID) WHERE higherEducationApplicationID=:higherEducationApplicationID ORDER BY rank, institution, major';
                 $resultApps = $connection2->prepare($sqlApps);
                 $resultApps->execute($dataApps);
