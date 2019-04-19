@@ -1,4 +1,6 @@
 <?php
+use Gibbon\Forms\Form;
+use Gibbon\Forms\DatabaseFormFactory;
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -41,7 +43,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             $page->addError(__('The specified class cannot be found.'));
         } else {
             //Let's go!
-            $row = $result->fetch();
+            $values = $result->fetch();
 
             $page->breadcrumbs->add(__('Manage References'), 'references_manage.php', ['gibbonSchoolYearID' => $gibbonSchoolYearID]);
             $page->breadcrumbs->add(__('Edit Reference'), 'references_manage_edit.php', [
@@ -53,108 +55,46 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             if (isset($_GET['return'])) {
                 returnProcess($guid, $_GET['return'], null, null);
             }
-            ?>
-            <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/references_manage_edit_contribution_editProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
-                <table class='smallIntBorder' cellspacing='0' style="width: 100%">
-                    <tr>
-                        <td>
-                            <b>Contribution Type *</b><br/>
-                            <span style="font-size: 90%"><i>This value cannot be changed.</i></span>
-                        </td>
-                        <td class="right">
-                            <input readonly name="type" id="type" maxlength=255 value="<?php echo $row['type'] ?>" type="text" style="width: 300px">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Title *</b><br/>
-                        </td>
-                        <td class="right">
-                            <input name="title" id="title" maxlength=10 value="<?php echo $row['title'] ?>" type="text" style="width: 300px">
-                            <script type="text/javascript">
-                                var title=new LiveValidation('title');
-                                title.add(Validate.Presence);
-                             </script>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b><?php echo __('Author') ?></b><br/>
-                            <span class="emphasis small"></span>
-                        </td>
-                        <td class="right">
-                            <select class="standardWidth" name="gibbonPersonID" id="gibbonPersonID">
-                                <?php
-                                echo "<option value='Please select...'>".__('Please select...').'</option>';
-                                try {
-                                    $dataSelect = array('gibbonPersonID' => $row['gibbonPersonID']);
-                                    $sqlSelect = "SELECT gibbonPerson.gibbonPersonID, surname, preferredName FROM gibbonPerson JOIN gibbonStaff ON (gibbonPerson.gibbonPersonID=gibbonStaff.gibbonPersonID) WHERE (status='Full' or gibbonPerson.gibbonPersonID=:gibbonPersonID) ORDER BY surname, preferredName";
-                                    $resultSelect = $connection2->prepare($sqlSelect);
-                                    $resultSelect->execute($dataSelect);
-                                } catch (PDOException $e) {}
-                                while ($rowSelect = $resultSelect->fetch()) {
-                                    if ($row['gibbonPersonID'] == $rowSelect['gibbonPersonID']) {
-                                        echo "<option selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Staff', true, true).'</option>';
-                                    } else {
-                                        echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Staff', true, true).'</option>';
-                                    }
-                                }
-                                ?>
-                            </select>
-                            <script type="text/javascript">
-                                var gibbonPersonID=new LiveValidation('gibbonPersonID');
-                                gibbonPersonID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php echo __('Select something!') ?>"});
-                            </script>
-                        </td>
-                    </tr>
+            $form = Form::create('action',$_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/references_manage_edit_contribution_editProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID");
+            $form->setFactory(DatabaseFormFactory::create($pdo));
+            $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+            $form->addHiddenValue('higherEducationReferenceID', $higherEducationReferenceID);
+            $form->addHiddenValue('q',"/modules/".$_SESSION[$guid]['module']."/references_manage_edit_contribution_editProcess.php");
 
-                    <tr>
-                        <td colspan=2 style='padding-top: 15px;'>
-                            <b>Reference</b><br/>
-                            <span style="font-size: 90%"><i>
-                            <?php
-                            if ($row['refType'] == 'US Reference') {
-                                echo 'Maximum limit of 10,000 characters.';
-                            } else {
-                                echo 'Maximum limit of 2,000 characters.'; } ?>
-                            </i></span><br/>
-                            <textarea name="body" id="body" rows=20 style="width:738px; margin: 5px 0px 0px 0px"><?php echo $row['body'] ?></textarea>
-                            <script type="text/javascript">
-                                var body=new LiveValidation('body');
-                                <?php
-                                if ($row['refType'] == 'US Reference') {
-                                    echo 'body.add( Validate.Length, { maximum: 10000 } );';
-                                } else {
-                                    echo 'body.add( Validate.Length, { maximum: 2000 } );';
-                                }
-                                ?>
-                             </script>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Status *</b><br/>
-                        </td>
-                        <td class="right">
-                            <select name="status" id="status" style="width: 302px">
-                                <option <?php if ($row['status'] == 'In Progress') { echo 'selected'; } ?> value='In Progress'>In Progress</option> ;
-                                <option <?php if ($row['status'] == 'Complete') { echo 'selected'; } ?> value='Complete'>Complete</option> ;
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span style="font-size: 90%"><i>* denotes a required field</i></span>
-                        </td>
-                        <td class="right">
-                            <input name="higherEducationReferenceID" id="higherEducationReferenceID" value="<?php echo $higherEducationReferenceID ?>" type="hidden">
-                            <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-                            <input type="submit" value="Submit">
-                        </td>
-                    </tr>
-                </table>
-            </form>
-            <?php
+            $row = $form->addRow();
+                $row->addLabel('type', __('Contribution Type'))->description(__('This value cannot be changed.'));
+                $row->addTextField('type')->required()->readOnly()->maxLength(255);
+
+            $row = $form->addRow();
+                $row->addLabel('title', __('Title'));
+                $row->addTextField('title')->required()->maxLength(255);
+
+
+            $row = $form->addRow();
+                  $row->addLabel('gibbonPersonID', __('Author'));
+                  $row->addSelectStaff('gibbonPersonID')->placeholder();
+
+            $row = $form->addRow();
+                  $column = $row->addColumn();
+                  if ($values['refType'] == 'US Reference') {
+                  $column->addLabel('body', __('Reference'))->description(__('Maximum limit of 10,000 Characters'));
+                  $column->addTextArea('body')->setRows(20)->maxLength(10000)->setClass('fullWidth');
+                  } else {
+                      $column->addLabel('body', __('Reference'))->description(__('Maximum limit of 2,000 Characters'));
+                      $column->addTextArea('body')->setRows(20)->maxLength(2000)->setClass('fullWidth');
+                  }
+            $row = $form->addRow();
+                  $row->addLabel('status', __('Status'));
+                  $row->addSelect('status')->fromArray(array('In Progress' =>__('In Progress'), 'Complete' => __('Complete')))->isRequired()->setValue($values['status']);
+
+            $row = $form->addRow();
+            $row->addFooter();
+            $row->addSubmit();
+
+            $form->loadAllValuesFrom($values);
+
+            echo $form->getOutput();
+
 
         }
     }
