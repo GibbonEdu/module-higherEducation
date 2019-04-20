@@ -20,6 +20,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
+
+use Gibbon\Forms\Form;
+
+
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_track_edit.php') == false) {
     //Acess denied
     $page->addError(__('You do not have access to this action.'));
@@ -69,201 +73,73 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     $page->addError(__('The specified application cannot be found.'));
                 } else {
                     //Let's go!
-                    $row = $result->fetch(); ?>
-                    <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/applications_track_editProcess.php?higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID" ?>">
-                        <table class='smallIntBorder' cellspacing='0' style="width: 100%">
-                            <tr class='break'>
-                                <td colspan=2>
-                                    <h3 class='top'>Application Information</h3>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <b>Institution *</b><br/>
-                                </td>
-                                <td class="right">
-                                    <select name="higherEducationInstitutionID" id="higherEducationInstitutionID" style="width: 302px">
-                                        <?php
-                                        echo "<option value='Please select...'>Please select...</option>";
-                                        try {
-                                            $dataSelect = array();
-                                            $sqlSelect = "SELECT * FROM higherEducationInstitution WHERE active='Y' ORDER BY name";
-                                            $resultSelect = $connection2->prepare($sqlSelect);
-                                            $resultSelect->execute($dataSelect);
-                                        } catch (PDOException $e) {
-                                        }
-                                        while ($rowSelect = $resultSelect->fetch()) {
-                                            $selected = '';
-                                            if ($rowSelect['higherEducationInstitutionID'] == $row['higherEducationInstitutionID']) {
-                                                $selected = 'selected';
-                                            }
-                                            echo "<option $selected value='".$rowSelect['higherEducationInstitutionID']."'>".htmlPrep($rowSelect['name']).' ('.htmlPrep($rowSelect['country']).')</option>';
-                                        }
-                                        ?>
-                                    </select>
-                                    <script type="text/javascript">
-                                        var higherEducationInstitutionID=new LiveValidation('higherEducationInstitutionID');
-                                        higherEducationInstitutionID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
-                                     </script>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <b>Major/Course *</b><br/>
-                                </td>
-                                <td class="right">
-                                    <select name="higherEducationMajorID" id="higherEducationMajorID" style="width: 302px">
-                                        <?php
-                                        echo "<option value='Please select...'>Please select...</option>";
-                                        try {
-                                            $dataSelect = array();
-                                            $sqlSelect = "SELECT * FROM higherEducationMajor WHERE active='Y' ORDER BY name";
-                                            $resultSelect = $connection2->prepare($sqlSelect);
-                                            $resultSelect->execute($dataSelect);
-                                        } catch (PDOException $e) {
-                                        }
-                                        while ($rowSelect = $resultSelect->fetch()) {
-                                            $selected = '';
-                                            if ($rowSelect['higherEducationMajorID'] == $row['higherEducationMajorID']) {
-                                                $selected = 'selected';
-                                            }
-                                            echo "<option $selected value='".$rowSelect['higherEducationMajorID']."'>".htmlPrep($rowSelect['name']).'</option>';
-                                        }
-                                        ?>
-                                    </select>
-                                    <script type="text/javascript">
-                                        var higherEducationMajorID=new LiveValidation('higherEducationMajorID');
-                                        higherEducationMajorID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
-                                     </script>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <b>Application Number</b><br/>
-                                    <span style="font-size: 90%"><i>Official number for your application (given by institution, UCAS, etc).</i></span>
-                                </td>
-                                <td class="right">
-                                    <input name="applicationNumber" id="applicationNumber" maxlength=50 value="<?php echo $row['applicationNumber'] ?>" type="text" style="width: 300px">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <b>Rank</b><br/>
-                                    <span style="font-size: 90%"><i>Order all your applications. 1 should be your most favoured application.</i></span>
-                                </td>
-                                <td class="right">
-                                    <select name="rank" id="rank" style="width: 302px">
-                                        <?php
-                                        echo "<option value=''></option>";
-                                        for ($i = 1; $i < 11; ++$i) {
-                                            $selected = '';
-                                            if ($i == $row['rank']) {
-                                                $selected = 'selected';
-                                            }
-                                            echo "<option $selected value='$i'>$i</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <b>Rating</b><br/>
-                                    <span style="font-size: 90%"><i>How likely is it that you will get into this institution?</i></span>
-                                </td>
-                                <td class="right">
-                                    <select name="rating" id="rating" style="width: 302px">
-                                        <option <?php if ($row['rating'] == '') { echo 'selected'; } ?> value=""></option>
-                                        <option <?php if ($row['rating'] == 'High Reach') { echo 'selected'; } ?> value="High Reach">High Reach</option>
-                                        <option <?php if ($row['rating'] == 'Reach') { echo 'selected'; } ?> value="Reach">Reach</option>
-                                        <option <?php if ($row['rating'] == 'Mid') { echo 'selected'; } ?> value="Mid">Mid</option>
-                                        <option <?php if ($row['rating'] == 'Safe') { echo 'selected'; } ?> value="Safe">Safe</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan=2 style='padding-top: 15px;'>
-                                    <b>Application Question</b><br/>
-                                    <span style="font-size: 90%"><i>If the application form has a question, enter it here.</i></span><br/>
-                                    <textarea name="question" id="question" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['question']) ?></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan=2 style='padding-top: 15px;'>
-                                    <b>Application Answer</b><br/>
-                                    <span style="font-size: 90%"><i>Answer the above question here.</i></span><br/>
-                                    <textarea name="answer" id="answer" rows=14 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['answer']) ?></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan=2 style='padding-top: 15px;'>
-                                    <b>Scholarship Details</b><br/>
-                                    <span style="font-size: 90%"><i>Have you applied for a scholarship? If so, list the details below.</i></span><br/>
-                                    <textarea name="scholarship" id="scholarship" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['scholarship']) ?></textarea>
-                                </td>
-                            </tr>
+                    $values = $result->fetch(); 
 
-                            <tr class='break'>
-                                <td colspan=2>
-                                    <h3>Status & Offers</h3>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <b>Status</b><br/>
-                                    <span style="font-size: 90%"><i>Where are you in the application process?</i></span>
-                                </td>
-                                <td class="right">
-                                    <select name="status" id="status" style="width: 302px">
-                                        <option <?php if ($row['status'] == '') { echo 'selected'; } ?> value=""></option>
-                                        <option <?php if ($row['status'] == 'Not Yet Started') { echo 'selected'; } ?> value="Not Yet Started">Not Yet Started</option>
-                                        <option <?php if ($row['status'] == 'Researching') { echo 'selected'; } ?> value="Researching">Researching</option>
-                                        <option <?php if ($row['status'] == 'Started') { echo 'selected'; } ?> value="Started">Started</option>
-                                        <option <?php if ($row['status'] == 'Passed To Careers Office') { echo 'selected'; } ?> value="Passed To Careers Office">Passed To Careers Office</option>
-                                        <option <?php if ($row['status'] == 'Completed') { echo 'selected'; } ?> value="Completed">Completed</option>
-                                        <option <?php if ($row['status'] == 'Application Sent') { echo 'selected'; } ?> value="Application Sent">Application Sent</option>
-                                        <option <?php if ($row['status'] == 'Offer/Acceptance Received') { echo 'selected'; } ?> value="Offer/Acceptance Received">Offer/Acceptance Received</option>
-                                        <option <?php if ($row['status'] == 'Rejection Received') { echo 'selected'; } ?> value="Rejection Received">Rejection Received</option>
-                                        <option <?php if ($row['status'] == 'Offer Denied') { echo 'selected'; } ?> value="Offer Denied">Offer Denied</option>
-                                        <option <?php if ($row['status'] == 'Deposit Paid/Offer Accepted') { echo 'selected'; } ?> value="Deposit Paid/Offer Accepted">Deposit Paid/Offer Accepted</option>
-                                        <option <?php if ($row['status'] == 'Enrolling') { echo 'selected'; } ?> value="Enrolling">Enrolling</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <b>Offer</b><br/>
-                                    <span style="font-size: 90%"><i>If you have received an offer or rejection, select relevant option below:</i></span>
-                                </td>
-                                <td class="right">
-                                    <select name="offer" id="offer" style="width: 302px">
-                                        <option <?php if ($row['offer'] == '') { echo 'selected'; } ?> value=""></option>
-                                        <option <?php if ($row['offer'] == 'First Choice') { echo 'selected'; } ?> value="First Choice">Yes - First Choice</option>
-                                        <option <?php if ($row['offer'] == 'Backup') { echo 'selected'; } ?> value="Backup">Yes - Backup Choice</option>
-                                        <option <?php if ($row['offer'] == 'Y') { echo 'selected'; } ?> value="Y">Yes - Other</option>
-                                        <option <?php if ($row['offer'] == 'N') { echo 'selected'; } ?> value="N">No</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan=2 style='padding-top: 15px;'>
-                                    <b>Offer Details</b><br/>
-                                    <span style="font-size: 90%"><i>If you have received an offer, enter details here.</i></span><br/>
-                                    <textarea name="offerDetails" id="offerDetails" rows=4 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['offerDetails']) ?></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span style="font-size: 90%"><i>* denotes a required field</i></span>
-                                </td>
-                                <td class="right">
-                                    <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-                                    <input type="submit" value="Submit">
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
-                    <?php
+					$form = Form::create('applicationsTrackEdit', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/applications_track_editProcess.php?higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID");
+					$form->addHiddenValue('address', $_SESSION[$guid]['address']);
+
+					$form->addRow()->addHeading(__('Application Information'));
+			
+					$data0 = array();
+					$sql0 = "SELECT higherEducationInstitutionID as value, concat(name, ' (', country, ')') as name FROM higherEducationInstitution WHERE active='Y' ORDER BY name";
+					$row = $form->addRow();
+						$row->addLabel('higherEducationInstitutionID', __('Institution'));
+						$row->addSelect('higherEducationInstitutionID')->fromQuery($pdo, $sql0, $data0)->placeholder()->selected($values['higherEducationInstitutionID'])->required();
+
+					$data1 = array();
+					$sql1 = "SELECT higherEducationMajorID as value, name as name FROM higherEducationMajor WHERE active='Y' ORDER BY name";
+			
+					$row = $form->addRow();
+						$row->addLabel('higherEducationMajorID', __('Major/Course'));
+						$row->addSelect('higherEducationMajorID')->fromQuery($pdo, $sql1, $data1)->selected($values['higherEducationMajorID'])->placeholder()->required();
+
+					$row = $form->addRow();
+						$row->addLabel('applicationNumber', __('Application Number'))->description(__('Official number for your application (given by institution, UCAS, etc).'));
+						$row->addTextField('applicationNumber')->setValue($values["applicationNumber"])->maxLength(50);
+
+					$row = $form->addRow();
+						$row->addLabel('rank', __('Rank'));
+						$row->addSelect('rank')->fromArray(range(1, 10))->selected($values["rank"])->placeholder();
+				
+					$row = $form->addRow();
+						$row->addLabel('rating', __('Rating'))->description(__('How likely is it that you will get into this institution?'));
+						$row->addSelect('rating')->fromArray(array('High Reach' =>__('High Reach'), 'Reach' => __('Reach'), 'Mid' => __('Mid'), 'Safe' => __('Safe')))->selected($values["rating"])->placeholder();
+			
+					$row = $form->addRow();
+						$column = $row->addColumn();
+						$column->addLabel('question', __('Application Question'))->description(__('If the application form has a question, enter it here.'));
+						$column->addTextArea('question')->setRows(4)->setClass('fullWidth')->setValue($values["question"]);
+			
+					 $row = $form->addRow();
+						$column = $row->addColumn();
+						$column->addLabel('answer', __('Application Answer'))->description(__('Answer the above question here.'));
+						$column->addTextArea('answer')->setRows(14)->setClass('fullWidth')->setValue($values["answer"]);
+				
+					$row = $form->addRow();
+						$column = $row->addColumn();
+						$column->addLabel('scholarship', __('Scholarship Details'))->description(__('Have you applied for a scholarship? If so, list the details below.'));
+						$column->addTextArea('scholarship')->setRows(4)->setClass('fullWidth')->setValue($values["scholarship"]);
+				
+					$form->addRow()->addHeading(__('Status & Offers'));   
+			 
+					$row = $form->addRow();
+						$row->addLabel('status', __('Status'))->description(__('Where are you in the application process'));
+						$row->addSelect('status')->fromArray(array('Not Yet Started' =>__('Not Yet Started'), 'Researching' => __('Researching'), 'Started' => __('Started'), 'Passed To Careers Office' => __('Passed To Careers Office'), 'Completed' => __('Completed'), 'Application Sent' => __('Application Sent'), 'Offer/Acceptance Received' => __('Offer/Acceptance Received'), 'Rejection Received' => __('Rejection Received')))->selected($values["status"])->placeholder();
+			
+					$row = $form->addRow();
+						$row->addLabel('offer', __('Offer'))->description(__('If you have received an offer or rejection, select relevant option below:'));
+						$row->addSelect('offer')->fromArray(array('First Choice' =>__('Yes - First Choice'), 'Backup' => __('Yes - Backup Choice'), 'Y' => __('Yes - Other'), 'N' => __('No')))->selected($values["offer"])->placeholder();
+		
+					$row = $form->addRow();
+						$column = $row->addColumn();
+						$column->addLabel('offerDetails', __('Offer Details'))->description(__('If you have received an offer, enter details here.'));
+						$column->addTextArea('offerDetails')->setRows(4)->setClass('fullWidth')->setValue($values["offerDetails"]);
+			
+					$row = $form->addRow();
+						$row->addFooter();
+						$row->addSubmit();
+
+					echo $form->getOutput();
 
                 }
             }
