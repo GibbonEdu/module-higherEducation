@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 include __DIR__.'/../../gibbon.php';
 
+
 $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
 $higherEducationReferenceComponentID = $_GET['higherEducationReferenceComponentID'];
 $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
