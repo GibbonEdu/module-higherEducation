@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.3.03
+-------
+Refactoring Track Application, Edit Contribution and Request References forms
+
 v1.3.02
 -------
 Minor fixes to breadcrumbs
