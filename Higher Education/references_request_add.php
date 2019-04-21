@@ -1,4 +1,7 @@
 <?php
+//LOAD FORM OBJECTS
+use Gibbon\Forms\Form;
+use Gibbon\Forms\DatabaseFormFactory;
 /*
 Gibbon, Flexible & Open School System
 Copyright (C) 2010, Ross Parker
@@ -36,93 +39,36 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
         $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
+
+        //START FORM
+        $form = Form::create('requestReference',$_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/references_request_addProcess.php');
+        $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+        $form->setFactory(DatabaseFormFactory::create($pdo));
+
+        $row = $form->addRow();
+            $row->addLabel('type', __('Type'));
+            $row->addSelect('type')->fromArray(array('Composite Reference' =>__('Composite Reference'), 'US Reference' => __('US Reference')))->placeholder()->isRequired();
+
+        $form->toggleVisibilityByCLass('gibbonPersonIDReferee')->onSelect('type')->when('US Reference');
+        $row = $form->addRow()->addClass('gibbonPersonIDReferee');
+            $row->addLabel('gibbonPersonIDReferee', __('Referee'));
+            $row->addSelectStaff('gibbonPersonIDReferee')->placeholder();
+
+        $row = $form->addRow();
+            $column = $row->addColumn();
+                $column->addLabel('notes', __('Notes'))->description(__('Any information you need to share with your referee(s), that is not already in your general reference notes'));
+                $column->addTextArea('notes')->setRows(4)->setClass('fullWidth');
+
+        $row = $form->addRow();
+        $row->addFooter();
+        $row->addSubmit();
+
+        echo $form->getOutput();
         ?>
+
         <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/references_request_addProcess.php' ?>">
-            <table class='smallIntBorder' cellspacing='0' style="width: 100%">
-                <tr>
-                    <td>
-                        <b>Type *</b><br/>
-                    </td>
-                    <td class="right">
-                        <select name="type" id="type" style="width: 302px">
-                            <option value="Please select...">Please select...</option>
-                            <option value="Composite Reference">Composite Reference</option>
-                            <option value="US Reference">US Reference</option>
-                        </select>
-                        <script type="text/javascript">
-                            var type=new LiveValidation('type');
-                            type.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
-                         </script>
-                    </td>
-                </tr>
-                <script type="text/javascript">
-                    $(document).ready(function(){
-                        gibbonPersonIDReferee.disable();
-                        $("#type").change(function(){
-                            if ($('#type option:selected').val() == "Please select...") {
-                                gibbonPersonIDReferee.disable();
-                                $("#refereeRow").css("display","none");
-                            }
-                            else if ($('#type option:selected').val() == "Composite Reference") {
-                                gibbonPersonIDReferee.disable();
-                                $("#refereeRow").css("display","none");
-                            }
-                            else {
-                                gibbonPersonIDReferee.enable();
-                                $("#refereeRow").slideDown("fast", $("#refereeRow").css("display","table-row")); //Slide Down Effect
-                            }
-                         });
-                    });
-                </script>
-                <tr id="refereeRow" style='display: none'>
-                    <td>
-                        <b>Referee *</b><br/>
-                        <span style="font-size: 90%"><i>The teacher you wish to write your reference.</i></span>
-                    </td>
-                    <td class="right">
-                        <select name="gibbonPersonIDReferee" id="gibbonPersonIDReferee" style="width: 302px">
-                            <?php
-                            echo "<option value='Please select...'>Please select...</option>";
-                            try {
-                                $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
-                                $sql = "SELECT gibbonPerson.gibbonPersonID, surname, preferredName, title FROM gibbonPerson JOIN gibbonStaff ON (gibbonPerson.gibbonPersonID=gibbonStaff.gibbonPersonID) JOIN gibbonRole ON (gibbonPerson.gibbonRoleIDPrimary=gibbonRole.gibbonRoleID) WHERE (gibbonStaff.type='Teaching' OR gibbonRole.category='Staff') AND gibbonPerson.status='Full' ORDER BY surname, preferredName";
-                                $result = $connection2->prepare($sql);
-                                $result->execute($data);
-                            } catch (PDOException $e) {
-                            }
-                            while ($row = $result->fetch()) {
-                                echo "<option value='".$row['gibbonPersonID']."'>".formatName($row['title'], $row['preferredName'], $row['surname'], 'Staff', true, true).'</option>';
-                            }
-                            ?>
-                        </select>
-                        <script type="text/javascript">
-                            var gibbonPersonIDReferee=new LiveValidation('gibbonPersonIDReferee');
-                            gibbonPersonIDReferee.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "Select something!"});
-                         </script>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan=2 style='padding-top: 15px;'>
-                        <b>Notes</b><br/>
-                        <span style="font-size: 90%"><i>Any information you need to share with your referee(s), that is not already in your <a href='<?php echo $_SESSION[$guid]['absoluteURL'] ?>/index.php?q=/modules/Higher Education/references_myNotes.php'>general reference notes</a>.</i></span><br/>
-                        <textarea name="notes" id="notes" rows=4 style="width:738px; margin: 5px 0px 0px 0px"></textarea>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <span style="font-size: 90%"><i>* denotes a required field</i></span>
-                    </td>
-                    <td class="right">
-                        <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-                        <input type="submit" value="Submit">
-                    </td>
-                </tr>
-            </table>
         </form>
         <?php
-
     }
 }
 ?>
