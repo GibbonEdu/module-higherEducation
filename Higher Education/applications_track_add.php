@@ -27,8 +27,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
-    $page->breadcrumbs->add(__('Track Applications'), 'applications_track.php');
-    $page->breadcrumbs->add(__('Add Application'));
+    $page->breadcrumbs
+        ->add(__('Track Applications'), 'applications_track.php')
+        ->add(__('Add Application'));
 
     $returns = array();
     $editLink = '';
@@ -81,7 +82,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                 $row->addTextField('applicationNumber')->maxLength(50);
              
             $row = $form->addRow();
-                $row->addLabel('rank', __('Rank'));
+                $row->addLabel('rank', __('Rank'))->description(__('Order all your applications. 1 should be your most favoured application.'));
                 $row->addSelect('rank')->fromArray(range(1, 10))->placeholder();
             
             $row = $form->addRow();
@@ -110,7 +111,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                 $row->addSelect('status')->fromArray(array('Not Yet Started' =>__('Not Yet Started'), 'Researching' => __('Researching'), 'Started' => __('Started'), 'Passed To Careers Office' => __('Passed To Careers Office'), 'Completed' => __('Completed'), 'Application Sent' => __('Application Sent'), 'Offer/Acceptance Received' => __('Offer/Acceptance Received'), 'Rejection Received' => __('Rejection Received')))->placeholder();
             
             $row = $form->addRow();
-                $row->addLabel('offer', __('Offer'))->description(__('If you have received an offer or rejection, select relevant option below:'));
+                $row->addLabel('offer', __('Offer'))->description(__('If you have received an offer or rejection, select relevant option.'));
                 $row->addSelect('offer')->fromArray(array('First Choice' =>__('Yes - First Choice'), 'Backup' => __('Yes - Backup Choice'), 'Y' => __('Yes - Other'), 'N' => __('No')))->placeholder();
         
             $row = $form->addRow();

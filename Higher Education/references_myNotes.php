@@ -45,11 +45,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
         $values = $result->fetch();
-        ?>
-        <p>
-            On this page you can store some notes that will help your referee write about you. You might want to include some highlights of your achievements in and out of school, community service work you have done and activities you have taken part in.
-        </p>
-    <?php
+
+        echo '<p>'.__m('On this page you can store some notes that will help your referee write about you. You might want to include some highlights of your achievements in and out of school, community service work you have done and activities you have taken part in.').'</p>';
+
         $form = Form::create('myNotes', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/references_myNotesProcess.php');
         $form->addHiddenValue('address', $_SESSION[$guid]['address']);
 
@@ -62,4 +60,3 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         echo $form->getOutput();
     }
 }
-?>

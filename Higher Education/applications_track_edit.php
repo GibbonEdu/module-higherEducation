@@ -29,8 +29,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     $page->addError(__('You do not have access to this action.'));
 } else {
     //Proceed!
-    $page->breadcrumbs->add(__('Track Applications'), 'applications_track.php');
-    $page->breadcrumbs->add(__('Edit Application'));
+    $page->breadcrumbs
+        ->add(__('Track Applications'), 'applications_track.php')
+        ->add(__('Edit Application'));
 
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
@@ -75,71 +76,73 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     //Let's go!
                     $values = $result->fetch(); 
 
-					$form = Form::create('applicationsTrackEdit', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/applications_track_editProcess.php?higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID");
-					$form->addHiddenValue('address', $_SESSION[$guid]['address']);
+                    $form = Form::create('applicationsTrackEdit', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/applications_track_editProcess.php?higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID");
+                    $form->addHiddenValue('address', $_SESSION[$guid]['address']);
 
-					$form->addRow()->addHeading(__('Application Information'));
-			
-					$data0 = array();
-					$sql0 = "SELECT higherEducationInstitutionID as value, concat(name, ' (', country, ')') as name FROM higherEducationInstitution WHERE active='Y' ORDER BY name";
-					$row = $form->addRow();
-						$row->addLabel('higherEducationInstitutionID', __('Institution'));
-						$row->addSelect('higherEducationInstitutionID')->fromQuery($pdo, $sql0, $data0)->placeholder()->selected($values['higherEducationInstitutionID'])->required();
+                    $form->addRow()->addHeading(__('Application Information'));
+            
+                    $data0 = array();
+                    $sql0 = "SELECT higherEducationInstitutionID as value, concat(name, ' (', country, ')') as name FROM higherEducationInstitution WHERE active='Y' ORDER BY name";
+                    $row = $form->addRow();
+                        $row->addLabel('higherEducationInstitutionID', __('Institution'));
+                        $row->addSelect('higherEducationInstitutionID')->fromQuery($pdo, $sql0, $data0)->placeholder()->required();
 
-					$data1 = array();
-					$sql1 = "SELECT higherEducationMajorID as value, name as name FROM higherEducationMajor WHERE active='Y' ORDER BY name";
-			
-					$row = $form->addRow();
-						$row->addLabel('higherEducationMajorID', __('Major/Course'));
-						$row->addSelect('higherEducationMajorID')->fromQuery($pdo, $sql1, $data1)->selected($values['higherEducationMajorID'])->placeholder()->required();
+                    $data1 = array();
+                    $sql1 = "SELECT higherEducationMajorID as value, name as name FROM higherEducationMajor WHERE active='Y' ORDER BY name";
+            
+                    $row = $form->addRow();
+                        $row->addLabel('higherEducationMajorID', __('Major/Course'));
+                        $row->addSelect('higherEducationMajorID')->fromQuery($pdo, $sql1, $data1)->placeholder()->required();
 
-					$row = $form->addRow();
-						$row->addLabel('applicationNumber', __('Application Number'))->description(__('Official number for your application (given by institution, UCAS, etc).'));
-						$row->addTextField('applicationNumber')->setValue($values["applicationNumber"])->maxLength(50);
+                    $row = $form->addRow();
+                        $row->addLabel('applicationNumber', __('Application Number'))->description(__('Official number for your application (given by institution, UCAS, etc).'));
+                        $row->addTextField('applicationNumber')->maxLength(50);
 
-					$row = $form->addRow();
-						$row->addLabel('rank', __('Rank'));
-						$row->addSelect('rank')->fromArray(range(1, 10))->selected($values["rank"])->placeholder();
-				
-					$row = $form->addRow();
-						$row->addLabel('rating', __('Rating'))->description(__('How likely is it that you will get into this institution?'));
-						$row->addSelect('rating')->fromArray(array('High Reach' =>__('High Reach'), 'Reach' => __('Reach'), 'Mid' => __('Mid'), 'Safe' => __('Safe')))->selected($values["rating"])->placeholder();
-			
-					$row = $form->addRow();
-						$column = $row->addColumn();
-						$column->addLabel('question', __('Application Question'))->description(__('If the application form has a question, enter it here.'));
-						$column->addTextArea('question')->setRows(4)->setClass('fullWidth')->setValue($values["question"]);
-			
-					 $row = $form->addRow();
-						$column = $row->addColumn();
-						$column->addLabel('answer', __('Application Answer'))->description(__('Answer the above question here.'));
-						$column->addTextArea('answer')->setRows(14)->setClass('fullWidth')->setValue($values["answer"]);
-				
-					$row = $form->addRow();
-						$column = $row->addColumn();
-						$column->addLabel('scholarship', __('Scholarship Details'))->description(__('Have you applied for a scholarship? If so, list the details below.'));
-						$column->addTextArea('scholarship')->setRows(4)->setClass('fullWidth')->setValue($values["scholarship"]);
-				
-					$form->addRow()->addHeading(__('Status & Offers'));   
-			 
-					$row = $form->addRow();
-						$row->addLabel('status', __('Status'))->description(__('Where are you in the application process'));
-						$row->addSelect('status')->fromArray(array('Not Yet Started' =>__('Not Yet Started'), 'Researching' => __('Researching'), 'Started' => __('Started'), 'Passed To Careers Office' => __('Passed To Careers Office'), 'Completed' => __('Completed'), 'Application Sent' => __('Application Sent'), 'Offer/Acceptance Received' => __('Offer/Acceptance Received'), 'Rejection Received' => __('Rejection Received')))->selected($values["status"])->placeholder();
-			
-					$row = $form->addRow();
-						$row->addLabel('offer', __('Offer'))->description(__('If you have received an offer or rejection, select relevant option below:'));
-						$row->addSelect('offer')->fromArray(array('First Choice' =>__('Yes - First Choice'), 'Backup' => __('Yes - Backup Choice'), 'Y' => __('Yes - Other'), 'N' => __('No')))->selected($values["offer"])->placeholder();
-		
-					$row = $form->addRow();
-						$column = $row->addColumn();
-						$column->addLabel('offerDetails', __('Offer Details'))->description(__('If you have received an offer, enter details here.'));
-						$column->addTextArea('offerDetails')->setRows(4)->setClass('fullWidth')->setValue($values["offerDetails"]);
-			
-					$row = $form->addRow();
-						$row->addFooter();
-						$row->addSubmit();
+                    $row = $form->addRow();
+                        $row->addLabel('rank', __('Rank'))->description(__('Order all your applications. 1 should be your most favoured application.'));
+                        $row->addSelect('rank')->fromArray(range(1, 10))->placeholder();
+                
+                    $row = $form->addRow();
+                        $row->addLabel('rating', __('Rating'))->description(__('How likely is it that you will get into this institution?'));
+                        $row->addSelect('rating')->fromArray(array('High Reach' =>__('High Reach'), 'Reach' => __('Reach'), 'Mid' => __('Mid'), 'Safe' => __('Safe')))->placeholder();
+            
+                    $row = $form->addRow();
+                        $column = $row->addColumn();
+                        $column->addLabel('question', __('Application Question'))->description(__('If the application form has a question, enter it here.'));
+                        $column->addTextArea('question')->setRows(4)->setClass('fullWidth');
+            
+                     $row = $form->addRow();
+                        $column = $row->addColumn();
+                        $column->addLabel('answer', __('Application Answer'))->description(__('Answer the above question here.'));
+                        $column->addTextArea('answer')->setRows(14)->setClass('fullWidth');
+                
+                    $row = $form->addRow();
+                        $column = $row->addColumn();
+                        $column->addLabel('scholarship', __('Scholarship Details'))->description(__('Have you applied for a scholarship? If so, list the details below.'));
+                        $column->addTextArea('scholarship')->setRows(4)->setClass('fullWidth');
+                
+                    $form->addRow()->addHeading(__('Status & Offers'));   
+             
+                    $row = $form->addRow();
+                        $row->addLabel('status', __('Status'))->description(__('Where are you in the application process'));
+                        $row->addSelect('status')->fromArray(array('Not Yet Started' =>__('Not Yet Started'), 'Researching' => __('Researching'), 'Started' => __('Started'), 'Passed To Careers Office' => __('Passed To Careers Office'), 'Completed' => __('Completed'), 'Application Sent' => __('Application Sent'), 'Offer/Acceptance Received' => __('Offer/Acceptance Received'), 'Rejection Received' => __('Rejection Received')))->placeholder();
+            
+                    $row = $form->addRow();
+                        $row->addLabel('offer', __('Offer'))->description(__('If you have received an offer or rejection, select relevant option below:'));
+                        $row->addSelect('offer')->fromArray(array('First Choice' =>__('Yes - First Choice'), 'Backup' => __('Yes - Backup Choice'), 'Y' => __('Yes - Other'), 'N' => __('No')))->placeholder();
+        
+                    $row = $form->addRow();
+                        $column = $row->addColumn();
+                        $column->addLabel('offerDetails', __('Offer Details'))->description(__('If you have received an offer, enter details here.'));
+                        $column->addTextArea('offerDetails')->setRows(4)->setClass('fullWidth');
+            
+                    $row = $form->addRow();
+                        $row->addFooter();
+                        $row->addSubmit();
+                        
+                    $form->loadAllValuesFrom($values);
 
-					echo $form->getOutput();
+                    echo $form->getOutput();
 
                 }
             }

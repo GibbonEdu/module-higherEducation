@@ -38,7 +38,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
         $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
         echo '<p>';
-        echo 'Use this page to provide relevant information about your higher education application intentions and progress. This information will be used to guide you through this process.';
+        echo __m('Use this page to provide relevant information about your higher education application intentions and progress. This information will be used to guide you through this process.');
         echo '</p>';
 
         //Check for application record
@@ -53,7 +53,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 
         if ($result->rowCount() != 1) {
             echo "<div class='warning'>";
-            echo 'It appears that you are new to application tracking via the Higher Education module. Please enter your details below, and press the Submit button once you are done. You can reenter details into this page at any time.';
+            echo __m('It appears that you are new to application tracking via the Higher Education module. Please enter your details below, and press the Submit button once you are done. You can reenter details into this page at any time.');
             echo '</div>';
         } else {
             $values = $result->fetch();
@@ -64,7 +64,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             $higherEducationApplicationID = $values['higherEducationApplicationID'];
         }
 
-        $form = Form::create('applicationStatus', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/applications_trackProcess.php?higherEducationApplicationID='.$higherEducationApplicationID);        
+        $form = Form::create('applicationStatus', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/applications_trackProcess.php?higherEducationApplicationID='.$higherEducationApplicationID);
+        
         $form->addHiddenValue('address', $_SESSION[$guid]['address']);
 
         $row = $form->addRow();
@@ -76,33 +77,35 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
         $row = $form->addRow();
             $column = $row->addColumn()->addClass('visibility');
                 $column->addLabel('careerInterests', __('Career Interests'))->description(__('What areas of work are you interested in? What are your ambitions?'));
-                $column->addTextArea('careerInterests')->setRows(8)->setClass('fullWidth')->setValue($values['careerInterests']);
+                $column->addTextArea('careerInterests')->setRows(8)->setClass('w-full');
         
         $row = $form->addRow();
             $column = $row->addColumn()->addClass('visibility');
                 $column->addLabel('coursesMajors', __('Courses/Majors'))->description(__('What areas of study are you interested in? How do these relate to your career interests?'));
-                $column->addTextArea('coursesMajors')->setRows(8)->setClass('fullWidth')->setValue($values['coursesMajors']);
+                $column->addTextArea('coursesMajors')->setRows(8)->setClass('w-full');
         
         $row = $form->addRow();
             $column = $row->addColumn()->addClass('visibility');
                 $column->addLabel('otherScores', __('Scores'))->description(__('Do you have any non-'.$_SESSION[$guid]['organisationNameShort'].' exam scores?'));
-                $column->addTextArea('otherScores')->setRows(8)->setClass('fullWidth')->setValue($values['otherScores']);
+                $column->addTextArea('otherScores')->setRows(8)->setClass('w-full');
         
         $row = $form->addRow();
             $column = $row->addColumn()->addClass('visibility');
                 $column->addLabel('personalStatement', __('Personal Statement'))->description(__('Draft out ideas for your personal statement.'));
-                $column->addTextArea('personalStatement')->setRows(8)->setClass('fullWidth')->setValue($values['personalStatement']);
+                $column->addTextArea('personalStatement')->setRows(8)->setClass('w-full');
         
         $row = $form->addRow();
             $column = $row->addColumn()->addClass('visibility');
                 $column->addLabel('meetingNotes', __('Meeting Notes'))->description(__('Take notes on any meetings you have regarding your application process'));
-                $column->addTextArea('meetingNotes')->setRows(8)->setClass('fullWidth')->setValue($values['meetingNotes']);
+                $column->addTextArea('meetingNotes')->setRows(8)->setClass('w-full');
         
+        $form->loadAllValuesFrom($values);
+
         $row = $form->addRow();
             $row->addFooter();
             $row->addSubmit();
 
-echo $form->getOutput();
+        echo $form->getOutput();
 
         $style = '';
         if (isset($values['applying'])) {

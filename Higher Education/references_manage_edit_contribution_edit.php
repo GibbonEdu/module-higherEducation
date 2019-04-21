@@ -45,58 +45,56 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             //Let's go!
             $values = $result->fetch();
 
-            $page->breadcrumbs->add(__('Manage References'), 'references_manage.php', ['gibbonSchoolYearID' => $gibbonSchoolYearID]);
-            $page->breadcrumbs->add(__('Edit Reference'), 'references_manage_edit.php', [
+            $urlParams = [
                 'higherEducationReferenceID' => $higherEducationReferenceID,
                 'gibbonSchoolYearID' => $gibbonSchoolYearID,
-            ]);
-            $page->breadcrumbs->add(__('Edit Contribution'));
+            ];
+
+            $page->breadcrumbs
+                ->add(__('Manage References'), 'references_manage.php', $urlParams)
+                ->add(__('Edit Reference'), 'references_manage_edit.php', $urlParams)
+                ->add(__('Edit Contribution'));
 
             if (isset($_GET['return'])) {
                 returnProcess($guid, $_GET['return'], null, null);
             }
-            $form = Form::create('action',$_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/references_manage_edit_contribution_editProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID");
+            $form = Form::create('editContribution', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/references_manage_edit_contribution_editProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID");
             $form->setFactory(DatabaseFormFactory::create($pdo));
             $form->addHiddenValue('address', $_SESSION[$guid]['address']);
             $form->addHiddenValue('higherEducationReferenceID', $higherEducationReferenceID);
-            $form->addHiddenValue('q',"/modules/".$_SESSION[$guid]['module']."/references_manage_edit_contribution_editProcess.php");
 
             $row = $form->addRow();
-                $row->addLabel('type', __('Contribution Type'))->description(__('This value cannot be changed.'));
+                $row->addLabel('type', __('Contribution Type'));
                 $row->addTextField('type')->required()->readOnly()->maxLength(255);
 
             $row = $form->addRow();
                 $row->addLabel('title', __('Title'));
                 $row->addTextField('title')->required()->maxLength(255);
 
-
             $row = $form->addRow();
                   $row->addLabel('gibbonPersonID', __('Author'));
                   $row->addSelectStaff('gibbonPersonID')->placeholder();
 
+            $col = $form->addRow()->addColumn();
+            if ($values['refType'] == 'US Reference') {
+                $col->addLabel('body', __('Reference'))->description(__('Maximum limit of 10,000 Characters'));
+                $col->addTextArea('body')->setRows(20)->maxLength(10000)->setClass('w-full');
+            } else {
+                    $col->addLabel('body', __('Reference'))->description(__('Maximum limit of 2,000 Characters'));
+                    $col->addTextArea('body')->setRows(20)->maxLength(2000)->setClass('w-full');
+            }
+            
             $row = $form->addRow();
-                  $column = $row->addColumn();
-                  if ($values['refType'] == 'US Reference') {
-                  $column->addLabel('body', __('Reference'))->description(__('Maximum limit of 10,000 Characters'));
-                  $column->addTextArea('body')->setRows(20)->maxLength(10000)->setClass('fullWidth');
-                  } else {
-                      $column->addLabel('body', __('Reference'))->description(__('Maximum limit of 2,000 Characters'));
-                      $column->addTextArea('body')->setRows(20)->maxLength(2000)->setClass('fullWidth');
-                  }
-            $row = $form->addRow();
-                  $row->addLabel('status', __('Status'));
-                  $row->addSelect('status')->fromArray(array('In Progress' =>__('In Progress'), 'Complete' => __('Complete')))->isRequired()->setValue($values['status']);
+                $row->addLabel('status', __('Status'));
+                $row->addSelect('status')->fromArray(['In Progress' =>__('In Progress'), 'Complete' => __('Complete')])->isRequired();
 
             $row = $form->addRow();
-            $row->addFooter();
-            $row->addSubmit();
+                $row->addFooter();
+                $row->addSubmit();
 
             $form->loadAllValuesFrom($values);
 
             echo $form->getOutput();
-
-
         }
     }
 }
-?>
