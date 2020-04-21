@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
+use Gibbon\Forms\Form;
+
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_view_details.php') == false) {
     //Acess denied
     $page->addError(__('You do not have access to this action.'));
@@ -50,8 +52,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             if ($result->rowCount() != 1) {
                 $page->addError(__('The specified student does not exist, or you do not have access to them.'));
             } else {
-                $row = $result->fetch();
-                $image_240 = $row['image_240'];
+                $values = $result->fetch();
+                $image_240 = $values['image_240'];
 
                 $page->breadcrumbs->add(__('View Applications'), 'applications_view.php');
                 $page->breadcrumbs->add(__('Application Details'));
@@ -60,12 +62,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                 echo '<tr>';
                 echo "<td style='width: 34%; vertical-align: top'>";
                 echo "<span style='font-size: 115%; font-weight: bold'>Name</span><br/>";
-                echo formatName('', $row['preferredName'], $row['surname'], 'Student', true, true);
+                echo formatName('', $values['preferredName'], $values['surname'], 'Student', true, true);
                 echo '</td>';
                 echo "<td style='width: 34%; vertical-align: top'>";
                 echo "<span style='font-size: 115%; font-weight: bold'>Roll Group</span><br/>";
                 try {
-                    $dataDetail = array('gibbonRollGroupID' => $row['gibbonRollGroupID']);
+                    $dataDetail = array('gibbonRollGroupID' => $values['gibbonRollGroupID']);
                     $sqlDetail = 'SELECT * FROM gibbonRollGroup WHERE gibbonRollGroupID=:gibbonRollGroupID';
                     $resultDetail = $connection2->prepare($sqlDetail);
                     $resultDetail->execute($dataDetail);
@@ -75,8 +77,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     echo '</div>';
                 }
                 if ($resultDetail->rowCount() == 1) {
-                    $rowDetail = $resultDetail->fetch();
-                    echo '<i>'.$rowDetail['name'].'</i>';
+                    $valuesDetail = $resultDetail->fetch();
+                    echo '<i>'.$valuesDetail['name'].'</i>';
                 }
                 echo '</td>';
                 echo "<td style='width: 34%; vertical-align: top'>";
@@ -102,59 +104,54 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     echo 'The selected student has not initiated the higher education application process.';
                     echo '</div>';
                 } else {
-                    $row = $result->fetch();
+                    $values = $result->fetch();
 
-                    if ($row['applying'] != 'Y') {
+                    if ($values['applying'] != 'Y') {
                         echo "<div class='warning'>";
                         echo 'The selected student is not applying for higher education.';
                         echo '</div>';
                     } else {
 
                         //Create application record
-                        ?>
-                        <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/applications_trackProcess.php?higherEducationApplicationID='.$row['higherEducationApplicationID'] ?>">
-                        <table class='smallIntBorder' cellspacing='0' style="width: 100%">
-                            <tr id='careerInterestsRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
-                                <td colspan=2 style='padding-top: 15px;'>
-                                    <b>Career Interests</b><br/>
-                                    <span style="font-size: 90%"><i><b>Student asked</b>: What areas of work are you interested in? What are your ambitions?</i></span><br/>
-                                    <textarea readonly name="careerInterests" id="careerInterests" rows=12 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['careerInterests']) ?></textarea>
-                                </td>
-                            </tr>
-                            <tr id='coursesMajorsRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
-                                <td colspan=2 style='padding-top: 15px;'>
-                                    <b>Courses/Majors</b><br/>
-                                    <span style="font-size: 90%"><i><b>Student asked</b>: What areas of study are you interested in? How do these relate to your career interests?</i></span><br/>
-                                    <textarea readonly name="coursesMajors" id="coursesMajors" rows=12 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['coursesMajors']) ?></textarea>
-                                </td>
-                            </tr>
-                            <tr id='otherScoresRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
-                                <td colspan=2 style='padding-top: 15px;'>
-                                    <b>Scores</b><br/>
-                                    <span style="font-size: 90%"><i><b>Student asked</b>: Do you have any non-<?php echo $_SESSION[$guid]['organisationNameShort'] ?> exam scores?</i></span><br/>
-                                    <textarea readonly name="otherScores" id="otherScores" rows=12 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['otherScores']) ?></textarea>
-                                </td>
-                            </tr>
-                            <tr id='personalStatementRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
-                                <td colspan=2 style='padding-top: 15px;'>
-                                    <b>Personal Statement</b><br/>
-                                    <span style="font-size: 90%"><i><b>Student asked</b>: Draft out ideas for your personal statement.</i></span><br/>
-                                    <textarea readonly name="personalStatement" id="personalStatement" rows=12 style="width:738px; margin: 5px 0px 0px 0px"><?php echo htmlPrep($row['personalStatement']) ?></textarea>
-                                </td>
-                            </tr>
-                            <tr id='meetingNotesRow' <?php if ($row['applying'] == 'N' or $row['applying'] == '') { echo "style='display: none;'"; } ?>>
-                                <td colspan=2 style='padding-top: 15px;'>
-                                    <b>Meeting notes</b><br/>
-                                    <span style="font-size: 90%"><i><b>Student asked</b>: Take notes on any meetings you have regarding your application process.</i></span><br/>
-                                    <textarea readonly name="meetingNotes" id="meetingNotes" rows=12 style="width:738px; margin: 5px 0px 0px 0px;"><?php echo htmlPrep($row['meetingNotes']) ?></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                        </form>
-                        <?php
+                        $form = Form::create('applicationStatus', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/applications_trackProcess.php?higherEducationApplicationID='.$values['higherEducationApplicationID']);
+
+                        $row = $form->addRow();
+                            $row->addLabel('applying', __('Applying?'))->description(__('<b>Student asked</b>: Are you intending on applying for entry to higher education?'));
+                            $row->addYesNo('applying')->selected($values['applying'])->readOnly();
+        
+                        $form->toggleVisibilityByClass('visibility')->onSelect('applying')->when('Y');
+        
+                        $row = $form->addRow();
+                            $column = $row->addColumn()->addClass('visibility');
+                                $column->addLabel('careerInterests', __('Career Interests'))->description(__('<b>Student asked</b>: What areas of work are you interested in? What are your ambitions?'));
+                                $column->addTextArea('careerInterests')->setRows(8)->setClass('w-full')->readOnly();
+        
+                        $row = $form->addRow();
+                            $column = $row->addColumn()->addClass('visibility');
+                                $column->addLabel('coursesMajors', __('Courses/Majors'))->description(__('<b>Student asked</b>: What areas of study are you interested in? How do these relate to your career interests?'));
+                                $column->addTextArea('coursesMajors')->setRows(8)->setClass('w-full')->readOnly();
+        
+                        $row = $form->addRow();
+                            $column = $row->addColumn()->addClass('visibility');
+                                $column->addLabel('otherScores', __('Scores'))->description(__('<b>Student asked</b>: Do you have any non-'.$_SESSION[$guid]['organisationNameShort'].' exam scores?'));
+                                $column->addTextArea('otherScores')->setRows(8)->setClass('w-full')->readOnly();
+        
+                        $row = $form->addRow();
+                            $column = $row->addColumn()->addClass('visibility');
+                                $column->addLabel('personalStatement', __('Personal Statement'))->description(__('<b>Student asked</b>: Draft out ideas for your personal statement.'));
+                                $column->addTextArea('personalStatement')->setRows(8)->setClass('w-full')->readOnly();
+        
+                        $row = $form->addRow();
+                            $column = $row->addColumn()->addClass('visibility');
+                                $column->addLabel('meetingNotes', __('Meeting Notes'))->description(__('<b>Student asked</b>: Take notes on any meetings you have regarding your application process'));
+                                $column->addTextArea('meetingNotes')->setRows(8)->setClass('w-full')->readOnly();
+        
+                        $form->loadAllValuesFrom($values);
+
+                        echo $form->getOutput();
 
                         $style = '';
-                        if ($row['applying'] == 'N' or $row['applying'] == '') {
+                        if ($values['applying'] == 'N' or $values['applying'] == '') {
                             $style = 'display: none;';
                         }
                         echo "<div id='applicationsDiv' style='$style'>";
@@ -162,13 +159,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                         echo 'Application To Institutions';
                         echo '</h2>';
 
-                        if ($row['higherEducationApplicationID'] == '') {
+                        if ($values['higherEducationApplicationID'] == '') {
                             echo "<div class='warning'>";
                             echo 'You need to save the information above (press the Submit button) before you can start adding applications.';
                             echo '</div>';
                         } else {
                             try {
-                                $dataApps = array('higherEducationApplicationID' => $row['higherEducationApplicationID']);
+                                $dataApps = array('higherEducationApplicationID' => $values['higherEducationApplicationID']);
                                 $sqlApps = 'SELECT higherEducationApplicationInstitution.higherEducationApplicationInstitutionID, higherEducationInstitution.name as institution, higherEducationMajor.name as major, higherEducationApplicationInstitution.* FROM higherEducationApplicationInstitution JOIN higherEducationInstitution ON (higherEducationApplicationInstitution.higherEducationInstitutionID=higherEducationInstitution.higherEducationInstitutionID) JOIN higherEducationMajor ON (higherEducationApplicationInstitution.higherEducationMajorID=higherEducationMajor.higherEducationMajorID) WHERE higherEducationApplicationID=:higherEducationApplicationID ORDER BY rank, institution, major';
                                 $resultApps = $connection2->prepare($sqlApps);
                                 $resultApps->execute($dataApps);
@@ -204,28 +201,28 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                                 echo '</tr>';
 
                                 $count = 0;
-                                $rowNum = 'odd';
-                                while ($rowApps = $resultApps->fetch()) {
+                                $valuesNum = 'odd';
+                                while ($valuesApps = $resultApps->fetch()) {
                                     if ($count % 2 == 0) {
-                                        $rowNum = 'even';
+                                        $valuesNum = 'even';
                                     } else {
-                                        $rowNum = 'odd';
+                                        $valuesNum = 'odd';
                                     }
 
                                     //COLOR ROW BY STATUS!
-                                    echo "<tr class=$rowNum>";
+                                    echo "<tr class=$valuesNum>";
                                     echo '<td>';
-                                    echo $rowApps['institution'];
+                                    echo $valuesApps['institution'];
                                     echo '</td>';
                                     echo '<td>';
-                                    echo $rowApps['major'];
+                                    echo $valuesApps['major'];
                                     echo '</td>';
                                     echo '<td>';
-                                    echo $rowApps['rank'].'<br/>';
-                                    echo "<span style='font-size: 75%; font-style: italic'>".$rowApps['rating'].'</span>';
+                                    echo $valuesApps['rank'].'<br/>';
+                                    echo "<span style='font-size: 75%; font-style: italic'>".$valuesApps['rating'].'</span>';
                                     echo '</td>';
                                     echo '<td>';
-                                    echo $rowApps['status'];
+                                    echo $valuesApps['status'];
                                     echo '</td>';
                                     echo '<td>';
                                     echo "<script type='text/javascript'>";
@@ -248,10 +245,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                                     echo '<b>Application Number</b>';
                                     echo '</td>';
                                     echo "<td style='vertical-align: top'>";
-                                    if ($rowApps['applicationNumber'] == '') {
+                                    if ($valuesApps['applicationNumber'] == '') {
                                         echo 'NA';
                                     } else {
-                                        echo $rowApps['applicationNumber'];
+                                        echo $valuesApps['applicationNumber'];
                                     }
                                     echo '</td>';
                                     echo '</tr>';
@@ -260,10 +257,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                                     echo '<b>Scholarship Details</b>';
                                     echo '</td>';
                                     echo "<td style='vertical-align: top'>";
-                                    if ($rowApps['scholarship'] == '') {
+                                    if ($valuesApps['scholarship'] == '') {
                                         echo 'NA';
                                     } else {
-                                        echo $rowApps['scholarship'];
+                                        echo $valuesApps['scholarship'];
                                     }
                                     echo '</td>';
                                     echo '</tr>';
@@ -272,11 +269,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                                     echo '<b>Offer</b>';
                                     echo '</td>';
                                     echo "<td style='vertical-align: top'>";
-                                    if ($rowApps['offer'] == '') {
+                                    if ($valuesApps['offer'] == '') {
                                         echo 'NA';
                                     } else {
-                                        echo $rowApps['offer'].'</br>';
-                                        echo '<i>'.$rowApps['offerDetails'].'</i></br>';
+                                        echo $valuesApps['offer'].'</br>';
+                                        echo '<i>'.$valuesApps['offerDetails'].'</i></br>';
                                     }
 
                                     echo '</td>';
@@ -286,10 +283,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                                     echo '<b>Application Question</b>';
                                     echo '</td>';
                                     echo "<td style='vertical-align: top'>";
-                                    if ($rowApps['question'] == '') {
+                                    if ($valuesApps['question'] == '') {
                                         echo 'NA';
                                     } else {
-                                        echo $rowApps['question'];
+                                        echo $valuesApps['question'];
                                     }
                                     echo '</td>';
                                     echo '</tr>';
@@ -298,10 +295,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                                     echo '<b>Application Answer</b>';
                                     echo '</td>';
                                     echo "<td style='vertical-align: top'>";
-                                    if ($rowApps['answer'] == '') {
+                                    if ($valuesApps['answer'] == '') {
                                         echo 'NA';
                                     } else {
-                                        echo $rowApps['answer'];
+                                        echo $valuesApps['answer'];
                                     }
                                     echo '</td>';
                                     echo '</tr>';
