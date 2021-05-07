@@ -37,10 +37,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
         try {
             if ($role == 'Coordinator') {
                 $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
-                $sql = "SELECT gibbonPerson.gibbonPersonID, higherEducationStudentID, surname, preferredName, gibbonYearGroup.nameShort AS yearGroup, gibbonRollGroup.nameShort AS rollGroup, gibbonRollGroup.gibbonRollGroupID, gibbonPersonIDAdvisor, gibbonSchoolYear.name AS schoolYear FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonSchoolYear ON (gibbonSchoolYear.gibbonSchoolYearID=gibbonPerson.gibbonSchoolYearIDClassOf) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonRollGroup ON (gibbonStudentEnrolment.gibbonRollGroupID=gibbonRollGroup.gibbonRollGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' ORDER BY gibbonSchoolYear.sequenceNumber DESC, surname, preferredName";
+                $sql = "SELECT gibbonPerson.gibbonPersonID, higherEducationStudentID, surname, preferredName, gibbonYearGroup.nameShort AS yearGroup, gibbonFormGroup.nameShort AS formGroup, gibbonFormGroup.gibbonFormGroupID, gibbonPersonIDAdvisor, gibbonSchoolYear.name AS schoolYear FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonSchoolYear ON (gibbonSchoolYear.gibbonSchoolYearID=gibbonPerson.gibbonSchoolYearIDClassOf) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' ORDER BY gibbonSchoolYear.sequenceNumber DESC, surname, preferredName";
             } else {
                 $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID'], 'advisor' => $_SESSION[$guid]['gibbonPersonID']);
-                $sql = "SELECT gibbonPerson.gibbonPersonID, higherEducationStudentID, surname, preferredName, gibbonYearGroup.nameShort AS yearGroup, gibbonRollGroup.nameShort AS rollGroup, gibbonRollGroup.gibbonRollGroupID, gibbonPersonIDAdvisor, gibbonSchoolYear.name AS schoolYear FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonSchoolYear ON (gibbonSchoolYear.gibbonSchoolYearID=gibbonPerson.gibbonSchoolYearIDClassOf) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonRollGroup ON (gibbonStudentEnrolment.gibbonRollGroupID=gibbonRollGroup.gibbonRollGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND gibbonPersonIDAdvisor=:advisor ORDER BY gibbonSchoolYear.sequenceNumber DESC, surname, preferredName";
+                $sql = "SELECT gibbonPerson.gibbonPersonID, higherEducationStudentID, surname, preferredName, gibbonYearGroup.nameShort AS yearGroup, gibbonFormGroup.nameShort AS formGroup, gibbonFormGroup.gibbonFormGroupID, gibbonPersonIDAdvisor, gibbonSchoolYear.name AS schoolYear FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonSchoolYear ON (gibbonSchoolYear.gibbonSchoolYearID=gibbonPerson.gibbonSchoolYearIDClassOf) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND gibbonPersonIDAdvisor=:advisor ORDER BY gibbonSchoolYear.sequenceNumber DESC, surname, preferredName";
             }
             $result = $connection2->prepare($sql);
             $result->execute($data);
@@ -52,7 +52,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             $page->addError(__('There are no students to display.'));
         } else {
             echo "<div class='linkTop'>";
-            echo 'Filter Roll Group: ';
+            echo 'Filter Form Group: ';
 
             ?>
                 <script type="text/javascript">
@@ -83,10 +83,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     try {
                         if ($role == 'Coordinator') {
                             $dataSelect = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
-                            $sqlSelect = "SELECT DISTINCT gibbonRollGroup.nameShort AS rollGroup, gibbonRollGroup.gibbonRollGroupID FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonRollGroup ON (gibbonStudentEnrolment.gibbonRollGroupID=gibbonRollGroup.gibbonRollGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' ORDER BY gibbonRollGroup.nameShort";
+                            $sqlSelect = "SELECT DISTINCT gibbonFormGroup.nameShort AS formGroup, gibbonFormGroup.gibbonFormGroupID FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' ORDER BY gibbonFormGroup.nameShort";
                         } else {
                             $dataSelect = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID'], 'advisor' => $_SESSION[$guid]['gibbonPersonID']);
-                            $sqlSelect = "SELECT DISTINCT gibbonRollGroup.nameShort AS rollGroup, gibbonRollGroup.gibbonRollGroupID FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonRollGroup ON (gibbonStudentEnrolment.gibbonRollGroupID=gibbonRollGroup.gibbonRollGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND gibbonPersonIDAdvisor=:advisor ORDER BY gibbonRollGroup.nameShort";
+                            $sqlSelect = "SELECT DISTINCT gibbonFormGroup.nameShort AS formGroup, gibbonFormGroup.gibbonFormGroupID FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND gibbonPersonIDAdvisor=:advisor ORDER BY gibbonFormGroup.nameShort";
                         }
                         $resultSelect = $connection2->prepare($sqlSelect);
                         $resultSelect->execute($dataSelect);
@@ -95,7 +95,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     }
 
                     while ($rowSelect = $resultSelect->fetch()) {
-                        echo "<option value='".$rowSelect['gibbonRollGroupID']."'>".htmlPrep($rowSelect['rollGroup']).'</option>';
+                        echo "<option value='".$rowSelect['gibbonFormGroupID']."'>".htmlPrep($rowSelect['formGroup']).'</option>';
                     }
                     ?>
                 </select>
@@ -108,7 +108,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                 echo 'Name';
                 echo '</th>';
                 echo '<th>';
-                echo 'Roll<br/>Group';
+                echo 'Form<br/>Group';
                 echo '</th>';
                 echo '<th>';
                 echo 'Applying';
@@ -128,12 +128,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     ++$count;
 
                     //COLOR ROW BY STATUS!
-                    echo "<tr class='".$row['gibbonRollGroupID']."' id='".$row['rollGroup']."' name='".$row['rollGroup']."'>";
+                    echo "<tr class='".$row['gibbonFormGroupID']."' id='".$row['formGroup']."' name='".$row['formGroup']."'>";
                     echo '<td>';
                     echo formatName('', $row['preferredName'], $row['surname'], 'Student', true, true);
                     echo '</td>';
                     echo '<td>';
-                    echo $row['rollGroup'];
+                    echo $row['formGroup'];
                     echo '</td>';
                     echo '<td>';
                     try {

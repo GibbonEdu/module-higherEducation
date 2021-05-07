@@ -40,7 +40,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
 
     $row = $form->addRow();
         $row->addLabel('Members', __('Students'));
-        $row->addSelectStudent('Members', $_SESSION[$guid]['gibbonSchoolYearID'], array('byRoll' => true))->selectMultiple()->isRequired();
+        $row->addSelectStudent('Members', $_SESSION[$guid]['gibbonSchoolYearID'], array('byForm' => true))->selectMultiple()->isRequired();
 
     $sql = "SELECT gibbonPerson.gibbonPersonID as value, CONCAT(surname, ', ', preferredName) as name FROM gibbonPerson JOIN higherEducationStaff ON (gibbonPerson.gibbonPersonID=higherEducationStaff.gibbonPersonID) WHERE status='Full' ORDER BY surname, preferredName";
     $row = $form->addRow();

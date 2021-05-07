@@ -121,7 +121,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 //Get tutors
                 try {
                     $dataForm = array('gibbonSchoolYearID' => $gibbonSchoolYearID, 'gibbonPersonID' => $gibbonPersonID);
-                    $sqlForm = 'SELECT gibbonRollGroup.* FROM gibbonRollGroup JOIN gibbonStudentEnrolment ON (gibbonStudentEnrolment.gibbonRollGroupID=gibbonRollGroup.gibbonRollGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPersonID=:gibbonPersonID';
+                    $sqlForm = 'SELECT gibbonFormGroup.* FROM gibbonFormGroup JOIN gibbonStudentEnrolment ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPersonID=:gibbonPersonID';
                     $resultForm = $connection2->prepare($sqlForm);
                     $resultForm->execute($dataForm);
                 } catch (PDOException $e) {

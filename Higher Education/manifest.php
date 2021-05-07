@@ -25,7 +25,7 @@ $description = 'A module to support students as they undertake the higher educat
 $entryURL = 'index.php';
 $type = 'Additional';
 $category = 'Other';
-$version = '1.3.03';
+$version = '1.4.00';
 $author = 'Ross Parker';
 $url = 'http://rossparker.org';
 
