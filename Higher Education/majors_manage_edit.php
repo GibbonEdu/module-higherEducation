@@ -30,7 +30,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
     $page->breadcrumbs->add(__('Manage Majors'), 'majors_manage.php');
     $page->breadcrumbs->add(__('Edit Major'));
 
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role != 'Coordinator') {
         $page->addError(__('You do not have access to this action.'));
     } else {
@@ -58,8 +58,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
                 //Let's go!
                 $values = $result->fetch();
 
-                $form = Form::create('majors', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/majors_manage_editProcess.php?higherEducationMajorID='.$higherEducationMajorID);
-                $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+                $form = Form::create('majors', $session->get('absoluteURL').'/modules/'.$session->get('module').'/majors_manage_editProcess.php?higherEducationMajorID='.$higherEducationMajorID);
+                $form->addHiddenValue('address', $session->get('address'));
 
                 $row = $form->addRow();
                     $row->addLabel('name', __('Name'));

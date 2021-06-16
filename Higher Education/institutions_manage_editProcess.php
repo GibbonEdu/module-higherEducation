@@ -22,15 +22,15 @@ include __DIR__.'/../../gibbon.php';
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
-$higherEducationInstitutionID = $_GET['higherEducationInstitutionID'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/institutions_manage_edit.php&higherEducationInstitutionID=$higherEducationInstitutionID";
+$higherEducationInstitutionID = $_GET['higherEducationInstitutionID'] ?? '';
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/institutions_manage_edit.php&higherEducationInstitutionID=$higherEducationInstitutionID";
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/institutions_manage_edit.php') == false) {
     //Fail 0
     $URL = $URL.'&return=error0';
     header("Location: {$URL}");
 } else {
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role != 'Coordinator') {
         //Fail 0
         $URL = $URL.'&return=error0';
@@ -61,9 +61,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
                 header("Location: {$URL}");
             } else {
                 //Validate Inputs
-                $name = $_POST['name'];
-                $country = $_POST['country'];
-                $active = $_POST['active'];
+                $name = $_POST['name'] ?? '';
+                $country = $_POST['country'] ?? '';
+                $active = $_POST['active'] ?? '';
 
                 if ($name == '' or $country == '' or $active == '') {
                     //Fail 3

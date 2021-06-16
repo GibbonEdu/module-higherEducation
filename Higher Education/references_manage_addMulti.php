@@ -37,7 +37,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         returnProcess($guid, $_GET['return'], null, null);
     }
 
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role == false) {
         //Acess denied
         $page->addError(__('You are not enroled in the Higher Education programme.'));
@@ -46,11 +46,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             //Acess denied
             $page->addError(__('You do not have permission to access this page.'));
         } else {
-            $form = Form::create('referencesManageAddMulti',$_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/references_manage_addMultiProcess.php?gibbonSchoolYearID='.$_GET['gibbonSchoolYearID'].'&search='.$_GET['search']);
+            $form = Form::create('referencesManageAddMulti',$session->get('absoluteURL').'/modules/'.$session->get('module').'/references_manage_addMultiProcess.php?gibbonSchoolYearID='.$_GET['gibbonSchoolYearID'].'&search='.$_GET['search']);
             $form->setFactory(DatabaseFormFactory::create($pdo));
-            $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+            $form->addHiddenValue('address', $session->get('address'));
         
-                $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
+                $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
                 $sql = "SELECT gibbonPerson.gibbonPersonID as value, concat(gibbonFormGroup.nameShort, ' - ', gibbonPerson.surname,', ',gibbonPerson.firstName) as name FROM gibbonPerson JOIN gibbonStudentEnrolment ON (gibbonPerson.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) JOIN gibbonFormGroup ON  (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) JOIN higherEducationStudent ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE status='FULL' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') AND gibbonFormGroup.gibbonSchoolYearID=:gibbonSchoolYearID ORDER BY nameShort, surname, preferredName";
             
              $row = $form->addRow();

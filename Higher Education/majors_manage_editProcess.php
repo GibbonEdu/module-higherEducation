@@ -23,14 +23,14 @@ include __DIR__.'/../../gibbon.php';
 include __DIR__.'/moduleFunctions.php';
 
 $higherEducationMajorID = $_GET['higherEducationMajorID'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/majors_manage_edit.php&higherEducationMajorID=$higherEducationMajorID";
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/majors_manage_edit.php&higherEducationMajorID=$higherEducationMajorID";
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_manage_edit.php') == false) {
     //Fail 0
     $URL = $URL.'&return=error0';
     header("Location: {$URL}");
 } else {
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role != 'Coordinator') {
         //Fail 0
         $URL = $URL.'&return=error0';
@@ -61,8 +61,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
                 header("Location: {$URL}");
             } else {
                 //Validate Inputs
-                $name = $_POST['name'];
-                $active = $_POST['active'];
+                $name = $_POST['name'] ?? '';
+                $active = $_POST['active'] ?? '';
 
                 if ($name == '' or $active == '') {
                     //Fail 3

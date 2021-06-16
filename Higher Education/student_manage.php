@@ -30,7 +30,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
         returnProcess($guid, $_GET['return'], null, null);
     }
 
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role != 'Coordinator') {
         $page->addError(__('You do not have access to this action.'));
     } else {
@@ -44,9 +44,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
         }
 
         try {
-            $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
+            $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
             $sql = "SELECT higherEducationStudentID, surname, preferredName, gibbonYearGroup.nameShort AS yearGroup, gibbonFormGroup.nameShort AS formGroup, gibbonPersonIDAdvisor, gibbonSchoolYear.name AS schoolYear FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonSchoolYear ON (gibbonSchoolYear.gibbonSchoolYearID=gibbonPerson.gibbonSchoolYearIDClassOf) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' ORDER BY gibbonSchoolYear.sequenceNumber DESC, surname, preferredName";
-            $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($pagination - 1) * $_SESSION[$guid]['pagination']);
+            $sqlPage = $sql.' LIMIT '.$session->get('pagination').' OFFSET '.(($pagination - 1) * $session->get('pagination'));
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
@@ -54,7 +54,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
         }
 
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/student_manage_add.php'><img title='New' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new.png'/></a>";
+        echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/student_manage_add.php'><img title='New' src='./themes/".$session->get('gibbonThemeName')."/img/page_new.png'/></a>";
         echo '</div>';
 
         if ($result->rowCount() < 1) {
@@ -62,8 +62,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
                 echo __('There are no students to display.');
             echo '</div>';
         } else {
-            if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-                printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'top');
+            if ($result->rowCount() > $session->get('pagination')) {
+                printPagination($guid, $result->rowCount(), $pagination, $session->get('pagination'), 'top');
             }
 
             echo "<table cellspacing='0' style='width: 100%'>";
@@ -135,15 +135,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
                 }
                 echo '</td>';
                 echo '<td>';
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/student_manage_edit.php&higherEducationStudentID='.$row['higherEducationStudentID']."'><img title='Edit' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/config.png'/></a> ";
-                echo "<a class='thickbox' href='".$_SESSION[$guid]['absoluteURL'].'/fullscreen.php?q=/modules/'.$_SESSION[$guid]['module'].'/student_manage_delete.php&higherEducationStudentID='.$row['higherEducationStudentID']."&width=650&height=135'><img title='Delete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
+                echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/student_manage_edit.php&higherEducationStudentID='.$row['higherEducationStudentID']."'><img title='Edit' src='./themes/".$session->get('gibbonThemeName')."/img/config.png'/></a> ";
+                echo "<a class='thickbox' href='".$session->get('absoluteURL').'/fullscreen.php?q=/modules/'.$session->get('module').'/student_manage_delete.php&higherEducationStudentID='.$row['higherEducationStudentID']."&width=650&height=135'><img title='Delete' src='./themes/".$session->get('gibbonThemeName')."/img/garbage.png'/></a> ";
                 echo '</td>';
                 echo '</tr>';
             }
             echo '</table>';
 
-            if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-                printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'bottom');
+            if ($result->rowCount() > $session->get('pagination')) {
+                printPagination($guid, $result->rowCount(), $pagination, $session->get('pagination'), 'bottom');
             }
         }
     }

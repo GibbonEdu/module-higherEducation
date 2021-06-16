@@ -34,15 +34,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
     $returns = array();
     $editLink = '';
     if (isset($_GET['editID'])) {
-        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Higher Education/staff_manage_edit.php&higherEducationStaffID='.$_GET['editID'];
+        $editLink = $session->get('absoluteURL').'/index.php?q=/modules/Higher Education/staff_manage_edit.php&higherEducationStaffID='.$_GET['editID'];
     }
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], $editLink, $returns);
     }
 
-    $form = Form::create('staff', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/staff_manage_addProcess.php');
+    $form = Form::create('staff', $session->get('absoluteURL').'/modules/'.$session->get('module').'/staff_manage_addProcess.php');
     $form->setFactory(DatabaseFormFactory::create($pdo));
-    $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+    $form->addHiddenValue('address', $session->get('address'));
 
     $row = $form->addRow();
         $row->addLabel('gibbonPersonID', __('Staff'));

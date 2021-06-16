@@ -32,7 +32,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         returnProcess($guid, $_GET['return'], null, null);
     }
 
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
+    if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {
         $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
         echo '<p>';
@@ -40,7 +40,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         echo '</p>';
 
         try {
-            $data = array('gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
+            $data = array('gibbonPersonID' => $session->get('gibbonPersonID'));
             $sql = 'SELECT higherEducationReference.* FROM higherEducationReference WHERE higherEducationReference.gibbonPersonID=:gibbonPersonID ORDER BY timestamp';
             $result = $connection2->prepare($sql);
             $result->execute($data);
@@ -51,7 +51,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         }
 
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/references_request_add.php'><img title='New' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new.png'/></a>";
+        echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/references_request_add.php'><img title='New' src='./themes/".$session->get('gibbonThemeName')."/img/page_new.png'/></a>";
         echo '</div>';
 
         if ($result->rowCount() < 1) {
@@ -97,11 +97,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 echo '</td>';
                 echo "<td style='width: 25px'>";
                 if ($row['status'] == 'Cancelled') {
-                    echo "<img style='margin-right: 3px; float: left' title='Cancelled' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconCross.png'/> ";
+                    echo "<img style='margin-right: 3px; float: left' title='Cancelled' src='./themes/".$session->get('gibbonThemeName')."/img/iconCross.png'/> ";
                 } elseif ($row['status'] == 'Complete') {
-                    echo "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconTick.png'/> ";
+                    echo "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick.png'/> ";
                 } else {
-                    echo "<img style='padding-bottom: 3px; margin-right: 3px; float: left' title='In Progress' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconTick_light.png'/> ";
+                    echo "<img style='padding-bottom: 3px; margin-right: 3px; float: left' title='In Progress' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick_light.png'/> ";
                 }
                 echo '</td>';
                 echo '<td>';

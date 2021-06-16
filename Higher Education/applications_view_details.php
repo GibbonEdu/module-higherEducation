@@ -26,7 +26,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     //Acess denied
     $page->addError(__('You do not have access to this action.'));
 } else {
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role == false) {
         //Acess denied
         $page->addError(__('You are not enroled in the Higher Education programme.'));
@@ -37,10 +37,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
         } else {
             try {
                 if ($role == 'Coordinator') {
-                    $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID'], 'gibbonPersonID' => $gibbonPersonID);
+                    $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'), 'gibbonPersonID' => $gibbonPersonID);
                     $sql = "SELECT gibbonPerson.gibbonPersonID, higherEducationStudentID, surname, preferredName, image_240, gibbonYearGroup.nameShort AS yearGroup, gibbonFormGroup.nameShort AS formGroup, gibbonFormGroup.gibbonFormGroupID, gibbonPersonIDAdvisor, gibbonSchoolYear.name AS schoolYear FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonSchoolYear ON (gibbonSchoolYear.gibbonSchoolYearID=gibbonPerson.gibbonSchoolYearIDClassOf) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND gibbonPerson.gibbonPersonID=:gibbonPersonID ORDER BY gibbonSchoolYear.sequenceNumber DESC, surname, preferredName";
                 } else {
-                    $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID'], 'advisor' => $_SESSION[$guid]['gibbonPersonID'], 'gibbonPersonID' => $gibbonPersonID);
+                    $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'), 'advisor' => $session->get('gibbonPersonID'), 'gibbonPersonID' => $gibbonPersonID);
                     $sql = "SELECT gibbonPerson.gibbonPersonID, higherEducationStudentID, surname, preferredName, image_240, , gibbonYearGroup.nameShort AS yearGroup, gibbonFormGroup.nameShort AS formGroup, gibbonFormGroup.gibbonFormGroupID, gibbonPersonIDAdvisor, gibbonSchoolYear.name AS schoolYear FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonSchoolYear ON (gibbonSchoolYear.gibbonSchoolYearID=gibbonPerson.gibbonSchoolYearIDClassOf) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND gibbonPersonIDAdvisor=:advisor AND gibbonPerson.gibbonPersonID=:gibbonPersonID ORDER BY gibbonSchoolYear.sequenceNumber DESC, surname, preferredName";
                 }
                 $result = $connection2->prepare($sql);
@@ -113,39 +113,39 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     } else {
 
                         //Create application record
-                        $form = Form::create('applicationStatus', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/applications_trackProcess.php?higherEducationApplicationID='.$values['higherEducationApplicationID']);
+                        $form = Form::create('applicationStatus', $session->get('absoluteURL').'/modules/'.$session->get('module').'/applications_trackProcess.php?higherEducationApplicationID='.$values['higherEducationApplicationID']);
 
                         $row = $form->addRow();
                             $row->addLabel('applying', __('Applying?'))->description(__('<b>Student asked</b>: Are you intending on applying for entry to higher education?'));
                             $row->addYesNo('applying')->selected($values['applying'])->readOnly();
-        
+
                         $form->toggleVisibilityByClass('visibility')->onSelect('applying')->when('Y');
-        
+
                         $row = $form->addRow();
                             $column = $row->addColumn()->addClass('visibility');
                                 $column->addLabel('careerInterests', __('Career Interests'))->description(__('<b>Student asked</b>: What areas of work are you interested in? What are your ambitions?'));
                                 $column->addTextArea('careerInterests')->setRows(8)->setClass('w-full')->readOnly();
-        
+
                         $row = $form->addRow();
                             $column = $row->addColumn()->addClass('visibility');
                                 $column->addLabel('coursesMajors', __('Courses/Majors'))->description(__('<b>Student asked</b>: What areas of study are you interested in? How do these relate to your career interests?'));
                                 $column->addTextArea('coursesMajors')->setRows(8)->setClass('w-full')->readOnly();
-        
+
                         $row = $form->addRow();
                             $column = $row->addColumn()->addClass('visibility');
-                                $column->addLabel('otherScores', __('Scores'))->description(__('<b>Student asked</b>: Do you have any non-'.$_SESSION[$guid]['organisationNameShort'].' exam scores?'));
+                                $column->addLabel('otherScores', __('Scores'))->description(__('<b>Student asked</b>: Do you have any non-'.$session->get('organisationNameShort').' exam scores?'));
                                 $column->addTextArea('otherScores')->setRows(8)->setClass('w-full')->readOnly();
-        
+
                         $row = $form->addRow();
                             $column = $row->addColumn()->addClass('visibility');
                                 $column->addLabel('personalStatement', __('Personal Statement'))->description(__('<b>Student asked</b>: Draft out ideas for your personal statement.'));
                                 $column->addTextArea('personalStatement')->setRows(8)->setClass('w-full')->readOnly();
-        
+
                         $row = $form->addRow();
                             $column = $row->addColumn()->addClass('visibility');
                                 $column->addLabel('meetingNotes', __('Meeting Notes'))->description(__('<b>Student asked</b>: Take notes on any meetings you have regarding your application process'));
                                 $column->addTextArea('meetingNotes')->setRows(8)->setClass('w-full')->readOnly();
-        
+
                         $form->loadAllValuesFrom($values);
 
                         echo $form->getOutput();
@@ -234,7 +234,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                                     echo '});';
                                     echo '});';
                                     echo '</script>';
-                                    echo "<a class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='".$_SESSION[$guid]['absoluteURL']."/themes/Default/img/page_down.png' alt='Show Details' onclick='return false;' /></a>";
+                                    echo "<a class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='".$session->get('absoluteURL')."/themes/Default/img/page_down.png' alt='Show Details' onclick='return false;' /></a>";
                                     echo '</td>';
                                     echo '</tr>';
                                     echo "<tr class='description-$count' id='fields-$count' style='background-color: #fff; display: none'>";
@@ -316,7 +316,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                 }
 
                 //Set sidebar
-                $_SESSION[$guid]['sidebarExtra'] = getUserPhoto($guid, $image_240, 240);
+                $session->set('sidebarExtra', getUserPhoto($guid, $image_240, 240));
             }
         }
     }

@@ -24,14 +24,14 @@ include __DIR__.'/moduleFunctions.php';
 
 $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
 $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_manage_edit.php&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID";
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_manage_edit.php&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID";
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage_edit.php') == false) {
     //Fail 0
     $URL = $URL.'&return=error0';
     header("Location: {$URL}");
 } else {
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role != 'Coordinator') {
         //Fail 0
         $URL = $URL.'&return=error0';
@@ -63,9 +63,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 $row = $result->fetch();
 
                 //Validate Inputs
-                $status = $_POST['status'];
-                $statusNotes = $_POST['statusNotes'];
-                $alertsSent = $_POST['alertsSent'];
+                $status = $_POST['status'] ?? '';
+                $statusNotes = $_POST['statusNotes'] ?? '';
+                $alertsSent = $_POST['alertsSent'] ?? '';
                 if ($alertsSent != 'Y') {
                     $alertsSent == 'N';
                 }

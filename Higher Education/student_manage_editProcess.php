@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include __DIR__.'/../../gibbon.php';
 
 $higherEducationStudentID = $_GET['higherEducationStudentID'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/student_manage_edit.php&higherEducationStudentID=$higherEducationStudentID";
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/student_manage_edit.php&higherEducationStudentID=$higherEducationStudentID";
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_manage_edit.php') == false) {
 
@@ -53,11 +53,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
             header("Location: {$URL}");
         } else {
             //Validate Inputs
-            if ($_POST['gibbonPersonIDAdvisor'] != '') {
-                $gibbonPersonIDAdvisor = $_POST['gibbonPersonIDAdvisor'];
-            } else {
-                $gibbonPersonIDAdvisor = null;
-            }
+            $gibbonPersonIDAdvisor = $_POST['gibbonPersonIDAdvisor'] ?? null;
 
             //Write to database
             try {
