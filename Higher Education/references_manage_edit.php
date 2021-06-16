@@ -40,7 +40,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     ]);
     $page->breadcrumbs->add(__('Edit Reference'));
 
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role != 'Coordinator') {
         $page->addError(__('You do not have access to this action.'));
     } else {
@@ -70,13 +70,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 $values = $result->fetch();
 
                 echo "<div class='linkTop'>";
-                echo "<a target='_blank' href='".$_SESSION[$guid]['absoluteURL'].'/report.php?q=/modules/'.$_SESSION[$guid]['module']."/references_manage_edit_print.php&higherEducationReferenceID=$higherEducationReferenceID'><img title='Print' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/print.png'/></a>";
+                echo "<a target='_blank' href='".$session->get('absoluteURL').'/report.php?q=/modules/'.$session->get('module')."/references_manage_edit_print.php&higherEducationReferenceID=$higherEducationReferenceID'><img title='Print' src='./themes/".$session->get('gibbonThemeName')."/img/print.png'/></a>";
                 echo '</div>'; 
                 
-                $form = Form::create('referencesManage', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/references_manage_editProcess.php?higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID");
+                $form = Form::create('referencesManage', $session->get('absoluteURL').'/modules/'.$session->get('module')."/references_manage_editProcess.php?higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID");
                 
                 $form->addHiddenValue('alertsSent', $values['alertsSent']);
-                $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+                $form->addHiddenValue('address', $session->get('address'));
                 
                 $form->addRow()->addHeading(__('Reference Information'));
                 
@@ -152,9 +152,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                         $table->addColumn('name', __('Name'))->format(Format::using('name', ['title', 'preferredName', 'surname', 'Staff', true, true]));
                         $table->addColumn('status', __('Status'))->format(function($valuesContributions) use ($guid) {
                             if ($valuesContributions['status'] == 'Complete') {
-                                return "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconTick.png'/> <b>".$valuesContributions['status']."</b>";
+                                return "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick.png'/> <b>".$valuesContributions['status']."</b>";
                             } else {
-                                return "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconTick_light.png'/> <b> ".$valuesContributions['status']."</b>";
+                                return "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick_light.png'/> <b> ".$valuesContributions['status']."</b>";
                             }
                         });
                         $table->addColumn('type', __('Type'));
@@ -165,9 +165,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             ->addParam('gibbonSchoolYearID', $gibbonSchoolYearID)
                             ->format(function ($valuesContributions, $actions) use ($guid) {
                                 $actions->addAction('edit', __('Edit'))
-                                        ->setURL('/modules/'.$_SESSION[$guid]['module'].'/references_manage_edit_contribution_edit.php');
+                                        ->setURL('/modules/'.$session->get('module').'/references_manage_edit_contribution_edit.php');
                                 $actions->addAction('delete', __('Delete'))
-                                        ->setURL('/modules/'.$_SESSION[$guid]['module'].'/references_manage_edit_contribution_delete.php');
+                                        ->setURL('/modules/'.$session->get('module').'/references_manage_edit_contribution_delete.php');
                             });              
                 }
                     

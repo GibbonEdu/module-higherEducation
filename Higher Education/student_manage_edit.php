@@ -41,7 +41,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
         $page->addError(__('You have not specified an activity.'));
     } else {
         try {
-            $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID'], 'higherEducationStudentID' => $higherEducationStudentID);
+            $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'), 'higherEducationStudentID' => $higherEducationStudentID);
             $sql = "SELECT higherEducationStudentID, surname, preferredName, gibbonYearGroup.nameShort AS yearGroup, gibbonFormGroup.nameShort AS formGroup, gibbonPersonIDAdvisor FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND higherEducationStudentID=:higherEducationStudentID";
             $result = $connection2->prepare($sql);
             $result->execute($data);
@@ -55,8 +55,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
             //Let's go!
             $values = $result->fetch();
 
-            $form = Form::create('students', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/student_manage_editProcess.php?higherEducationStudentID='.$higherEducationStudentID);
-            $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+            $form = Form::create('students', $session->get('absoluteURL').'/modules/'.$session->get('module').'/student_manage_editProcess.php?higherEducationStudentID='.$higherEducationStudentID);
+            $form->addHiddenValue('address', $session->get('address'));
 
             $row = $form->addRow();
                 $row->addLabel('name', __('Student'));

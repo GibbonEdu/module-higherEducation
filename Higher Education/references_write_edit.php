@@ -55,7 +55,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             //Let's go!
             $row = $result->fetch();
             ?>
-            <form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/references_write_editProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
+            <form method="post" action="<?php echo $session->get('absoluteURL').'/modules/'.$session->get('module')."/references_write_editProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
                 <table class='smallIntBorder' cellspacing='0' style="width: 100%">
                     <tr class='break'>
                         <td colspan=2>
@@ -98,7 +98,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             <b>Academic</b><br/>
                         </td>
                         <td class="right">
-                            <a target='_blank' href='<?php echo $_SESSION[$guid]['absoluteURL'] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php echo $row['gibbonPersonIDStudent'] ?>&subpage=Markbook'>Markbook</a> | <a target='_blank' href='<?php echo $_SESSION[$guid]['absoluteURL'] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php echo $row['gibbonPersonIDStudent'] ?>&subpage=External Assessment'>External Assessment</a>
+                            <a target='_blank' href='<?php echo $session->get('absoluteURL') ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php echo $row['gibbonPersonIDStudent'] ?>&subpage=Markbook'>Markbook</a> | <a target='_blank' href='<?php echo $session->get('absoluteURL') ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php echo $row['gibbonPersonIDStudent'] ?>&subpage=External Assessment'>External Assessment</a>
                         </td>
                     </tr>
                     <tr>
@@ -106,12 +106,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             <b>Co-curricular</b><br/>
                         </td>
                         <td class="right">
-                            <a target='_blank' href='<?php echo $_SESSION[$guid]['absoluteURL'] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php echo $row['gibbonPersonIDStudent'] ?>&subpage=Activities'>Activities</a>
+                            <a target='_blank' href='<?php echo $session->get('absoluteURL') ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php echo $row['gibbonPersonIDStudent'] ?>&subpage=Activities'>Activities</a>
                             <?php
                                 $gibbonModuleID = checkModuleReady('/modules/IB Diploma/index.php', $connection2);
                                 if ($gibbonModuleID != false) {
                                     try {
-                                        $dataAction = array('gibbonModuleID' => $gibbonModuleID, 'actionName' => 'View CAS in Student Profile', 'gibbonRoleID' => $_SESSION[$guid]['gibbonRoleIDCurrent']);
+                                        $dataAction = array('gibbonModuleID' => $gibbonModuleID, 'actionName' => 'View CAS in Student Profile', 'gibbonRoleID' => $session->get('gibbonRoleIDCurrent'));
                                         $sqlAction = 'SELECT gibbonAction.name FROM gibbonAction JOIN gibbonPermission ON (gibbonAction.gibbonActionID=gibbonPermission.gibbonActionID) JOIN gibbonRole ON (gibbonPermission.gibbonRoleID=gibbonRole.gibbonRoleID) WHERE (gibbonAction.name=:actionName) AND (gibbonPermission.gibbonRoleID=:gibbonRoleID) AND gibbonAction.gibbonModuleID=:gibbonModuleID';
                                         $resultAction = $connection2->prepare($sqlAction);
                                         $resultAction->execute($dataAction);
@@ -130,14 +130,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                                             $options = unserialize($rowHooks['options']);
                                             //Check for permission to hook
                                             try {
-                                                $dataHook = array('gibbonRoleIDCurrent' => $_SESSION[$guid]['gibbonRoleIDCurrent'], 'sourceModuleName' => $options['sourceModuleName']);
+                                                $dataHook = array('gibbonRoleIDCurrent' => $session->get('gibbonRoleIDCurrent'), 'sourceModuleName' => $options['sourceModuleName']);
                                                 $sqlHook = "SELECT gibbonHook.name, gibbonModule.name AS module, gibbonAction.name AS action FROM gibbonHook JOIN gibbonModule ON (gibbonModule.name='".$options['sourceModuleName']."') JOIN gibbonAction ON (gibbonAction.name='".$options['sourceModuleAction']."') JOIN gibbonPermission ON (gibbonPermission.gibbonActionID=gibbonAction.gibbonActionID) WHERE gibbonAction.gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE gibbonPermission.gibbonRoleID=:gibbonRoleIDCurrent AND name=:sourceModuleName) AND gibbonHook.type='Student Profile' ORDER BY name";
                                                 $resultHook = $connection2->prepare($sqlHook);
                                                 $resultHook->execute($dataHook);
                                             } catch (PDOException $e) {
                                             }
                                             if ($resultHook->rowCount() == 1) {
-                                                echo " | <a target='_blank' href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID='.$row['gibbonPersonIDStudent'].'&hook='.$rowHooks['name'].'&module='.$options['sourceModuleName'].'&action='.$options['sourceModuleAction'].'&gibbonHookID='.$rowHooks['gibbonHookID']."'>".$rowHooks['name'].'</a>';
+                                                echo " | <a target='_blank' href='".$session->get('absoluteURL').'/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID='.$row['gibbonPersonIDStudent'].'&hook='.$rowHooks['name'].'&module='.$options['sourceModuleName'].'&action='.$options['sourceModuleAction'].'&gibbonHookID='.$rowHooks['gibbonHookID']."'>".$rowHooks['name'].'</a>';
                                             }
                                         }
                                     }
@@ -150,7 +150,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             <b>Miscellaneous</b><br/>
                         </td>
                         <td class="right">
-                            <a target='_blank' href='<?php echo $_SESSION[$guid]['absoluteURL'] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php echo $row['gibbonPersonIDStudent'] ?>&subpage=Behaviour'>Behaviour</a> | <a target='_blank' href='<?php echo $_SESSION[$guid]['absoluteURL'] ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php echo $row['gibbonPersonIDStudent'] ?>&subpage=School Attendance'>Attendance</a>
+                            <a target='_blank' href='<?php echo $session->get('absoluteURL') ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php echo $row['gibbonPersonIDStudent'] ?>&subpage=Behaviour'>Behaviour</a> | <a target='_blank' href='<?php echo $session->get('absoluteURL') ?>/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=<?php echo $row['gibbonPersonIDStudent'] ?>&subpage=School Attendance'>Attendance</a>
                         </td>
                     </tr>
                     <?php
@@ -300,9 +300,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                                     echo '</td>';
                                     echo "<td style='width: 25px'>";
                                     if ($rowContributions['status'] == 'Complete') {
-                                        echo "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconTick.png'/> ";
+                                        echo "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick.png'/> ";
                                     } else {
-                                        echo "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconTick_light.png'/> ";
+                                        echo "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick_light.png'/> ";
                                     }
                                     echo '</td>';
                                     echo '<td>';
@@ -329,7 +329,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                                     echo '});';
                                     echo '</script>';
                                     if ($rowContributions['status'] != 'Pending') {
-                                        echo "<a class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='".$_SESSION[$guid]['absoluteURL']."/themes/Default/img/page_down.png' alt='Show Details' onclick='return false;' /></a>";
+                                        echo "<a class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='".$session->get('absoluteURL')."/themes/Default/img/page_down.png' alt='Show Details' onclick='return false;' /></a>";
                                     }
                                     echo '</td>';
                                     echo '</tr>';
@@ -354,7 +354,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             <span style="font-size: 90%"><i>* denotes a required field</i></span>
                         </td>
                         <td class="right">
-                            <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
+                            <input type="hidden" name="address" value="<?php echo $session->get('address') ?>">
                             <input type="submit" value="Submit">
                         </td>
                     </tr>

@@ -23,7 +23,7 @@ include __DIR__.'/../../gibbon.php';
 include __DIR__.'/moduleFunctions.php';
 
 
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/references_myNotes.php';
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/references_myNotes.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_myNotes.php') == false) {
     //Fail 0
@@ -31,17 +31,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     header("Location: {$URL}");
 } else {
     //Check for student enrolment
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
+    if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {
         //Fail 0
         $URL = $URL.'&return=error0';
         header("Location: {$URL}");
     } else {
         //Validate Inputs
-        $referenceNotes = $_POST['referenceNotes'];
+        $referenceNotes = $_POST['referenceNotes'] ?? '';
 
         //Write to database
         try {
-            $data = array('referenceNotes' => $referenceNotes, 'gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
+            $data = array('referenceNotes' => $referenceNotes, 'gibbonPersonID' => $session->get('gibbonPersonID'));
             $sql = 'UPDATE higherEducationStudent SET referenceNotes=:referenceNotes WHERE gibbonPersonID=:gibbonPersonID';
             $result = $connection2->prepare($sql);
             $result->execute($data);

@@ -24,7 +24,7 @@ include __DIR__.'/moduleFunctions.php';
 
 $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
 $higherEducationReferenceComponentID = $_GET['higherEducationReferenceComponentID'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_write_edit.php&higherEducationReferenceComponentID=$higherEducationReferenceComponentID&gibbonSchoolYearID=$gibbonSchoolYearID";
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_write_edit.php&higherEducationReferenceComponentID=$higherEducationReferenceComponentID&gibbonSchoolYearID=$gibbonSchoolYearID";
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_write_edit.php') == false) {
     //Fail 0
@@ -37,7 +37,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         header("Location: {$URL}");
     } else {
         try {
-            $data = array('higherEducationReferenceComponentID' => $higherEducationReferenceComponentID, 'gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
+            $data = array('higherEducationReferenceComponentID' => $higherEducationReferenceComponentID, 'gibbonPersonID' => $session->get('gibbonPersonID'));
             $sql = 'SELECT * FROM higherEducationReferenceComponent WHERE higherEducationReferenceComponentID=:higherEducationReferenceComponentID AND gibbonPersonID=:gibbonPersonID';
             $result = $connection2->prepare($sql);
             $result->execute($data);
@@ -54,8 +54,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             header("Location: {$URL}");
         } else {
             //Validate Inputs
-            $status = $_POST['status'];
-            $body = $_POST['body'];
+            $status = $_POST['status'] ?? '';
+            $body = $_POST['body'] ?? '';
 
             if ($status == '' or $body == '') {
                 //Fail 3

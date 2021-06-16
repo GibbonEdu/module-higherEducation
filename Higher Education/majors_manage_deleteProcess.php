@@ -22,16 +22,16 @@ include __DIR__.'/../../gibbon.php';
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
-$higherEducationMajorID = $_POST['higherEducationMajorID'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/majors_manage_delete.php&higherEducationMajorID=$higherEducationMajorID";
-$URLDelete = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/majors_manage.php';
+$higherEducationMajorID = $_POST['higherEducationMajorID'] ?? '';
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/majors_manage_delete.php&higherEducationMajorID=$higherEducationMajorID";
+$URLDelete = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/majors_manage.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_manage_delete.php') == false) {
     //Fail 0
     $URL = $URL.'&return=error0';
     header("Location: {$URL}");
 } else {
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role != 'Coordinator') {
         //Fail 0
         $URL = $URL.'&return=error0';

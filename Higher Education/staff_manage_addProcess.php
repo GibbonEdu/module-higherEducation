@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include __DIR__.'/../../gibbon.php';
 
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/staff_manage_add.php';
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/staff_manage_add.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_manage_add.php') == false) {
 
@@ -28,8 +28,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
     header("Location: {$URL}");
 } else {
     //Proceed!
-    $gibbonPersonID = $_POST['gibbonPersonID'];
-    $role = $_POST['role'];
+    $gibbonPersonID = $_POST['gibbonPersonID'] ?? '';
+    $role = $_POST['role'] ?? '';
 
     if ($gibbonPersonID == '' or $role == '') {
         //Fail 3

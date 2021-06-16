@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include __DIR__.'/../../gibbon.php';
 
 $higherEducationStaffID = $_GET['higherEducationStaffID'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/staff_manage_edit.php&higherEducationStaffID=$higherEducationStaffID";
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/staff_manage_edit.php&higherEducationStaffID=$higherEducationStaffID";
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_manage_edit.php') == false) {
 
@@ -53,7 +53,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
             header("Location: {$URL}");
         } else {
             //Validate Inputs
-            $role = $_POST['role'];
+            $role = $_POST['role'] ?? '';
 
             if ($role == '') {
                 //Fail 3

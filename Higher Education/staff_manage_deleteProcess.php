@@ -19,9 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include __DIR__.'/../../gibbon.php';
 
-$higherEducationStaffID = $_POST['higherEducationStaffID'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/staff_manage_delete.php&higherEducationStaffID=$higherEducationStaffID";
-$URLDelete = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/staff_manage.php';
+$higherEducationStaffID = $_POST['higherEducationStaffID'] ?? '';
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/staff_manage_delete.php&higherEducationStaffID=$higherEducationStaffID";
+$URLDelete = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/staff_manage.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_manage_delete.php') == false) {
 

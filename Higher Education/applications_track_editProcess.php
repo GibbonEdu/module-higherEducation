@@ -23,9 +23,9 @@ include __DIR__.'/../../gibbon.php';
 include __DIR__.'/moduleFunctions.php';
 
 
-$higherEducationApplicationInstitutionID = $_GET['higherEducationApplicationInstitutionID'];
+$higherEducationApplicationInstitutionID = $_GET['higherEducationApplicationInstitutionID'] ?? '';
 
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/applications_track_edit.php&higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID";
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/applications_track_edit.php&higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID";
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_track_edit.php') == false) {
     //Fail 0
@@ -33,14 +33,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     header("Location: {$URL}");
 } else {
     //Check for student enrolment
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
+    if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {
         //Fail 0
         $URL = $URL.'&return=error0';
         header("Location: {$URL}");
     } else {
         //Check for application record
         try {
-            $data = array('gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
+            $data = array('gibbonPersonID' => $session->get('gibbonPersonID'));
             $sql = 'SELECT * FROM  higherEducationApplication WHERE gibbonPersonID=:gibbonPersonID';
             $result = $connection2->prepare($sql);
             $result->execute($data);
@@ -84,17 +84,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 
                     //Validate Inputs
                     $higherEducationApplicationID = $row['higherEducationApplicationID'];
-                    $higherEducationInstitutionID = $_POST['higherEducationInstitutionID'];
-                    $higherEducationMajorID = $_POST['higherEducationMajorID'];
-                    $scholarship = $_POST['scholarship'];
-                    $applicationNumber = $_POST['applicationNumber'];
-                    $rank = $_POST['rank'];
-                    $rating = $_POST['rating'];
-                    $status = $_POST['status'];
-                    $question = $_POST['question'];
-                    $answer = $_POST['answer'];
-                    $offer = $_POST['offer'];
-                    $offerDetails = $_POST['offerDetails'];
+                    $higherEducationInstitutionID = $_POST['higherEducationInstitutionID'] ?? '';
+                    $higherEducationMajorID = $_POST['higherEducationMajorID'] ?? '';
+                    $scholarship = $_POST['scholarship'] ?? '';
+                    $applicationNumber = $_POST['applicationNumber'] ?? '';
+                    $rank = $_POST['rank'] ?? '';
+                    $rating = $_POST['rating'] ?? '';
+                    $status = $_POST['status'] ?? '';
+                    $question = $_POST['question'] ?? '';
+                    $answer = $_POST['answer'] ?? '';
+                    $offer = $_POST['offer'] ?? '';
+                    $offerDetails = $_POST['offerDetails'] ?? '';
 
                     if ($higherEducationApplicationID == '' or $higherEducationInstitutionID == '' or $higherEducationMajorID == '') {
                         //Fail 3

@@ -25,14 +25,14 @@ include __DIR__.'/moduleFunctions.php';
 
 $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
 $search = $_GET['search'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_manage_addMulti.php&gibbonSchoolYearID=$gibbonSchoolYearID&search=$search";
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_manage_addMulti.php&gibbonSchoolYearID=$gibbonSchoolYearID&search=$search";
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage_addMulti.php') == false) {
     //Fail 0
     $URL = $URL.'&return=error0';
     header("Location: {$URL}");
 } else {
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role != 'Coordinator') {
         //Fail 0
         $URL = $URL.'&return=error0';
@@ -45,19 +45,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             header("Location: {$URL}");
         } else {
             //Validate Inputs
-            if (isset($_POST['gibbonPersonIDMulti'])) {
-                $gibbonPersonIDMulti = $_POST['gibbonPersonIDMulti'];
-            } else {
-                $gibbonPersonIDMulti = null;
-            }
-            $type = $_POST['type'];
-            $gibbonPersonIDReferee = null;
-            if (isset($_POST['gibbonPersonIDReferee'])) {
-                $gibbonPersonIDReferee = $_POST['gibbonPersonIDReferee'];
-            }
+            $gibbonPersonIDMulti = $_POST['gibbonPersonIDMulti'] ?? '';
+            $type = $_POST['type'] ?? '';
+            $gibbonPersonIDReferee = $_POST['gibbonPersonIDReferee'] ?? '';
             $status = 'Pending';
             $statusNotes = '';
-            $notes = $_POST['notes'];
+            $notes = $_POST['notes'] ?? '';
             $timestamp = date('Y-m-d H:i:s');
 
             if ($gibbonPersonIDMulti == null or $type == '' or ($type == 'US References' and $gibbonPersonIDReferee == '')) {

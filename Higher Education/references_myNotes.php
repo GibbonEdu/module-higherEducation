@@ -34,7 +34,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     }
 
     try {
-        $data = array('gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
+        $data = array('gibbonPersonID' => $session->get('gibbonPersonID'));
         $sql = 'SELECT * FROM higherEducationStudent WHERE gibbonPersonID=:gibbonPersonID';
         $result = $connection2->prepare($sql);
         $result->execute($data);
@@ -48,8 +48,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 
         echo '<p>'.__m('On this page you can store some notes that will help your referee write about you. You might want to include some highlights of your achievements in and out of school, community service work you have done and activities you have taken part in.').'</p>';
 
-        $form = Form::create('myNotes', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/references_myNotesProcess.php');
-        $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+        $form = Form::create('myNotes', $session->get('absoluteURL').'/modules/'.$session->get('module').'/references_myNotesProcess.php');
+        $form->addHiddenValue('address', $session->get('address'));
 
         $row = $form->addRow();
             $row->addEditor('referenceNotes', $guid)->setRows(25)->showMedia()->setValue($values['referenceNotes']);

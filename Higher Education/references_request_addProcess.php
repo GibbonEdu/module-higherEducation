@@ -23,7 +23,7 @@ include __DIR__.'/../../gibbon.php';
 include __DIR__.'/moduleFunctions.php';
 
 
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/references_request_add.php';
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/references_request_add.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_request_add.php') == false) {
     //Fail 0
@@ -31,22 +31,19 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     header("Location: {$URL}");
 } else {
     //Check for student enrolment
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
+    if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {
         //Fail 0
         $URL = $URL.'&return=error0';
         header("Location: {$URL}");
     } else {
         //Validate Inputs
-        $gibbonPersonID = $_SESSION[$guid]['gibbonPersonID'];
-        $gibbonSchoolYearID = $_SESSION[$guid]['gibbonSchoolYearID'];
-        $type = $_POST['type'];
-        $gibbonPersonIDReferee = null;
-        if (isset($_POST['gibbonPersonIDReferee'])) {
-            $gibbonPersonIDReferee = $_POST['gibbonPersonIDReferee'];
-        }
+        $gibbonPersonID = $session->get('gibbonPersonID');
+        $gibbonSchoolYearID = $session->get('gibbonSchoolYearID');
+        $type = $_POST['type'] ?? '';
+        $gibbonPersonIDReferee = $_POST['gibbonPersonIDReferee'] ?? null;
         $status = 'Pending';
         $statusNotes = '';
-        $notes = $_POST['notes'];
+        $notes = $_POST['notes'] ?? '';
         $timestamp = date('Y-m-d H:i:s');
 
         if ($type == '' or ($type == 'US References' and $gibbonPersonIDReferee == '')) {

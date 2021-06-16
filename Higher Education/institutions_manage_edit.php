@@ -31,7 +31,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
     $page->breadcrumbs->add(__('Manage Institutions'), 'institutions_manage.php');
     $page->breadcrumbs->add(__('Edit Institution'));
 
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role != 'Coordinator') {
         $page->addError(__('You do not have access to this action.'));
     } else {
@@ -59,9 +59,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
                 //Let's go!
                 $values = $result->fetch();
 
-                $form = Form::create('institutions', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/institutions_manage_editProcess.php?higherEducationInstitutionID='.$higherEducationInstitutionID);
+                $form = Form::create('institutions', $session->get('absoluteURL').'/modules/'.$session->get('module').'/institutions_manage_editProcess.php?higherEducationInstitutionID='.$higherEducationInstitutionID);
                 $form->setFactory(DatabaseFormFactory::create($pdo));
-                $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+                $form->addHiddenValue('address', $session->get('address'));
 
                 $row = $form->addRow();
                     $row->addLabel('name', __('Name'));

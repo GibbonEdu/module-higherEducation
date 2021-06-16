@@ -43,7 +43,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
     try {
         $data = array();
         $sql = "SELECT higherEducationStaffID, higherEducationStaff.role, surname, preferredName FROM higherEducationStaff JOIN gibbonPerson ON (higherEducationStaff.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE status='Full' ORDER BY role, surname, preferredName";
-        $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($pagination - 1) * $_SESSION[$guid]['pagination']);
+        $sqlPage = $sql.' LIMIT '.$session->get('pagination').' OFFSET '.(($pagination - 1) * $session->get('pagination'));
         $result = $connection2->prepare($sql);
         $result->execute($data);
     } catch (PDOException $e) {
@@ -51,7 +51,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
     }
 
     echo "<div class='linkTop'>";
-    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/staff_manage_add.php'><img title='New' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new.png'/></a>";
+    echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/staff_manage_add.php'><img title='New' src='./themes/".$session->get('gibbonThemeName')."/img/page_new.png'/></a>";
     echo '</div>';
 
     if ($result->rowCount() < 1) {
@@ -59,8 +59,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
             echo __('There are no staff to display.');
         echo '</div>';
     } else {
-        if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-            printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'top');
+        if ($result->rowCount() > $session->get('pagination')) {
+            printPagination($guid, $result->rowCount(), $pagination, $session->get('pagination'), 'top');
         }
 
         echo "<table cellspacing='0' style='width: 100%'>";
@@ -105,15 +105,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
             echo $row['role'];
             echo '</td>';
             echo '<td>';
-            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/staff_manage_edit.php&higherEducationStaffID='.$row['higherEducationStaffID']."'><img title='Edit' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/config.png'/></a> ";
-            echo "<a class='thickbox' href='".$_SESSION[$guid]['absoluteURL'].'/fullscreen.php?q=/modules/'.$_SESSION[$guid]['module'].'/staff_manage_delete.php&higherEducationStaffID='.$row['higherEducationStaffID']."&width=650&height=135'><img title='Delete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
+            echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/staff_manage_edit.php&higherEducationStaffID='.$row['higherEducationStaffID']."'><img title='Edit' src='./themes/".$session->get('gibbonThemeName')."/img/config.png'/></a> ";
+            echo "<a class='thickbox' href='".$session->get('absoluteURL').'/fullscreen.php?q=/modules/'.$session->get('module').'/staff_manage_delete.php&higherEducationStaffID='.$row['higherEducationStaffID']."&width=650&height=135'><img title='Delete' src='./themes/".$session->get('gibbonThemeName')."/img/garbage.png'/></a> ";
             echo '</td>';
             echo '</tr>';
         }
         echo '</table>';
 
-        if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-            printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'bottom');
+        if ($result->rowCount() > $session->get('pagination')) {
+            printPagination($guid, $result->rowCount(), $pagination, $session->get('pagination'), 'bottom');
         }
     }
 }

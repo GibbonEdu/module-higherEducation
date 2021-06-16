@@ -30,7 +30,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
     $page->breadcrumbs->add(__('Manage Majors'), 'majors_manage.php');
     $page->breadcrumbs->add(__('Delete Major'));
 
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role != 'Coordinator') {
         $page->addError(__('You do not have access to this action.'));
     } else {
@@ -55,7 +55,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
                 $page->addError(__('The selected student member does not exist.'));
             } else {
                 //Let's go!
-                $form = DeleteForm::createForm($_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/majors_manage_deleteProcess.php?higherEducationMajorID=$higherEducationMajorID");
+                $form = DeleteForm::createForm($session->get('absoluteURL').'/modules/'.$session->get('module')."/majors_manage_deleteProcess.php?higherEducationMajorID=$higherEducationMajorID");
                 $form->addHiddenValue('higherEducationMajorID', $higherEducationMajorID);
                 echo $form->getOutput();
             }

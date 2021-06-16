@@ -26,7 +26,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
 } else {
     $page->breadcrumbs->add(__('Manage Majors'));
 
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role != 'Coordinator') {
         $page->addError(__('You do not have access to this action.'));
     } else {
@@ -44,9 +44,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
         }
 
         try {
-            $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
+            $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
             $sql = 'SELECT * FROM higherEducationMajor ORDER BY name';
-            $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($pagination - 1) * $_SESSION[$guid]['pagination']);
+            $sqlPage = $sql.' LIMIT '.$session->get('pagination').' OFFSET '.(($pagination - 1) * $session->get('pagination'));
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
@@ -54,14 +54,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
         }
 
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/majors_manage_add.php'><img title='New' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new.png'/></a>";
+        echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/majors_manage_add.php'><img title='New' src='./themes/".$session->get('gibbonThemeName')."/img/page_new.png'/></a>";
         echo '</div>';
 
         if ($result->rowCount() < 1) {
             $page->addError(__('There are no students to display.'));
         } else {
-            if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-                printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'top');
+            if ($result->rowCount() > $session->get('pagination')) {
+                printPagination($guid, $result->rowCount(), $pagination, $session->get('pagination'), 'top');
             }
 
             echo "<table cellspacing='0' style='width: 100%'>";
@@ -109,15 +109,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
                 echo $row['active'];
                 echo '</td>';
                 echo '<td>';
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/majors_manage_edit.php&higherEducationMajorID='.$row['higherEducationMajorID']."'><img title='Edit' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/config.png'/></a> ";
-                echo "<a class='thickbox' href='".$_SESSION[$guid]['absoluteURL'].'/fullscreen.php?q=/modules/'.$_SESSION[$guid]['module'].'/majors_manage_delete.php&higherEducationMajorID='.$row['higherEducationMajorID']."&width=650&height=135'><img title='Delete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
+                echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/majors_manage_edit.php&higherEducationMajorID='.$row['higherEducationMajorID']."'><img title='Edit' src='./themes/".$session->get('gibbonThemeName')."/img/config.png'/></a> ";
+                echo "<a class='thickbox' href='".$session->get('absoluteURL').'/fullscreen.php?q=/modules/'.$session->get('module').'/majors_manage_delete.php&higherEducationMajorID='.$row['higherEducationMajorID']."&width=650&height=135'><img title='Delete' src='./themes/".$session->get('gibbonThemeName')."/img/garbage.png'/></a> ";
                 echo '</td>';
                 echo '</tr>';
             }
             echo '</table>';
 
-            if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-                printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'bottom');
+            if ($result->rowCount() > $session->get('pagination')) {
+                printPagination($guid, $result->rowCount(), $pagination, $session->get('pagination'), 'bottom');
             }
         }
     }

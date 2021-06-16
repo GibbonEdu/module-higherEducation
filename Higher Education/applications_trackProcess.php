@@ -20,8 +20,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 include __DIR__.'/../../gibbon.php';
 
 
-$higherEducationApplicationID = $_GET['higherEducationApplicationID'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/applications_track.php';
+$higherEducationApplicationID = $_GET['higherEducationApplicationID'] ?? '';
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/applications_track.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_track.php') == false) {
     //Fail 0
@@ -29,13 +29,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     header("Location: {$URL}");
 } else {
     //Validate Inputs
-    $applying = $_POST['applying'];
+    $applying = $_POST['applying'] ?? '';
     if ($applying == 'Y') {
-        $careerInterests = $_POST['careerInterests'];
-        $coursesMajors = $_POST['coursesMajors'];
-        $otherScores = $_POST['otherScores'];
-        $personalStatement = $_POST['personalStatement'];
-        $meetingNotes = $_POST['meetingNotes'];
+        $careerInterests = $_POST['careerInterests'] ?? '';
+        $coursesMajors = $_POST['coursesMajors'] ?? '';
+        $otherScores = $_POST['otherScores'] ?? '';
+        $personalStatement = $_POST['personalStatement'] ?? '';
+        $meetingNotes = $_POST['meetingNotes'] ?? '';
     } else {
         $careerInterests = '';
         $coursesMajors = '';
@@ -47,7 +47,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     if ($higherEducationApplicationID == '') {
         //Insert new record
         try {
-            $data = array('gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID'], 'applying' => $applying, 'careerInterests' => $careerInterests, 'coursesMajors' => $coursesMajors, 'otherScores' => $otherScores, 'personalStatement' => $personalStatement, 'meetingNotes' => $meetingNotes);
+            $data = array('gibbonPersonID' => $session->get('gibbonPersonID'), 'applying' => $applying, 'careerInterests' => $careerInterests, 'coursesMajors' => $coursesMajors, 'otherScores' => $otherScores, 'personalStatement' => $personalStatement, 'meetingNotes' => $meetingNotes);
             $sql = 'INSERT INTO higherEducationApplication SET gibbonPersonID=:gibbonPersonID, applying=:applying, careerInterests=:careerInterests, coursesMajors=:coursesMajors, otherScores=:otherScores, personalStatement=:personalStatement, meetingNotes=:meetingNotes';
             $result = $connection2->prepare($sql);
             $result->execute($data);

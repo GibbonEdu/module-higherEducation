@@ -51,7 +51,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
             $page->addError(__('The selected staff member does not exist.'));
         } else {
             //Let's go!
-            $form = DeleteForm::createForm($_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/staff_manage_deleteProcess.php?higherEducationStaffID=$higherEducationStaffID");
+            $form = DeleteForm::createForm($session->get('absoluteURL').'/modules/'.$session->get('module')."/staff_manage_deleteProcess.php?higherEducationStaffID=$higherEducationStaffID");
             $form->addHiddenValue('higherEducationStaffID', $higherEducationStaffID);
             echo $form->getOutput();
         }

@@ -34,19 +34,19 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     $returns = array();
     $editLink = '';
     if (isset($_GET['editID'])) {
-        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Higher Education/applications_track_edit.php&higherEducationApplicationInstitutionID='.$_GET['editID'];
+        $editLink = $session->get('absoluteURL').'/index.php?q=/modules/Higher Education/applications_track_edit.php&higherEducationApplicationInstitutionID='.$_GET['editID'];
     }
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], $editLink, $returns);
     }
 
     //Check for student enrolment
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
+    if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {
         $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
         //Check for application record
         try {
-            $data = array('gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
+            $data = array('gibbonPersonID' => $session->get('gibbonPersonID'));
             $sql = 'SELECT * FROM  higherEducationApplication WHERE gibbonPersonID=:gibbonPersonID';
             $result = $connection2->prepare($sql);
             $result->execute($data);
@@ -59,8 +59,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
         } else {
             $values = $result->fetch();
 
-            $form = Form::create('applicationsTrackAdd', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/applications_track_addProcess.php');
-            $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+            $form = Form::create('applicationsTrackAdd', $session->get('absoluteURL').'/modules/'.$session->get('module').'/applications_track_addProcess.php');
+            $form->addHiddenValue('address', $session->get('address'));
 
             $form->addRow()->addHeading(__('Application Information'));
             

@@ -24,7 +24,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     //Acess denied
     $page->addError(__('You do not have access to this action.'));
 } else {
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role != 'Coordinator') {
         $page->addError(__('You do not have access to this action.'));
     } else {
@@ -56,7 +56,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 $row = $result->fetch();
 
                 echo "<div class='linkTop'>";
-                echo "<a href='javascript:window.print()'><img title='Print' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/print.png'/></a>";
+                echo "<a href='javascript:window.print()'><img title='Print' src='./themes/".$session->get('gibbonThemeName')."/img/print.png'/></a>";
                 echo '</div>'; ?>
                 <table class='smallIntBorder' cellspacing='0' style="width: 100%">
                     <tr>

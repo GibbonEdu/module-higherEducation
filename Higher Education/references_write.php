@@ -32,8 +32,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
     }
     if ($gibbonSchoolYearID == '') {
-        $gibbonSchoolYearID = $_SESSION[$guid]['gibbonSchoolYearID'];
-        $gibbonSchoolYearName = $_SESSION[$guid]['gibbonSchoolYearName'];
+        $gibbonSchoolYearID = $session->get('gibbonSchoolYearID');
+        $gibbonSchoolYearName = $session->get('gibbonSchoolYearName');
     }
     if (isset($_GET['gibbonSchoolYearID'])) {
         try {
@@ -61,13 +61,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         echo "<div class='linkTop'>";
             //Print year picker
             if (getPreviousSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/references_write.php&gibbonSchoolYearID='.getPreviousSchoolYearID($gibbonSchoolYearID, $connection2)."'>Previous Year</a> ";
+                echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/references_write.php&gibbonSchoolYearID='.getPreviousSchoolYearID($gibbonSchoolYearID, $connection2)."'>Previous Year</a> ";
             } else {
                 echo 'Previous Year ';
             }
             echo ' | ';
             if (getNextSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/references_write.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>Next Year</a> ";
+                echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/references_write.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>Next Year</a> ";
             } else {
                 echo 'Next Year ';
             }
@@ -88,9 +88,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         }
 
         try {
-            $data = array('gibbonSchoolYearID' => $gibbonSchoolYearID, 'gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
+            $data = array('gibbonSchoolYearID' => $gibbonSchoolYearID, 'gibbonPersonID' => $session->get('gibbonPersonID'));
             $sql = "SELECT higherEducationReference.timestamp, higherEducationReference.type AS typeReference, higherEducationReferenceComponent.*, surname, preferredName FROM higherEducationReferenceComponent JOIN higherEducationReference ON (higherEducationReferenceComponent.higherEducationReferenceID=higherEducationReference.higherEducationReferenceID) JOIN gibbonPerson ON (higherEducationReference.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReference.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND higherEducationReference.status='In Progress' AND higherEducationReferenceComponent.gibbonPersonID=:gibbonPersonID ORDER BY higherEducationReferenceComponent.status, timestamp DESC";
-            $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($pagination - 1) * $_SESSION[$guid]['pagination']);
+            $sqlPage = $sql.' LIMIT '.$session->get('pagination').' OFFSET '.(($pagination - 1) * $session->get('pagination'));
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
@@ -104,8 +104,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             echo 'There are no reference requests at current.';
             echo '</div>';
         } else {
-            if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-                printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'top', 'gibbonSchoolYearID=$gibbonSchoolYearID');
+            if ($result->rowCount() > $session->get('pagination')) {
+                printPagination($guid, $result->rowCount(), $pagination, $session->get('pagination'), 'top', 'gibbonSchoolYearID=$gibbonSchoolYearID');
             }
 
             echo "<table cellspacing='0' style='width: 100%'>";
@@ -153,11 +153,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 echo '</td>';
                 echo "<td style='width: 25px'>";
                 if ($row['status'] == 'Cancelled') {
-                    echo "<img style='margin-right: 3px; float: left' title='Cancelled' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconCross.png'/> ";
+                    echo "<img style='margin-right: 3px; float: left' title='Cancelled' src='./themes/".$session->get('gibbonThemeName')."/img/iconCross.png'/> ";
                 } elseif ($row['status'] == 'Complete') {
-                    echo "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconTick.png'/> ";
+                    echo "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick.png'/> ";
                 } else {
-                    echo "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/iconTick_light.png'/> ";
+                    echo "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick_light.png'/> ";
                 }
                 echo '</td>';
                 echo '<td>';
@@ -176,14 +176,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 }
                 echo '</td>';
                 echo '<td>';
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/references_write_edit.php&higherEducationReferenceComponentID='.$row['higherEducationReferenceComponentID']."&gibbonSchoolYearID=$gibbonSchoolYearID'><img title='Edit' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/config.png'/></a> ";
+                echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/references_write_edit.php&higherEducationReferenceComponentID='.$row['higherEducationReferenceComponentID']."&gibbonSchoolYearID=$gibbonSchoolYearID'><img title='Edit' src='./themes/".$session->get('gibbonThemeName')."/img/config.png'/></a> ";
                 echo '</td>';
                 echo '</tr>';
             }
             echo '</table>';
 
-            if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-                printPagination($guid, $result->rowCount(), $pagination, $_SESSION[$guid]['pagination'], 'bottom', "gibbonSchoolYearID=$gibbonSchoolYearID");
+            if ($result->rowCount() > $session->get('pagination')) {
+                printPagination($guid, $result->rowCount(), $pagination, $session->get('pagination'), 'bottom', "gibbonSchoolYearID=$gibbonSchoolYearID");
             }
         }
     }
