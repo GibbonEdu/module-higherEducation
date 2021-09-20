@@ -26,8 +26,8 @@ $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
 
 if ($higherEducationReferenceID == '' or $gibbonSchoolYearID == '') { echo 'Fatal error loading this page!';
 } else {
-    $URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_manage_edit_contribution_delete.php&higherEducationReferenceID=$higherEducationReferenceID&higherEducationReferenceComponentID=$higherEducationReferenceComponentID&gibbonSchoolYearID=$gibbonSchoolYearID";
-    $URLDelete = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_manage_edit.php&higherEducationReferenceID=$higherEducationReferenceID&higherEducationReferenceComponentID=$higherEducationReferenceComponentID&gibbonSchoolYearID=$gibbonSchoolYearID";
+    $URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_manage_edit_contribution_delete.php&higherEducationReferenceID=$higherEducationReferenceID&higherEducationReferenceComponentID=$higherEducationReferenceComponentID&gibbonSchoolYearID=$gibbonSchoolYearID";
+    $URLDelete = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_manage_edit.php&higherEducationReferenceID=$higherEducationReferenceID&higherEducationReferenceComponentID=$higherEducationReferenceComponentID&gibbonSchoolYearID=$gibbonSchoolYearID";
 
     if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage_edit.php') == false) {
         //Fail 0

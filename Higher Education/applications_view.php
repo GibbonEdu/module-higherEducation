@@ -24,7 +24,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     //Acess denied
     $page->addError(__('You do not have access to this action.'));
 } else {
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role == false) {
         //Acess denied
         $page->addError(__('You are not enroled in the Higher Education programme.'));
@@ -36,10 +36,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 
         try {
             if ($role == 'Coordinator') {
-                $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
+                $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
                 $sql = "SELECT gibbonPerson.gibbonPersonID, higherEducationStudentID, surname, preferredName, gibbonYearGroup.nameShort AS yearGroup, gibbonFormGroup.nameShort AS formGroup, gibbonFormGroup.gibbonFormGroupID, gibbonPersonIDAdvisor, gibbonSchoolYear.name AS schoolYear FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonSchoolYear ON (gibbonSchoolYear.gibbonSchoolYearID=gibbonPerson.gibbonSchoolYearIDClassOf) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' ORDER BY gibbonSchoolYear.sequenceNumber DESC, surname, preferredName";
             } else {
-                $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID'], 'advisor' => $_SESSION[$guid]['gibbonPersonID']);
+                $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'), 'advisor' => $session->get('gibbonPersonID'));
                 $sql = "SELECT gibbonPerson.gibbonPersonID, higherEducationStudentID, surname, preferredName, gibbonYearGroup.nameShort AS yearGroup, gibbonFormGroup.nameShort AS formGroup, gibbonFormGroup.gibbonFormGroupID, gibbonPersonIDAdvisor, gibbonSchoolYear.name AS schoolYear FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonSchoolYear ON (gibbonSchoolYear.gibbonSchoolYearID=gibbonPerson.gibbonSchoolYearIDClassOf) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND gibbonPersonIDAdvisor=:advisor ORDER BY gibbonSchoolYear.sequenceNumber DESC, surname, preferredName";
             }
             $result = $connection2->prepare($sql);
@@ -82,10 +82,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     <?php
                     try {
                         if ($role == 'Coordinator') {
-                            $dataSelect = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
+                            $dataSelect = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
                             $sqlSelect = "SELECT DISTINCT gibbonFormGroup.nameShort AS formGroup, gibbonFormGroup.gibbonFormGroupID FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' ORDER BY gibbonFormGroup.nameShort";
                         } else {
-                            $dataSelect = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID'], 'advisor' => $_SESSION[$guid]['gibbonPersonID']);
+                            $dataSelect = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'), 'advisor' => $session->get('gibbonPersonID'));
                             $sqlSelect = "SELECT DISTINCT gibbonFormGroup.nameShort AS formGroup, gibbonFormGroup.gibbonFormGroupID FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND gibbonPersonIDAdvisor=:advisor ORDER BY gibbonFormGroup.nameShort";
                         }
                         $resultSelect = $connection2->prepare($sqlSelect);
@@ -159,7 +159,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     echo '</td>';
                     echo '<td>';
                     if ($resultAdvisor->rowCount() > 0 and $rowAdvisor['applying'] == 'Y') {
-                        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/applications_view_details.php&gibbonPersonID='.$row['gibbonPersonID']."'><img title='Details' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_right.png'/></a> ";
+                        echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/applications_view_details.php&gibbonPersonID='.$row['gibbonPersonID']."'><img title='Details' src='./themes/".$session->get('gibbonThemeName')."/img/page_right.png'/></a> ";
                     }
                     echo '</td>';
                     echo '</tr>';

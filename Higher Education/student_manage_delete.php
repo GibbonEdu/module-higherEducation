@@ -40,7 +40,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
         $page->addError(__('You have not specified a student member.'));
     } else {
         try {
-            $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID'], 'higherEducationStudentID' => $higherEducationStudentID);
+            $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'), 'higherEducationStudentID' => $higherEducationStudentID);
             $sql = "SELECT higherEducationStudentID, surname, preferredName, gibbonYearGroup.nameShort AS yearGroup, gibbonFormGroup.nameShort AS formGroup FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND higherEducationStudentID=:higherEducationStudentID";
             $result = $connection2->prepare($sql);
             $result->execute($data);
@@ -51,7 +51,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
             $page->addError(__('The selected student member does not exist.'));
         } else {
             //Let's go!
-            $form = DeleteForm::createForm($_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/student_manage_deleteProcess.php?higherEducationStudentID=$higherEducationStudentID");
+            $form = DeleteForm::createForm($session->get('absoluteURL').'/modules/'.$session->get('module')."/student_manage_deleteProcess.php?higherEducationStudentID=$higherEducationStudentID");
             $form->addHiddenValue('higherEducationStudentID', $higherEducationStudentID);
             echo $form->getOutput();
         }

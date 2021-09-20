@@ -34,13 +34,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
         returnProcess($guid, $_GET['return'], null, null);
     }
 
-    $form = Form::create('students', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/student_manage_addProcess.php');
+    $form = Form::create('students', $session->get('absoluteURL').'/modules/'.$session->get('module').'/student_manage_addProcess.php');
     $form->setFactory(DatabaseFormFactory::create($pdo));
-    $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+    $form->addHiddenValue('address', $session->get('address'));
 
     $row = $form->addRow();
         $row->addLabel('Members', __('Students'));
-        $row->addSelectStudent('Members', $_SESSION[$guid]['gibbonSchoolYearID'], array('byForm' => true))->selectMultiple()->isRequired();
+        $row->addSelectStudent('Members', $session->get('gibbonSchoolYearID'), array('byForm' => true))->selectMultiple()->isRequired();
 
     $sql = "SELECT gibbonPerson.gibbonPersonID as value, CONCAT(surname, ', ', preferredName) as name FROM gibbonPerson JOIN higherEducationStaff ON (gibbonPerson.gibbonPersonID=higherEducationStaff.gibbonPersonID) WHERE status='Full' ORDER BY surname, preferredName";
     $row = $form->addRow();

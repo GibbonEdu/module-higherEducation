@@ -26,7 +26,7 @@ $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
 
 if ($higherEducationReferenceID == '' or $gibbonSchoolYearID == '') { echo 'Fatal error loading this page!';
 } else {
-    $URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_manage_edit_contribution_edit.php&higherEducationReferenceID=$higherEducationReferenceID&higherEducationReferenceComponentID=$higherEducationReferenceComponentID&gibbonSchoolYearID=$gibbonSchoolYearID";
+    $URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_manage_edit_contribution_edit.php&higherEducationReferenceID=$higherEducationReferenceID&higherEducationReferenceComponentID=$higherEducationReferenceComponentID&gibbonSchoolYearID=$gibbonSchoolYearID";
 
     if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage_edit.php') == false) {
         //Fail 0
@@ -58,10 +58,10 @@ if ($higherEducationReferenceID == '' or $gibbonSchoolYearID == '') { echo 'Fata
                 header("Location: {$URL}");
             } else {
                 //Validate Inputs
-                $title = $_POST['title'];
-                $status = $_POST['status'];
-                $body = $_POST['body'];
-                $gibbonPersonID = $_POST['gibbonPersonID'];
+                $title = $_POST['title'] ?? '';
+                $status = $_POST['status'] ?? '';
+                $body = $_POST['body'] ?? '';
+                $gibbonPersonID = $_POST['gibbonPersonID'] ?? '';
 
                 if ($title == '' or $status == '' or $gibbonPersonID == '') {
                     //Fail 3

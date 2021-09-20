@@ -34,7 +34,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
         returnProcess($guid, $_GET['return'], null, null);
     }
 
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
+    if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {
         $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
         echo '<p>';
@@ -43,7 +43,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 
         //Check for application record
         try {
-            $data = array('gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
+            $data = array('gibbonPersonID' => $session->get('gibbonPersonID'));
             $sql = 'SELECT * FROM  higherEducationApplication WHERE gibbonPersonID=:gibbonPersonID';
             $result = $connection2->prepare($sql);
             $result->execute($data);
@@ -64,41 +64,41 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             $higherEducationApplicationID = $values['higherEducationApplicationID'];
         }
 
-        $form = Form::create('applicationStatus', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/applications_trackProcess.php?higherEducationApplicationID='.$higherEducationApplicationID);
-        
-        $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+        $form = Form::create('applicationStatus', $session->get('absoluteURL').'/modules/'.$session->get('module').'/applications_trackProcess.php?higherEducationApplicationID='.$higherEducationApplicationID);
+
+        $form->addHiddenValue('address', $session->get('address'));
 
         $row = $form->addRow();
             $row->addLabel('applying', __('Applying?'))->description(__('Are you intending on applying for entry to higher education?'));
             $row->addYesNo('applying')->selected($values['applying']);
-        
+
         $form->toggleVisibilityByClass('visibility')->onSelect('applying')->when('Y');
-        
+
         $row = $form->addRow();
             $column = $row->addColumn()->addClass('visibility');
                 $column->addLabel('careerInterests', __('Career Interests'))->description(__('What areas of work are you interested in? What are your ambitions?'));
                 $column->addTextArea('careerInterests')->setRows(8)->setClass('w-full');
-        
+
         $row = $form->addRow();
             $column = $row->addColumn()->addClass('visibility');
                 $column->addLabel('coursesMajors', __('Courses/Majors'))->description(__('What areas of study are you interested in? How do these relate to your career interests?'));
                 $column->addTextArea('coursesMajors')->setRows(8)->setClass('w-full');
-        
+
         $row = $form->addRow();
             $column = $row->addColumn()->addClass('visibility');
-                $column->addLabel('otherScores', __('Scores'))->description(__('Do you have any non-'.$_SESSION[$guid]['organisationNameShort'].' exam scores?'));
+                $column->addLabel('otherScores', __('Scores'))->description(__('Do you have any non-'.$session->get('organisationNameShort').' exam scores?'));
                 $column->addTextArea('otherScores')->setRows(8)->setClass('w-full');
-        
+
         $row = $form->addRow();
             $column = $row->addColumn()->addClass('visibility');
                 $column->addLabel('personalStatement', __('Personal Statement'))->description(__('Draft out ideas for your personal statement.'));
                 $column->addTextArea('personalStatement')->setRows(8)->setClass('w-full');
-        
+
         $row = $form->addRow();
             $column = $row->addColumn()->addClass('visibility');
                 $column->addLabel('meetingNotes', __('Meeting Notes'))->description(__('Take notes on any meetings you have regarding your application process'));
                 $column->addTextArea('meetingNotes')->setRows(8)->setClass('w-full');
-        
+
         $form->loadAllValuesFrom($values);
 
         $row = $form->addRow();
@@ -135,7 +135,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             }
 
             echo "<div class='linkTop'>";
-            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/applications_track_add.php'><img title='New' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new.png'/></a>";
+            echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/applications_track_add.php'><img title='New' src='./themes/".$session->get('gibbonThemeName')."/img/page_new.png'/></a>";
             echo '</div>';
 
             if ($resultApps->rowCount() < 1) {
@@ -182,8 +182,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     echo "<span style='font-size: 75%; font-style: italic'>".$rowApps['rating'].'</span>';
                     echo '</td>';
                     echo '<td>';
-                    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/applications_track_edit.php&higherEducationApplicationInstitutionID='.$rowApps['higherEducationApplicationInstitutionID']."'><img title='Edit' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/config.png'/></a> ";
-                    echo "<a class='thickbox' href='".$_SESSION[$guid]['absoluteURL'].'/fullscreen.php?q=/modules/'.$_SESSION[$guid]['module'].'/applications_track_delete.php&higherEducationApplicationInstitutionID='.$rowApps['higherEducationApplicationInstitutionID']."&width=650&height=135'><img title='Delete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
+                    echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/applications_track_edit.php&higherEducationApplicationInstitutionID='.$rowApps['higherEducationApplicationInstitutionID']."'><img title='Edit' src='./themes/".$session->get('gibbonThemeName')."/img/config.png'/></a> ";
+                    echo "<a class='thickbox' href='".$session->get('absoluteURL').'/fullscreen.php?q=/modules/'.$session->get('module').'/applications_track_delete.php&higherEducationApplicationInstitutionID='.$rowApps['higherEducationApplicationInstitutionID']."&width=650&height=135'><img title='Delete' src='./themes/".$session->get('gibbonThemeName')."/img/garbage.png'/></a> ";
                     echo '</td>';
                     echo '</tr>';
 

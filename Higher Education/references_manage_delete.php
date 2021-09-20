@@ -33,7 +33,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     ]);
     $page->breadcrumbs->add(__('Delete Reference'));
 
-    $role = staffHigherEducationRole($_SESSION[$guid]['gibbonPersonID'], $connection2);
+    $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role != 'Coordinator') {
         $page->addError(__('You do not have access to this action.'));
     } else {
@@ -59,7 +59,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 $page->addError(__('The selected reference does not exist.'));
             } else {
                 //Let's go!
-                $form = DeleteForm::createForm($_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/references_manage_deleteProcess.php?higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID");
+                $form = DeleteForm::createForm($session->get('absoluteURL').'/modules/'.$session->get('module')."/references_manage_deleteProcess.php?higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID");
                 $form->addHiddenValue('higherEducationReferenceID', $higherEducationReferenceID);
                 echo $form->getOutput();
             }

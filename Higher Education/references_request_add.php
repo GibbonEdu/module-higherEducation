@@ -37,14 +37,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     }
 
     //Check for student enrolment
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
+    if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {
         $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
 
         //START FORM
-        $form = Form::create('requestReference', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/references_request_addProcess.php');
+        $form = Form::create('requestReference', $session->get('absoluteURL').'/modules/'.$session->get('module').'/references_request_addProcess.php');
         $form->setFactory(DatabaseFormFactory::create($pdo));
-        $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+        $form->addHiddenValue('address', $session->get('address'));
 
         $types = [
             'Composite Reference' =>__('Composite Reference'),

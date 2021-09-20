@@ -23,10 +23,10 @@ include __DIR__.'/../../gibbon.php';
 include __DIR__.'/moduleFunctions.php';
 
 
-$higherEducationApplicationInstitutionID = $_GET['higherEducationApplicationInstitutionID'];
+$higherEducationApplicationInstitutionID = $_GET['higherEducationApplicationInstitutionID'] ?? '';
 
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/applications_track_delete.php&higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID";
-$URLDelete = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/applications_track.php';
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/applications_track_delete.php&higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID";
+$URLDelete = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/applications_track.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_track_delete.php') == false) {
     //Fail 0
@@ -34,14 +34,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     header("Location: {$URL}");
 } else {
     //Check for student enrolment
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
+    if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {
         //Fail 0
         $URL = $URL.'&return=error0';
         header("Location: {$URL}");
     } else {
         //Check for application record
         try {
-            $data = array('gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
+            $data = array('gibbonPersonID' => $session->get('gibbonPersonID'));
             $sql = 'SELECT * FROM  higherEducationApplication WHERE gibbonPersonID=:gibbonPersonID';
             $result = $connection2->prepare($sql);
             $result->execute($data);

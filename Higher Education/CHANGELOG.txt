@@ -1,8 +1,12 @@
 CHANGELOG
 =========
+v1.4.02
+-------
+Refactored session variables and null coalesce
+
 v1.4.01
 -------
-Post-refactor adjustment to required fields 
+Post-refactor adjustment to required fields
 
 v1.4.00
 -------

@@ -35,12 +35,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     }
 
     //Check for student enrolment
-    if (studentEnrolment($_SESSION[$guid]['gibbonPersonID'], $connection2) == false) {
+    if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {
         $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
         //Check for application record
         try {
-            $data = array('gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
+            $data = array('gibbonPersonID' => $session->get('gibbonPersonID'));
             $sql = 'SELECT * FROM  higherEducationApplication WHERE gibbonPersonID=:gibbonPersonID';
             $result = $connection2->prepare($sql);
             $result->execute($data);
@@ -69,7 +69,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     $page->addError(__('The specified application cannot be found.'));
                 } else {
                     //Let's go!
-                    $form = DeleteForm::createForm($_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/applications_track_deleteProcess.php?higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID");
+                    $form = DeleteForm::createForm($session->get('absoluteURL').'/modules/'.$session->get('module')."/applications_track_deleteProcess.php?higherEducationApplicationInstitutionID=$higherEducationApplicationInstitutionID");
                     echo $form->getOutput();
                 }
             }
