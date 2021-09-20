@@ -77,50 +77,50 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 
                 $form->addHiddenValue('alertsSent', $values['alertsSent']);
                 $form->addHiddenValue('address', $session->get('address'));
-                
+              
                 $form->addRow()->addHeading(__('Reference Information'));
-                
+
                 $row = $form->addRow();
                 $row->addLabel('name', __('Student'));
                 $row->addTextField('name')->isRequired()->readonly()->setValue(formatName('', $values['preferredName'], $values['surname'], 'Student', false, false));
-                
+
                 $row = $form->addRow();
                 $row->addLabel('type', __('Type'));
                 $row->addTextField('name')->isRequired()->readonly()->setValue($values['type']);
-                
+
                 $row = $form->addRow();
                 if ($values['status'] == 'Pending') {
                     $row->addLabel('status', __('Status'));
                     $row->addSelect('status')->isRequired()->fromArray(array('Pending' =>__('Pending'), 'In Progress' => __('In Progress'), 'Complete' => __('Complete'), 'Cancelled' => __('Cancelled')))->placeholder()->setValue($values['status']);
-                
+
                 } elseif ($values['status'] == 'In Progress') {
                     $row->addLabel('status', __('Status'));
                     $row->addSelect('status')->isRequired()->fromArray(array('In Progress' => __('In Progress'), 'Complete' => __('Complete'), 'Cancelled' => __('Cancelled')))->placeholder()->setValue($values['status']);
-                
+
                 } elseif ($values['status'] == 'Complete') {
                     $row->addLabel('status', __('Status'));
                     $row->addSelect('status')->isRequired()->fromArray(array('Complete' => __('Complete')))->placeholder()->setValue($values['status']);
-                
+
                 } elseif ($values['status'] == 'Cancelled') {
                     $row->addLabel('status', __('Status'));
                     $row->addSelect('status')->isRequired()->fromArray(array('Cancelled' => __('Cancelled')))->placeholder()->setValue($values['status']);
                 }
-                
+
                 $form->toggleVisibilityByClass('contributionsRow')->onSelect('status')->when('In Progress');
-                
+
                 $row = $form->addRow();
                     $row->addLabel('statusNotes', __('Status Notes'));
                     if ($values['status'] == 'Pending' or $values['status'] == 'In Progress') {
-                        $row->addTextField('statusNotes')->isRequired()->setValue($values['statusNotes']);
+                        $row->addTextField('statusNotes')->setValue($values['statusNotes']);
                     } elseif ($values['status'] == 'Complete' or $values['status'] == 'Cancelled') {
-                        $row->addTextField('statusNotes')->isRequired()->readonly()->setValue($values['statusNotes']);
+                        $row->addTextField('statusNotes')->readonly()->setValue($values['statusNotes']);
                     }
-                    
+
                  $row = $form->addRow();
                     $column = $row->addColumn();
                     $column->addLabel('notes', __('Reference Notes'))->description(__('Information about this reference shared by the student.'));
                     $column->addTextArea('notes')->setRows(5)->setClass('w-full')->readOnly()->setValue($values['notes']);
-                    
+
                 $form->addRow()->addHeading(__('Contributions'));
 
                 if ($values['alertsSent'] == 'N') {
@@ -130,7 +130,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     $row = $form->addRow()->addClass('contributionsRow');
                     $row->addAlert(__('The user(s) listed below have already been notified by email that their input is required for this reference, and will not be alerted again.'), 'success');
                 }
-                
+
                     $dataContributions = array('higherEducationReferenceID' => $values['higherEducationReferenceID']);
                     $sqlContributions = 'SELECT higherEducationReferenceComponent.*, preferredName, surname FROM higherEducationReferenceComponent JOIN gibbonPerson ON (higherEducationReferenceComponent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReferenceID=:higherEducationReferenceID ORDER BY title';
                     $resultContributions = $pdo->select($sqlContributions, $dataContributions)->toDataSet();
@@ -140,13 +140,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     echo 'Error: no referee requested, or a system error.';
                     echo "</div>";
                 } else {
-                
+
                 //Dummy Criteria to force table to render as paginated
                 $staffGateway = $container->get(StaffGateway::class);
                 $criteria = $staffGateway->newQueryCriteria()
                     ->sortBy(['surname', 'preferredName'])
                     ->fromPOST();
-                    
+
                     $table = $form->addRow()->addDataTable('contributions', $criteria)->withData($resultContributions);
                         $table->addExpandableColumn('body');
                         $table->addColumn('name', __('Name'))->format(Format::using('name', ['title', 'preferredName', 'surname', 'Staff', true, true]));
@@ -163,16 +163,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             ->addParam('higherEducationReferenceComponentID')
                             ->addParam('higherEducationReferenceID')
                             ->addParam('gibbonSchoolYearID', $gibbonSchoolYearID)
-                            ->format(function ($valuesContributions, $actions) use ($guid) {
+                            ->format(function ($valuesContributions, $actions) use ($session) {
                                 $actions->addAction('edit', __('Edit'))
                                         ->setURL('/modules/'.$session->get('module').'/references_manage_edit_contribution_edit.php');
                                 $actions->addAction('delete', __('Delete'))
                                         ->setURL('/modules/'.$session->get('module').'/references_manage_edit_contribution_delete.php');
-                            });              
+                            });
                 }
-                    
+
                 $form->loadAllValuesFrom($values);
-                                
+
                 $row = $form->addRow();
                     $row->addFooter();
                     $row->addSubmit();
