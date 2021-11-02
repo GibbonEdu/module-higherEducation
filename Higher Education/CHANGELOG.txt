@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.4.03
+-------
+Removed deprecated function calls
+
 v1.4.02
 -------
 Refactored session variables and null coalesce

@@ -92,10 +92,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                         } catch (PDOException $e) {
                             $partialFail = true;
                         }
+                        $notificationGateway = new \Gibbon\Domain\System\NotificationGateway($pdo);
+						$notificationSender = new \Gibbon\Comms\NotificationSender($notificationGateway, $session);
+                        $notificationText = sprintf(__('Someone has requested your input on a Higher Education reference.'));
                         while ($rowEmail = $resultEmail->fetch()) {
-                            $notificationText = sprintf(__('Someone has requested your input on a Higher Education reference.'));
-                            setNotification($connection2, $guid, $rowEmail['gibbonPersonID'], $notificationText, 'Higher Education', '/index.php?q=/modules/Higher Education/references_write.php');
+							$notificationSender->addNotification($rowEmail['gibbonPersonID'], $notificationText, 'Higher Education', '/index.php?q=/modules/Higher Education/references_write.php');
                         }
+                        $notificationSender->sendNotifications();
                     }
 
                     //Write to database

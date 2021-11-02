@@ -17,14 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//Module includes
-include __DIR__.'/moduleFunctions.php';
-
 use Gibbon\Forms\Form;
 use Gibbon\Services\Format;
 use Gibbon\Tables\DataTable;
 use Gibbon\Domain\Staff\StaffGateway;
 
+//Module includes
+include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage_edit.php') == false) {
     //Acess denied
@@ -44,10 +43,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     if ($role != 'Coordinator') {
         $page->addError(__('You do not have access to this action.'));
     } else {
-        if (isset($_GET['return'])) {
-            returnProcess($guid, $_GET['return'], null, null);
-        }
-
         //Check if school year specified
         $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
         $higherEducationReferenceID = $_GET['higherEducationReferenceID'];
@@ -71,18 +66,18 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 
                 echo "<div class='linkTop'>";
                 echo "<a target='_blank' href='".$session->get('absoluteURL').'/report.php?q=/modules/'.$session->get('module')."/references_manage_edit_print.php&higherEducationReferenceID=$higherEducationReferenceID'><img title='Print' src='./themes/".$session->get('gibbonThemeName')."/img/print.png'/></a>";
-                echo '</div>'; 
-                
+                echo '</div>';
+
                 $form = Form::create('referencesManage', $session->get('absoluteURL').'/modules/'.$session->get('module')."/references_manage_editProcess.php?higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID");
-                
+
                 $form->addHiddenValue('alertsSent', $values['alertsSent']);
                 $form->addHiddenValue('address', $session->get('address'));
-              
+
                 $form->addRow()->addHeading(__('Reference Information'));
 
                 $row = $form->addRow();
                 $row->addLabel('name', __('Student'));
-                $row->addTextField('name')->isRequired()->readonly()->setValue(formatName('', $values['preferredName'], $values['surname'], 'Student', false, false));
+                $row->addTextField('name')->isRequired()->readonly()->setValue(Format::name('', $values['preferredName'], $values['surname'], 'Student', false, false));
 
                 $row = $form->addRow();
                 $row->addLabel('type', __('Type'));
@@ -150,7 +145,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     $table = $form->addRow()->addDataTable('contributions', $criteria)->withData($resultContributions);
                         $table->addExpandableColumn('body');
                         $table->addColumn('name', __('Name'))->format(Format::using('name', ['title', 'preferredName', 'surname', 'Staff', true, true]));
-                        $table->addColumn('status', __('Status'))->format(function($valuesContributions) use ($guid) {
+                        $table->addColumn('status', __('Status'))->format(function($valuesContributions) use ($guid, $session) {
                             if ($valuesContributions['status'] == 'Complete') {
                                 return "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick.png'/> <b>".$valuesContributions['status']."</b>";
                             } else {

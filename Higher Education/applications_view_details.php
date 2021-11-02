@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include __DIR__.'/moduleFunctions.php';
 
 use Gibbon\Forms\Form;
+use Gibbon\Services\Format;
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_view_details.php') == false) {
     //Acess denied
@@ -62,7 +63,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                 echo '<tr>';
                 echo "<td style='width: 34%; vertical-align: top'>";
                 echo "<span style='font-size: 115%; font-weight: bold'>Name</span><br/>";
-                echo formatName('', $values['preferredName'], $values['surname'], 'Student', true, true);
+                echo Format::name('', $values['preferredName'], $values['surname'], 'Student', true, true);
                 echo '</td>';
                 echo "<td style='width: 34%; vertical-align: top'>";
                 echo "<span style='font-size: 115%; font-weight: bold'>Form Group</span><br/>";
@@ -316,7 +317,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                 }
 
                 //Set sidebar
-                $session->set('sidebarExtra', getUserPhoto($guid, $image_240, 240));
+                $session->set('sidebarExtra', Format::userPhoto($image_240, 240));
             }
         }
     }

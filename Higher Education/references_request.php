@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Format;
+
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
@@ -27,11 +29,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 
     //Proceed!
     $page->breadcrumbs->add(__('Request References'));
-
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
+    
     if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {
         $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
@@ -89,7 +87,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     //COLOR ROW BY STATUS!
                     echo "<tr class=$rowNum>";
                 echo '<td>';
-                echo '<b>'.dateConvertBack($guid, substr($row['timestamp'], 0, 10)).'</b><br/>';
+                echo '<b>'.Format::date(substr($row['timestamp'], 0, 10)).'</b><br/>';
                 echo "<span style='font-size: 75%; font-style: italic'>".substr($row['timestamp'], 11, 5).'</span>';
                 echo '</td>';
                 echo '<td>';
@@ -122,7 +120,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     echo '</div>';
                 }
                 while ($rowReferee = $resultReferee->fetch()) {
-                    echo formatName(htmlPrep($rowReferee['title']), htmlPrep($rowReferee['preferredName']), htmlPrep($rowReferee['surname']), 'Staff', false).'<br/>';
+                    echo Format::name(htmlPrep($rowReferee['title']), htmlPrep($rowReferee['preferredName']), htmlPrep($rowReferee['surname']), 'Staff', false).'<br/>';
                 }
                 echo '</td>';
                 echo '</tr>';

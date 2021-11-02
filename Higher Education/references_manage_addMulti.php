@@ -33,10 +33,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     ]);
     $page->breadcrumbs->add(__('Add References'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role == false) {
         //Acess denied

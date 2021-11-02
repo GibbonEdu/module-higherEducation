@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Format;
+
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
@@ -25,10 +27,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
     $page->addError(__('You do not have access to this action.'));
 } else {
     $page->breadcrumbs->add(__('Manage Student Enrolment'));
-
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
 
     $role = staffHigherEducationRole($session->get('gibbonPersonID'), $connection2);
     if ($role != 'Coordinator') {
@@ -107,7 +105,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
                     //COLOR ROW BY STATUS!
                     echo "<tr class=$rowNum>";
                 echo '<td>';
-                echo formatName('', $row['preferredName'], $row['surname'], 'Student', true, true);
+                echo Format::name('', $row['preferredName'], $row['surname'], 'Student', true, true);
                 echo '</td>';
                 echo '<td>';
                 echo $row['formGroup'];
@@ -130,7 +128,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
 
                     if ($resultAdvisor->rowCount() == 1) {
                         $rowAdvisor = $resultAdvisor->fetch();
-                        echo formatName('', $rowAdvisor['preferredName'], $rowAdvisor['surname'], 'Staff', false, true);
+                        echo Format::name('', $rowAdvisor['preferredName'], $rowAdvisor['surname'], 'Staff', false, true);
                     }
                 }
                 echo '</td>';

@@ -172,17 +172,18 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             }
 
             //Attempt to notify coordinators
-            try {
-                $dataNotify = array();
-                $sqlNotify = "SELECT gibbonPerson.gibbonPersonID FROM higherEducationStaff JOIN gibbonPerson ON (higherEducationStaff.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE status='Full' AND role='Coordinator'";
-                $resultNotify = $connection2->prepare($sqlNotify);
-                $resultNotify->execute($dataNotify);
-            } catch (PDOException $e) {
-            }
+			$dataNotify = array();
+			$sqlNotify = "SELECT gibbonPerson.gibbonPersonID FROM higherEducationStaff JOIN gibbonPerson ON (higherEducationStaff.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE status='Full' AND role='Coordinator'";
+			$resultNotify = $connection2->prepare($sqlNotify);
+			$resultNotify->execute($dataNotify);
+
+			$notificationGateway = new \Gibbon\Domain\System\NotificationGateway($pdo);
+			$notificationSender = new \Gibbon\Comms\NotificationSender($notificationGateway, $session);
+            $notificationText = sprintf(__('Someone has created a new Higher Education reference request.'));
             while ($rowNotify = $resultNotify->fetch()) {
-                $notificationText = sprintf(__('Someone has created a new Higher Education reference request.'));
-                setNotification($connection2, $guid, $rowNotify['gibbonPersonID'], $notificationText, 'Higher Education', '/index.php?q=/modules/Higher Education/references_manage.php');
+                $notificationSender->addNotification($rowNotify['gibbonPersonID'], $notificationText, 'Higher Education', '/index.php?q=/modules/Higher Education/references_manage.php');
             }
+            $notificationSender->sendNotifications();
 
             if ($partialFail == true) {
                 //Fail 5

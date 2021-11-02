@@ -31,14 +31,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
     $page->breadcrumbs->add(__('Manage Staff'), 'staff_manage.php');
     $page->breadcrumbs->add(__('Add Staff'));
 
-    $returns = array();
     $editLink = '';
     if (isset($_GET['editID'])) {
         $editLink = $session->get('absoluteURL').'/index.php?q=/modules/Higher Education/staff_manage_edit.php&higherEducationStaffID='.$_GET['editID'];
     }
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], $editLink, $returns);
-    }
+    $page->return->setEditLink($editLink);
 
     $form = Form::create('staff', $session->get('absoluteURL').'/modules/'.$session->get('module').'/staff_manage_addProcess.php');
     $form->setFactory(DatabaseFormFactory::create($pdo));

@@ -30,10 +30,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     //Proceed!
     $page->breadcrumbs->add(__('Track Application'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {
         $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
@@ -70,7 +66,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 
         $row = $form->addRow();
             $row->addLabel('applying', __('Applying?'))->description(__('Are you intending on applying for entry to higher education?'));
-            $row->addYesNo('applying')->selected($values['applying']);
+            $row->addYesNo('applying');
 
         $form->toggleVisibilityByClass('visibility')->onSelect('applying')->when('Y');
 
@@ -169,8 +165,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                         $rowNum = 'odd';
                     }
 
-                            //COLOR ROW BY STATUS!
-                            echo "<tr class=$rowNum>";
+                    //COLOR ROW BY STATUS!
+                    echo "<tr class=$rowNum>";
                     echo '<td>';
                     echo $rowApps['institution'];
                     echo '</td>';

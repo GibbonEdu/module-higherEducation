@@ -30,10 +30,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
     $page->breadcrumbs->add(__('Track Applications'), 'applications_track.php');
     $page->breadcrumbs->add(__('Delete Application'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     //Check for student enrolment
     if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {
         $page->addError(__('You have not been enrolled for higher education applications.'));

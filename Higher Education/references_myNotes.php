@@ -29,10 +29,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     //Proceed!
     $page->breadcrumbs->add(__('Edit My Reference Notes'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     try {
         $data = array('gibbonPersonID' => $session->get('gibbonPersonID'));
         $sql = 'SELECT * FROM higherEducationStudent WHERE gibbonPersonID=:gibbonPersonID';

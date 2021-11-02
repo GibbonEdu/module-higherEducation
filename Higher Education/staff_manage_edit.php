@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\Forms\Form;
+use Gibbon\Services\Format;
 
 //Module includes
 include __DIR__.'/moduleFunctions.php';
@@ -29,10 +30,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
     //Proceed!
     $page->breadcrumbs->add(__('Manage Staff'), 'staff_manage.php');
     $page->breadcrumbs->add(__('Edit Staff'));
-
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
 
     //Check if school year specified
     $higherEducationStaffID = $_GET['higherEducationStaffID'];
@@ -58,7 +55,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
 
             $row = $form->addRow();
                 $row->addLabel('name', __('Staff'));
-                $row->addTextField('name')->readonly()->setValue(formatName('', $values['preferredName'], $values['surname'], 'Staff', true, true));
+                $row->addTextField('name')->readonly()->setValue(Format::name('', $values['preferredName'], $values['surname'], 'Staff', true, true));
 
             $roles = array(
                 'Coordinator' => __('Coordinator'),

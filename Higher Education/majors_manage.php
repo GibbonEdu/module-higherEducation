@@ -30,10 +30,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
     if ($role != 'Coordinator') {
         $page->addError(__('You do not have access to this action.'));
     } else {
-        if (isset($_GET['return'])) {
-            returnProcess($guid, $_GET['return'], null, null);
-        }
-
         //Set pagination variable
         $pagination = null;
         if (isset($_GET['page'])) {

@@ -30,10 +30,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
     $page->breadcrumbs->add(__('Student Enrolment'), 'student_manage.php');
     $page->breadcrumbs->add(__('Delete Student Enrolment'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     //Check if school year specified
     $higherEducationStudentID = $_GET['higherEducationStudentID'];
     if ($higherEducationStudentID == '') {

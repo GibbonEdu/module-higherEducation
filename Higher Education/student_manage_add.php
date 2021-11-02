@@ -30,10 +30,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
     $page->breadcrumbs->add(__('Student Enrolment'), 'student_manage.php');
     $page->breadcrumbs->add(__('Add Student Enrolment'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     $form = Form::create('students', $session->get('absoluteURL').'/modules/'.$session->get('module').'/student_manage_addProcess.php');
     $form->setFactory(DatabaseFormFactory::create($pdo));
     $form->addHiddenValue('address', $session->get('address'));

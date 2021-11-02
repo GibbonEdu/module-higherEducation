@@ -34,13 +34,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
     if ($role != 'Coordinator') {
         $page->addError(__('You do not have access to this action.'));
     } else {
-        $returns = array();
+        $editLink = '';
         if (isset($_GET['editID'])) {
             $editLink = $session->get('absoluteURL').'/index.php?q=/modules/Higher Education/institutions_manage_edit.php&higherEducationInstitutionID='.$_GET['editID'];
         }
-        if (isset($_GET['return'])) {
-            returnProcess($guid, $_GET['return'], $editLink, $returns);
-        }
+       	$page->return->setEditLink($editLink);
 
         $form = Form::create('institutions', $session->get('absoluteURL').'/modules/'.$session->get('module').'/institutions_manage_addProcess.php');
         $form->setFactory(DatabaseFormFactory::create($pdo));

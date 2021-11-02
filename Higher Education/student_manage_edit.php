@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\Forms\Form;
+use Gibbon\Services\Format;
 use Gibbon\Forms\DatabaseFormFactory;
 
 //Module includes
@@ -30,10 +31,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
     //Proceed!
     $page->breadcrumbs->add(__('Student Enrolment'), 'student_manage.php');
     $page->breadcrumbs->add(__('Edit Student Enrolment'));
-
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
 
     //Check if school year specified
     $higherEducationStudentID = $_GET['higherEducationStudentID'];
@@ -60,7 +57,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
 
             $row = $form->addRow();
                 $row->addLabel('name', __('Student'));
-                $row->addTextField('name')->isRequired()->readonly()->setValue(formatName('', $values['preferredName'], $values['surname'], 'Student', true, true));
+                $row->addTextField('name')->isRequired()->readonly()->setValue(Format::name('', $values['preferredName'], $values['surname'], 'Student', true, true));
 
             $sql = "SELECT gibbonPerson.gibbonPersonID as value, CONCAT(surname, ', ', preferredName) as name FROM gibbonPerson JOIN higherEducationStaff ON (gibbonPerson.gibbonPersonID=higherEducationStaff.gibbonPersonID) WHERE status='Full' ORDER BY surname, preferredName";
             $row = $form->addRow();

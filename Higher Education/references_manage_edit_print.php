@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Format;
+
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
@@ -64,7 +66,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             <b>Student</b><br/>
                         </td>
                         <td class="right">
-                            <input readonly name="student" id="student" maxlength=255 value="<?php echo formatName('', htmlPrep($row['preferredName']), htmlPrep($row['surname']), 'Student', false, false) ?>" type="text" style="width: 300px">
+                            <input readonly name="student" id="student" maxlength=255 value="<?php echo Format::name('', htmlPrep($row['preferredName']), htmlPrep($row['surname']), 'Student', false, false) ?>" type="text" style="width: 300px">
                         </td>
                     </tr>
                     <tr>
@@ -97,12 +99,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             if ($rowContributions['title'] == '') {
                                 echo $rowContributions['type'].' Comment';
                                 echo "<span style='font-size: 75%; font-style: italic'>";
-                                echo ' . by '.formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
+                                echo ' . by '.Format::name('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
                                 echo '</span>';
                             } else {
                                 echo $rowContributions['title'];
                                 echo "<span style='font-size: 75%; font-style: italic'>";
-                                echo ' . '.$rowContributions['type'].' comment by '.formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
+                                echo ' . '.$rowContributions['type'].' comment by '.Format::name('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
                                 echo '</span>';
                             }
                             echo '</h4>';

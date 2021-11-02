@@ -30,10 +30,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
     $page->breadcrumbs->add(__('Manage Staff'), 'staff_manage.php');
     $page->breadcrumbs->add(__('Delete Staff'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     //Check if school year specified
     $higherEducationStaffID = $_GET['higherEducationStaffID'];
     if ($higherEducationStaffID == '') {

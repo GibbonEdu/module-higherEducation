@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Format;
+
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
@@ -130,7 +132,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     //COLOR ROW BY STATUS!
                     echo "<tr class='".$row['gibbonFormGroupID']."' id='".$row['formGroup']."' name='".$row['formGroup']."'>";
                     echo '<td>';
-                    echo formatName('', $row['preferredName'], $row['surname'], 'Student', true, true);
+                    echo Format::name('', $row['preferredName'], $row['surname'], 'Student', true, true);
                     echo '</td>';
                     echo '<td>';
                     echo $row['formGroup'];

@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Format;
+
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
@@ -29,10 +31,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         'gibbonSchoolYearID' => $_GET['gibbonSchoolYearID'] ?? '',
     ]);
     $page->breadcrumbs->add(__('Edit Reference'));
-
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
 
     //Check if school year specified
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
@@ -68,7 +66,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             <span style="font-size: 90%"><i>This value cannot be changed.</i></span>
                         </td>
                         <td class="right">
-                            <input readonly name="student" id="student" maxlength=255 value="<?php echo formatName('', htmlPrep($row['preferredName']), htmlPrep($row['surname']), 'Student', false, false) ?>" type="text" style="width: 300px">
+                            <input readonly name="student" id="student" maxlength=255 value="<?php echo Format::name('', htmlPrep($row['preferredName']), htmlPrep($row['surname']), 'Student', false, false) ?>" type="text" style="width: 300px">
                         </td>
                     </tr>
                     <tr>
@@ -296,7 +294,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 
                                     echo "<tr class='$rowNum'>";
                                     echo '<td>';
-                                    echo formatName('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
+                                    echo Format::name('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
                                     echo '</td>';
                                     echo "<td style='width: 25px'>";
                                     if ($rowContributions['status'] == 'Complete') {

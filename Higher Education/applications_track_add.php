@@ -31,14 +31,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
         ->add(__('Track Applications'), 'applications_track.php')
         ->add(__('Add Application'));
 
-    $returns = array();
     $editLink = '';
     if (isset($_GET['editID'])) {
         $editLink = $session->get('absoluteURL').'/index.php?q=/modules/Higher Education/applications_track_edit.php&higherEducationApplicationInstitutionID='.$_GET['editID'];
     }
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], $editLink, $returns);
-    }
+   	$page->return->setEditLink($editLink);
 
     //Check for student enrolment
     if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {

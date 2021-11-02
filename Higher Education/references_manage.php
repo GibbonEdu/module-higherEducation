@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\Forms\Form;
+use Gibbon\Services\Format;
 
 //Module includes
 include __DIR__.'/moduleFunctions.php';
@@ -37,10 +38,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
         } else {
             //Proceed!
             $page->breadcrumbs->add(__('Manage References'));
-
-            if (isset($_GET['return'])) {
-                returnProcess($guid, $_GET['return'], null, null);
-            }
 
             $gibbonSchoolYearID = null;
             if (isset($_GET['gibbonSchoolYearID'])) {
@@ -190,8 +187,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 
                         echo "<tr class=$rowNum>";
                         echo '<td>';
-                        echo formatName('', $row['preferredName'], $row['surname'], 'Student', true).'<br/>';
-                        echo "<span style='font-size: 75%; font-style: italic'>".dateConvertBack($guid, substr($row['timestamp'], 0, 10)).'</span>';
+                        echo Format::name('', $row['preferredName'], $row['surname'], 'Student', true).'<br/>';
+                        echo "<span style='font-size: 75%; font-style: italic'>".Format::date(substr($row['timestamp'], 0, 10)).'</span>';
                         echo '</td>';
                         echo "<td style='width: 25px'>";
                         if ($row['status'] == 'Cancelled') {

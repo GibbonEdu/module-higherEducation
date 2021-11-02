@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Format;
+
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
@@ -25,10 +27,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
     $page->addError(__('You do not have access to this action.'));
 } else {
     $page->breadcrumbs->add(__('Manage Staff'));
-
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
 
     //Set pagination variable
     $pagination = null;
@@ -99,7 +97,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/staff_man
             //COLOR ROW BY STATUS!
             echo "<tr class=$rowNum>";
             echo '<td>';
-            echo formatName('', $row['preferredName'], $row['surname'], 'Staff', true, true);
+            echo Format::name('', $row['preferredName'], $row['surname'], 'Staff', true, true);
             echo '</td>';
             echo '<td>';
             echo $row['role'];

@@ -33,13 +33,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
     if ($role != 'Coordinator') {
         $page->addError(__('You do not have access to this action.'));
     } else {
-        $returns = array();
+    	$editLink = '';
         if (isset($_GET['editID'])) {
             $editLink = $session->get('absoluteURL').'/index.php?q=/modules/Higher Education/majors_manage_edit.php&higherEducationMajorID='.$_GET['editID'];
         }
-        if (isset($_GET['return'])) {
-            returnProcess($guid, $_GET['return'], $editLink, $returns);
-        }
+        $page->return->setEditLink($editLink);
 
         $form = Form::create('majors', $session->get('absoluteURL').'/modules/'.$session->get('module').'/majors_manage_addProcess.php');
         $form->addHiddenValue('address', $session->get('address'));

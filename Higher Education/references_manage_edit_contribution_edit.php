@@ -55,9 +55,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 ->add(__('Edit Reference'), 'references_manage_edit.php', $urlParams)
                 ->add(__('Edit Contribution'));
 
-            if (isset($_GET['return'])) {
-                returnProcess($guid, $_GET['return'], null, null);
-            }
             $form = Form::create('editContribution', $session->get('absoluteURL').'/modules/'.$session->get('module')."/references_manage_edit_contribution_editProcess.php?higherEducationReferenceComponentID=$higherEducationReferenceComponentID&higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID");
             $form->setFactory(DatabaseFormFactory::create($pdo));
             $form->addHiddenValue('address', $session->get('address'));
