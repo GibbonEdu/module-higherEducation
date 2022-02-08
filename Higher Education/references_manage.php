@@ -71,24 +71,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             }
 
             if ($gibbonSchoolYearID != '') {
-                echo "<h2 class='top'>";
-                echo $gibbonSchoolYearName;
-                echo '</h2>';
-
-                echo "<div class='linkTop'>";
-                    //Print year picker
-                    if (getPreviousSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-                        echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/references_manage.php&gibbonSchoolYearID='.getPreviousSchoolYearID($gibbonSchoolYearID, $connection2)."'>Previous Year</a> ";
-                    } else {
-                        echo 'Previous Year ';
-                    }
-                    echo ' | ';
-                    if (getNextSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-                        echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/references_manage.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>Next Year</a> ";
-                    } else {
-                        echo 'Next Year ';
-                    }
-                echo '</div>';
+                $page->navigator->addSchoolYearNavigation($gibbonSchoolYearID);
 
                 echo "<h3 class='top'>";
                 echo __('Search');
