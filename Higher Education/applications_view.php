@@ -53,7 +53,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
         if ($result->rowCount() < 1) {
             $page->addError(__('There are no students to display.'));
         } else {
-            echo "<div class='linkTop'>";
+            echo "<p class='text-right mb-2 text-xs'>";
             echo 'Filter Form Group: ';
 
             ?>
@@ -102,7 +102,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                     ?>
                 </select>
                 <?php
-                echo '</div>';
+                echo '</p>';
 
                 echo "<table cellspacing='0' style='width: 100%'>";
                 echo "<tr class='head'>";

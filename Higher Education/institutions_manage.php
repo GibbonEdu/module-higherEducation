@@ -49,9 +49,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
             $page->addError(__('Error: {error}. Students cannot be displayed.', ['error' => $e->getMessage()]));
         }
 
-        echo "<div class='linkTop'>";
-        echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/institutions_manage_add.php'><img title='New' src='./themes/".$session->get('gibbonThemeName')."/img/page_new.png'/></a>";
-        echo '</div>';
+        echo "<p class='text-right mb-2 text-xs'>";
+        echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/institutions_manage_add.php'>".__("Add")."<img style='margin-left: 5px' src='./themes/".$session->get('gibbonThemeName')."/img/page_new.png'/></a>";
+        echo '</p>';
 
         if ($result->rowCount() < 1) {
             $page->addError(__('There are no students to display.'));

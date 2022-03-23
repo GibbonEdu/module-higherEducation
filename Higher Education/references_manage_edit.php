@@ -64,9 +64,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 //Let's go!
                 $values = $result->fetch();
 
-                echo "<div class='linkTop'>";
-                echo "<a target='_blank' href='".$session->get('absoluteURL').'/report.php?q=/modules/'.$session->get('module')."/references_manage_edit_print.php&higherEducationReferenceID=$higherEducationReferenceID'><img title='Print' src='./themes/".$session->get('gibbonThemeName')."/img/print.png'/></a>";
-                echo '</div>';
+                echo "<p class='text-right mb-2 text-xs'>";
+                echo "<a target='_blank' href='".$session->get('absoluteURL').'/report.php?q=/modules/'.$session->get('module')."/references_manage_edit_print.php&higherEducationReferenceID=$higherEducationReferenceID'>".__("Print")."<img style='margin-left: 5px' title='Print' src='./themes/".$session->get('gibbonThemeName')."/img/print.png'/></a>";
+                echo '</p>';
 
                 $form = Form::create('referencesManage', $session->get('absoluteURL').'/modules/'.$session->get('module')."/references_manage_editProcess.php?higherEducationReferenceID=$higherEducationReferenceID&gibbonSchoolYearID=$gibbonSchoolYearID");
 

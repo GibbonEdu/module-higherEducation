@@ -29,7 +29,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
 
     //Proceed!
     $page->breadcrumbs->add(__('Request References'));
-    
+
     if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {
         $page->addError(__('You have not been enrolled for higher education applications.'));
     } else {
@@ -48,9 +48,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             echo '</div>';
         }
 
-        echo "<div class='linkTop'>";
-        echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/references_request_add.php'><img title='New' src='./themes/".$session->get('gibbonThemeName')."/img/page_new.png'/></a>";
-        echo '</div>';
+        echo "<p class='text-right mb-2 text-xs'>";
+        echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/references_request_add.php'>".__("Add")."<img style='margin-left: 5px' src='./themes/".$session->get('gibbonThemeName')."/img/page_new.png'/></a>";
+        echo '</p>';
 
         if ($result->rowCount() < 1) {
             echo "<div class='warning'>";

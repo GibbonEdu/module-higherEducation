@@ -57,9 +57,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 //Let's go!
                 $row = $result->fetch();
 
-                echo "<div class='linkTop'>";
-                echo "<a href='javascript:window.print()'><img title='Print' src='./themes/".$session->get('gibbonThemeName')."/img/print.png'/></a>";
-                echo '</div>'; ?>
+                echo "<p class='text-right mb-2 text-xs'>";
+                echo "<a href='javascript:window.print()'>".__("Print")."<img style='margin-left: 5px' title='Print' src='./themes/".$session->get('gibbonThemeName')."/img/print.png'/></a>";
+                echo '</p>'; ?>
                 <table class='smallIntBorder' cellspacing='0' style="width: 100%">
                     <tr>
                         <td>

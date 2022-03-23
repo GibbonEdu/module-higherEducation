@@ -130,9 +130,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                 echo '</div>';
             }
 
-            echo "<div class='linkTop'>";
-            echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/applications_track_add.php'><img title='New' src='./themes/".$session->get('gibbonThemeName')."/img/page_new.png'/></a>";
-            echo '</div>';
+            echo "<p class='text-right mb-2 text-xs'>";
+            echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/applications_track_add.php'>".__("Add")."<img style='margin-left: 5px' title='New' src='./themes/".$session->get('gibbonThemeName')."/img/page_new.png'/></a>";
+            echo '</p>';
 
             if ($resultApps->rowCount() < 1) {
                 echo "<div class='warning'>";

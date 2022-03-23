@@ -120,9 +120,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 } catch (PDOException $e) {
                 }
 
-                echo "<div class='linkTop'>";
-                echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/references_manage_addMulti.php&gibbonSchoolYearID=$gibbonSchoolYearID&search=$search'>".__('Add Multiple Records')."<img title='".__('Add Multiple Records')."' src='./themes/".$session->get('gibbonThemeName')."/img/page_new_multi.png'/></a>";
-                echo '</div>';
+                echo "<p class='text-right mb-2 text-xs'>";
+                echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/references_manage_addMulti.php&gibbonSchoolYearID=$gibbonSchoolYearID&search=$search'>".__('Add Multiple Records')."<img style='margin-left: 5px' title='".__('Add Multiple Records')."' src='./themes/".$session->get('gibbonThemeName')."/img/page_new_multi.png'/></a>";
+                echo '</p>';
 
                 if ($result->rowCount() < 1) {
                     echo "<div class='warning'>";
