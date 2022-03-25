@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\Services\Format;
+use Gibbon\Tables\DataTable;
+use Gibbon\Module\HigherEducation\Domain\ReferenceGateway;
 
 //Module includes
 include __DIR__.'/moduleFunctions.php';
@@ -29,10 +31,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     //Proceed!
     $page->breadcrumbs->add(__('Write References'));
 
-    $gibbonSchoolYearID = null;
-    if (isset($_GET['gibbonSchoolYearID'])) {
-        $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
-    }
+    $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? null;
     if ($gibbonSchoolYearID == '') {
         $gibbonSchoolYearID = $session->get('gibbonSchoolYearID');
         $gibbonSchoolYearName = $session->get('gibbonSchoolYearName');
@@ -58,117 +57,57 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
     if ($gibbonSchoolYearID != '') {
         $page->navigator->addSchoolYearNavigation($gibbonSchoolYearID);
 
-        echo '<p>';
-        echo 'The table below shows all references for which your input is required in the selected school year.';
-        echo '<p>';
+        $referenceGateway = $container->get(ReferenceGateway::class);
 
-        //Set pagination variable
-        $pagination = null;
-        if (isset($_GET['page'])) {
-            $pagination = $_GET['page'];
-        }
-        if ((!is_numeric($pagination)) or $pagination < 1) {
-            $pagination = 1;
-        }
+        // QUERY
+        $criteria = $referenceGateway->newQueryCriteria(true)
+            ->sortBy(['higherEducationReferenceComponent.status', 'timestamp'])
+            ->sortBy(['timestamp'], 'DESC')
+            ->pageSize(50)
+            ->fromPOST();
 
-        try {
-            $data = array('gibbonSchoolYearID' => $gibbonSchoolYearID, 'gibbonPersonID' => $session->get('gibbonPersonID'));
-            $sql = "SELECT higherEducationReference.timestamp, higherEducationReference.type AS typeReference, higherEducationReferenceComponent.*, surname, preferredName FROM higherEducationReferenceComponent JOIN higherEducationReference ON (higherEducationReferenceComponent.higherEducationReferenceID=higherEducationReference.higherEducationReferenceID) JOIN gibbonPerson ON (higherEducationReference.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReference.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND higherEducationReference.status='In Progress' AND higherEducationReferenceComponent.gibbonPersonID=:gibbonPersonID ORDER BY higherEducationReferenceComponent.status, timestamp DESC";
-            $sqlPage = $sql.' LIMIT '.$session->get('pagination').' OFFSET '.(($pagination - 1) * $session->get('pagination'));
-            $result = $connection2->prepare($sql);
-            $result->execute($data);
-        } catch (PDOException $e) {
-            echo "<div class='warning'>";
-                echo $e->getMessage();
-            echo '</div>';
-        }
+        $references = $referenceGateway->queryReferenceComponents($criteria, $session->get('gibbonSchoolYearID'), $session->get('gibbonPersonID'));
 
-        if ($result->rowCount() < 1) {
-            echo "<div class='success'>";
-            echo 'There are no reference requests at current.';
-            echo '</div>';
-        } else {
-            if ($result->rowCount() > $session->get('pagination')) {
-                printPagination($guid, $result->rowCount(), $pagination, $session->get('pagination'), 'top', 'gibbonSchoolYearID=$gibbonSchoolYearID');
-            }
+        // TABLE
+        $table = DataTable::createPaginated('references', $criteria);
+        $table->setTitle(__('View'));
+        $table->setDescription(__m('The table below shows all references for which your input is required in the selected school year.'));
 
-            echo "<table cellspacing='0' style='width: 100%'>";
-            echo "<tr class='head'>";
-            echo '<th>';
-            echo 'Name<br/>';
-            echo "<span style='font-size: 75%; font-style: italic'>Date</span>";
-            echo '</th>';
-            echo '<th colspan=2>';
-            echo 'Your Contribution';
-            echo '</th>';
-            echo '<th>';
-            echo 'Type';
-            echo '</th>';
-            echo '<th>';
-            echo 'Perspective';
-            echo '</th>';
-            echo '<th>';
-            echo 'Actions';
-            echo '</th>';
-            echo '</tr>';
+        $table->addColumn('name', __('Name'))
+            ->format(function ($values) {
+                return Format::name('', $values['preferredName'], $values['surname'], 'Student', true, true)."<br/>".Format::small(Format::date($values['timestamp']));
+            });
 
-            $count = 0;
-            $rowNum = 'odd';
-            try {
-                $resultPage = $connection2->prepare($sqlPage);
-                $resultPage->execute($data);
-            } catch (PDOException $e) {
-                echo "<div class='warning'>";
-                    echo $e->getMessage();
-                echo '</div>';
-            }
-            while ($row = $resultPage->fetch()) {
-                if ($count % 2 == 0) {
-                    $rowNum = 'even';
+        $table->addColumn('status', __m('Your Contribution'))
+            ->format(function ($values) use ($session) {
+                if ($values['status'] == 'Cancelled') {
+                    $return = "<img style='margin-right: 3px; float: left' title='Cancelled' src='./themes/".$session->get('gibbonThemeName')."/img/iconCross.png'/> ";
+                } elseif ($values['status'] == 'Complete') {
+                    $return = "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick.png'/> ";
                 } else {
-                    $rowNum = 'odd';
+                    $return = "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick_light.png'/> ";
                 }
-                ++$count;
+                $return .= Format::bold($values['status']);
 
-                echo "<tr class=$rowNum>";
-                echo '<td>';
-                echo Format::name('', $row['preferredName'], $row['surname'], 'Student', true).'<br/>';
-                echo "<span style='font-size: 75%; font-style: italic'>".Format::date(substr($row['timestamp'], 0, 10)).'</span>';
-                echo '</td>';
-                echo "<td style='width: 25px'>";
-                if ($row['status'] == 'Cancelled') {
-                    echo "<img style='margin-right: 3px; float: left' title='Cancelled' src='./themes/".$session->get('gibbonThemeName')."/img/iconCross.png'/> ";
-                } elseif ($row['status'] == 'Complete') {
-                    echo "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick.png'/> ";
-                } else {
-                    echo "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick_light.png'/> ";
-                }
-                echo '</td>';
-                echo '<td>';
-                echo '<b>'.$row['status'].'</b>';
-                if (isset($row['statusNotes'])) {
-                    echo "<br/><span style='font-size: 75%; font-style: italic'>".$row['statusNotes'].'</span>';
-                }
-                echo '</td>';
-                echo '<td>';
-                echo $row['typeReference'];
-                echo '</td>';
-                echo '<td>';
-                echo $row['type'].'<br/>';
-                if ($row['title'] != '') {
-                    echo "<span style='font-size: 75%; font-style: italic'>".$row['title'].'</span>';
-                }
-                echo '</td>';
-                echo '<td>';
-                echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/references_write_edit.php&higherEducationReferenceComponentID='.$row['higherEducationReferenceComponentID']."&gibbonSchoolYearID=$gibbonSchoolYearID'><img title='Edit' src='./themes/".$session->get('gibbonThemeName')."/img/config.png'/></a> ";
-                echo '</td>';
-                echo '</tr>';
-            }
-            echo '</table>';
+                return $return;
+            });
 
-            if ($result->rowCount() > $session->get('pagination')) {
-                printPagination($guid, $result->rowCount(), $pagination, $session->get('pagination'), 'bottom', "gibbonSchoolYearID=$gibbonSchoolYearID");
-            }
-        }
+
+        $table->addColumn('typeReference', __('Type'));
+
+        $table->addColumn('perspective', __('Perspective'))
+            ->format(function ($values) use ($session) {
+                return $values['type']."<br/>".Format::small($values['title']);
+            });
+
+        $actions = $table->addActionColumn()
+            ->addParam('higherEducationReferenceComponentID')
+            ->addParam('gibbonSchoolYearID', $gibbonSchoolYearID)
+            ->format(function ($resource, $actions) {
+                $actions->addAction('edit', __('Edit'))
+                    ->setURL('/modules/Higher Education/references_write_edit.php');
+            });
+
+        echo $table->render($references);
     }
 }

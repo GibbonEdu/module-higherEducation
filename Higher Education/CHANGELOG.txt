@@ -1,8 +1,12 @@
 CHANGELOG
 =========
+v1.5.02
+-------
+Refactoring of printPagination
+
 v1.5.01
 -------
-Refactoring of linkTop divs 
+Refactoring of linkTop divs
 
 v1.5.00
 -------

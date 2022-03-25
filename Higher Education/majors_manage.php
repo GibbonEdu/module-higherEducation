@@ -17,6 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Format;
+use Gibbon\Tables\DataTable;
+use Gibbon\Module\HigherEducation\Domain\MajorGateway;
+
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
@@ -30,91 +34,45 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/majors_ma
     if ($role != 'Coordinator') {
         $page->addError(__('You do not have access to this action.'));
     } else {
-        //Set pagination variable
-        $pagination = null;
-        if (isset($_GET['page'])) {
-            $pagination = $_GET['page'];
-        }
-        if ((!is_numeric($pagination)) or $pagination < 1) {
-            $pagination = 1;
-        }
+        $majorGateway = $container->get(MajorGateway::class);
 
-        try {
-            $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
-            $sql = 'SELECT * FROM higherEducationMajor ORDER BY name';
-            $sqlPage = $sql.' LIMIT '.$session->get('pagination').' OFFSET '.(($pagination - 1) * $session->get('pagination'));
-            $result = $connection2->prepare($sql);
-            $result->execute($data);
-        } catch (PDOException $e) {
-            $page->addError(__('Error: {error}. Students cannot be displayed.', ['error' => $e->getMessage()]));;
-        }
+        // QUERY
+        $criteria = $majorGateway->newQueryCriteria(true)
+            ->sortBy(['name'])
+            ->pageSize(50)
+            ->fromPOST();
 
-        echo "<p class='text-right mb-2 text-xs'>";
-        echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/majors_manage_add.php'>".__("Add")."<img style='margin-left: 5px' src='./themes/".$session->get('gibbonThemeName')."/img/page_new.png'/></a>";
-        echo '</p>';
+        $majors = $majorGateway->queryMajors($criteria);
 
-        if ($result->rowCount() < 1) {
-            $page->addError(__('There are no students to display.'));
-        } else {
-            if ($result->rowCount() > $session->get('pagination')) {
-                printPagination($guid, $result->rowCount(), $pagination, $session->get('pagination'), 'top');
-            }
+        // TABLE
+        $table = DataTable::createPaginated('majors', $criteria);
+        $table->setTitle(__('View'));
 
-            echo "<table cellspacing='0' style='width: 100%'>";
-            echo "<tr class='head'>";
-            echo '<th>';
-            echo 'Name';
-            echo '</th>';
-            echo '<th>';
-            echo 'Active';
-            echo '</th>';
-            echo '<th>';
-            echo 'Actions';
-            echo '</th>';
-            echo '</tr>';
+        $table->modifyRows(function ($unit, $row) {
+            if ($unit['active'] != 'Y') $row->addClass('error');
+            return $row;
+        });
 
-            $count = 0;
-            $rowNum = 'odd';
-            try {
-                $resultPage = $connection2->prepare($sqlPage);
-                $resultPage->execute($data);
-            } catch (PDOException $e) {
-                echo "<div class='warning'>";
-                    echo $e->getMessage();
-                echo '</div>';
-            }
+        $table->addHeaderAction('add', __('Add'))
+            ->setURL('/modules/Higher Education/majors_manage_add.php')
+            ->displayLabel();
 
-            while ($row = $resultPage->fetch()) {
-                if ($count % 2 == 0) {
-                    $rowNum = 'even';
-                } else {
-                    $rowNum = 'odd';
-                }
-                ++$count;
+        $table->addColumn('name', __('Name'));
 
-                if ($row['active'] == 'N') {
-                    $rowNum = 'error';
-                }
+        $table->addColumn('active', __('active'))
+            ->format(function ($values) {
+                return Format::yesNo(__($values['active']));
+            });
 
-                //COLOR ROW BY STATUS!
-                echo "<tr class=$rowNum>";
-                echo '<td>';
-                echo $row['name'];
-                echo '</td>';
-                echo '<td>';
-                echo $row['active'];
-                echo '</td>';
-                echo '<td>';
-                echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/majors_manage_edit.php&higherEducationMajorID='.$row['higherEducationMajorID']."'><img title='Edit' src='./themes/".$session->get('gibbonThemeName')."/img/config.png'/></a> ";
-                echo "<a class='thickbox' href='".$session->get('absoluteURL').'/fullscreen.php?q=/modules/'.$session->get('module').'/majors_manage_delete.php&higherEducationMajorID='.$row['higherEducationMajorID']."&width=650&height=135'><img title='Delete' src='./themes/".$session->get('gibbonThemeName')."/img/garbage.png'/></a> ";
-                echo '</td>';
-                echo '</tr>';
-            }
-            echo '</table>';
+        $actions = $table->addActionColumn()
+            ->addParam('higherEducationMajorID')
+            ->format(function ($resource, $actions) {
+                $actions->addAction('edit', __('Edit'))
+                    ->setURL('/modules/Higher Education/majors_manage_edit.php');
+                $actions->addAction('delete', __('Delete'))
+                    ->setURL('/modules/Higher Education/majors_manage_delete.php');
+            });
 
-            if ($result->rowCount() > $session->get('pagination')) {
-                printPagination($guid, $result->rowCount(), $pagination, $session->get('pagination'), 'bottom');
-            }
-        }
+        echo $table->render($majors);
     }
 }

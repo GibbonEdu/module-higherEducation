@@ -17,6 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Format;
+use Gibbon\Tables\DataTable;
+use Gibbon\Module\HigherEducation\Domain\InstitutionGateway;
+
 //Module includes
 include __DIR__.'/moduleFunctions.php';
 
@@ -30,91 +34,49 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/instituti
     if ($role != 'Coordinator') {
         $page->addError(__('You do not have access to this action.'));
     } else {
-       	//Set pagination variable
-        $pagination = null;
-        if (isset($_GET['page'])) {
-            $pagination = $_GET['page'];
-        }
-        if ((!is_numeric($pagination)) or $pagination < 1) {
-            $pagination = 1;
-        }
 
-        try {
-            $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
-            $sql = 'SELECT * FROM higherEducationInstitution ORDER BY name, country';
-            $sqlPage = $sql.' LIMIT '.$session->get('pagination').' OFFSET '.(($pagination - 1) * $session->get('pagination'));
-            $result = $connection2->prepare($sql);
-            $result->execute($data);
-        } catch (PDOException $e) {
-            $page->addError(__('Error: {error}. Students cannot be displayed.', ['error' => $e->getMessage()]));
-        }
+        $institutionGateway = $container->get(InstitutionGateway::class);
 
-        echo "<p class='text-right mb-2 text-xs'>";
-        echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/institutions_manage_add.php'>".__("Add")."<img style='margin-left: 5px' src='./themes/".$session->get('gibbonThemeName')."/img/page_new.png'/></a>";
-        echo '</p>';
+        // QUERY
+        $criteria = $institutionGateway->newQueryCriteria(true)
+            ->sortBy(['name', 'country'])
+            ->pageSize(50)
+            ->fromPOST();
 
-        if ($result->rowCount() < 1) {
-            $page->addError(__('There are no students to display.'));
-        } else {
-            if ($result->rowCount() > $session->get('pagination')) {
-                printPagination($guid, $result->rowCount(), $pagination, $session->get('pagination'), 'top');
-            }
+        $institutions = $institutionGateway->queryInstitutions($criteria);
 
-            echo "<table cellspacing='0' style='width: 100%'>";
-            echo "<tr class='head'>";
-            echo '<th>';
-            echo 'Name';
-            echo '</th>';
-            echo '<th>';
-            echo 'Active';
-            echo '</th>';
-            echo '<th>';
-            echo 'Actions';
-            echo '</th>';
-            echo '</tr>';
+        // TABLE
+        $table = DataTable::createPaginated('institutions', $criteria);
+        $table->setTitle(__('View'));
 
-            $count = 0;
-            $rowNum = 'odd';
-            try {
-                $resultPage = $connection2->prepare($sqlPage);
-                $resultPage->execute($data);
-            } catch (PDOException $e) {
-                echo "<div class='warning'>";
-                    echo $e->getMessage();
-                echo '</div>';
-            }
+        $table->modifyRows(function ($unit, $row) {
+            if ($unit['active'] != 'Y') $row->addClass('error');
+            return $row;
+        });
 
-            while ($row = $resultPage->fetch()) {
-                if ($count % 2 == 0) {
-                    $rowNum = 'even';
-                } else {
-                    $rowNum = 'odd';
-                }
-                ++$count;
+        $table->addHeaderAction('add', __('Add'))
+            ->setURL('/modules/Higher Education/institutions_manage_add.php')
+            ->displayLabel();
 
-                if ($row['active'] == 'N') {
-                    $rowNum = 'error';
-                }
+        $table->addColumn('name', __('Name'))
+            ->format(function ($values) {
+                return $values['name'].", ".$values['country'];
+            });
 
-                //COLOR ROW BY STATUS!
-                echo "<tr class=$rowNum>";
-                echo '<td>';
-                echo $row['name'].', '.$row['country'];
-                echo '</td>';
-                echo '<td>';
-                echo $row['active'];
-                echo '</td>';
-                echo '<td>';
-                echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/institutions_manage_edit.php&higherEducationInstitutionID='.$row['higherEducationInstitutionID']."'><img title='Edit' src='./themes/".$session->get('gibbonThemeName')."/img/config.png'/></a> ";
-                echo "<a class='thickbox' href='".$session->get('absoluteURL').'/fullscreen.php?q=/modules/'.$session->get('module').'/institutions_manage_delete.php&higherEducationInstitutionID='.$row['higherEducationInstitutionID']."&width=650&height=135'><img title='Delete' src='./themes/".$session->get('gibbonThemeName')."/img/garbage.png'/></a> ";
-                echo '</td>';
-                echo '</tr>';
-            }
-            echo '</table>';
+        $table->addColumn('active', __('active'))
+            ->format(function ($values) {
+                return Format::yesNo(__($values['active']));
+            });
 
-            if ($result->rowCount() > $session->get('pagination')) {
-                printPagination($guid, $result->rowCount(), $pagination, $session->get('pagination'), 'bottom');
-            }
-        }
+        $actions = $table->addActionColumn()
+            ->addParam('higherEducationInstitutionID')
+            ->format(function ($resource, $actions) {
+                $actions->addAction('edit', __('Edit'))
+                    ->setURL('/modules/Higher Education/institutions_manage_edit.php');
+                $actions->addAction('delete', __('Delete'))
+                    ->setURL('/modules/Higher Education/institutions_manage_delete.php');
+            });
+
+        echo $table->render($institutions);
     }
 }
