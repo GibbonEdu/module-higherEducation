@@ -21,6 +21,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 include __DIR__.'/moduleFunctions.php';
 
 use Gibbon\Forms\Form;
+use Gibbon\Services\Format;
+use Gibbon\Tables\DataTable;
+use Gibbon\Module\HigherEducation\Domain\ApplicationInstitutionGateway;
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_track.php') == false) {
     //Acess denied
@@ -28,10 +31,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 } else {
 
     //Proceed!
-    $page->breadcrumbs->add(__('Track Application'));
+    $page->breadcrumbs->add(__m('Track Application'));
 
     if (studentEnrolment($session->get('gibbonPersonID'), $connection2) == false) {
-        $page->addError(__('You have not been enrolled for higher education applications.'));
+        $page->addError(__m('You have not been enrolled for higher education applications.'));
     } else {
         echo '<p>';
         echo __m('Use this page to provide relevant information about your higher education application intentions and progress. This information will be used to guide you through this process.');
@@ -48,9 +51,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
         }
 
         if ($result->rowCount() != 1) {
-            echo "<div class='warning'>";
-            echo __m('It appears that you are new to application tracking via the Higher Education module. Please enter your details below, and press the Submit button once you are done. You can reenter details into this page at any time.');
-            echo '</div>';
+            $page->addMessage(__m('It appears that you are new to application tracking via the Higher Education module. Please enter your details below, and press the Submit button once you are done. You can reenter details into this page at any time.'));
         } else {
             $values = $result->fetch();
         }
@@ -119,76 +120,45 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             echo 'You need to save the information above (press the Submit button) before you can start adding applications.';
             echo '</div>';
         } else {
-            try {
-                $dataApps = array('higherEducationApplicationID' => $values['higherEducationApplicationID']);
-                $sqlApps = 'SELECT higherEducationApplicationInstitution.higherEducationApplicationInstitutionID, higherEducationInstitution.name as institution, higherEducationMajor.name as major, rank, rating FROM higherEducationApplicationInstitution JOIN higherEducationInstitution ON (higherEducationApplicationInstitution.higherEducationInstitutionID=higherEducationInstitution.higherEducationInstitutionID) JOIN higherEducationMajor ON (higherEducationApplicationInstitution.higherEducationMajorID=higherEducationMajor.higherEducationMajorID) WHERE higherEducationApplicationID=:higherEducationApplicationID ORDER BY rank, institution, major';
-                $resultApps = $connection2->prepare($sqlApps);
-                $resultApps->execute($dataApps);
-            } catch (PDOException $e) {
-                echo "<div class='warning'>";
-                    echo $e->getMessage();
-                echo '</div>';
-            }
 
-            echo "<p class='text-right mb-2 text-xs'>";
-            echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module')."/applications_track_add.php'>".__("Add")."<img style='margin-left: 5px' title='New' src='./themes/".$session->get('gibbonThemeName')."/img/page_new.png'/></a>";
-            echo '</p>';
+            $applicationInstitutionGateway = $container->get(ApplicationInstitutionGateway::class);
 
-            if ($resultApps->rowCount() < 1) {
-                echo "<div class='warning'>";
-                    echo __('There are no applications to display.');
-                echo '</div>';
-            } else {
-                echo "<table cellspacing='0' style='width: 100%'>";
-                echo "<tr class='head'>";
-                echo '<th>';
-                echo 'Institution';
-                echo '</th>';
-                echo '<th>';
-                echo 'Major';
-                echo '</th>';
-                echo '<th>';
-                echo 'Ranking<br/>';
-                echo "<span style='font-size: 75%; font-style: italic'>Rating</span>";
-                echo '</th>';
-                echo '<th>';
-                echo 'Actions';
-                echo '</th>';
-                echo '</tr>';
+            // QUERY
+            $criteria = $applicationInstitutionGateway->newQueryCriteria(true)
+                ->sortBy(['rank', 'institution', 'major'])
+                ->pageSize(50)
+                ->fromPOST();
 
-                $count = 0;
-                $rowNum = 'odd';
-                while ($rowApps = $resultApps->fetch()) {
-                    if ($count % 2 == 0) {
-                        $rowNum = 'even';
-                    } else {
-                        $rowNum = 'odd';
-                    }
+            $applications = $applicationInstitutionGateway->queryApplicationInstitutions($criteria, $higherEducationApplicationID);
 
-                    //COLOR ROW BY STATUS!
-                    echo "<tr class=$rowNum>";
-                    echo '<td>';
-                    echo $rowApps['institution'];
-                    echo '</td>';
-                    echo '<td>';
-                    echo $rowApps['major'];
-                    echo '</td>';
-                    echo '<td>';
-                    echo $rowApps['rank'].'<br/>';
-                    echo "<span style='font-size: 75%; font-style: italic'>".$rowApps['rating'].'</span>';
-                    echo '</td>';
-                    echo '<td>';
-                    echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/applications_track_edit.php&higherEducationApplicationInstitutionID='.$rowApps['higherEducationApplicationInstitutionID']."'><img title='Edit' src='./themes/".$session->get('gibbonThemeName')."/img/config.png'/></a> ";
-                    echo "<a class='thickbox' href='".$session->get('absoluteURL').'/fullscreen.php?q=/modules/'.$session->get('module').'/applications_track_delete.php&higherEducationApplicationInstitutionID='.$rowApps['higherEducationApplicationInstitutionID']."&width=650&height=135'><img title='Delete' src='./themes/".$session->get('gibbonThemeName')."/img/garbage.png'/></a> ";
-                    echo '</td>';
-                    echo '</tr>';
+            // TABLE
+            $table = DataTable::createPaginated('applications', $criteria);
+            $table->setTitle(__('View'));
 
-                    ++$count;
-                }
-                echo '</table>';
-            }
+            $table->addHeaderAction('add', __('Add'))
+                ->setURL('/modules/Higher Education/applications_track_add.php')
+                ->displayLabel();
+
+            $table->addColumn('institution', __m('Institution'));
+
+            $table->addColumn('major', __m('Major'));
+
+            $table->addColumn('ranking', __m('Ranking'))
+                ->format(function ($values) {
+                    return $values["rank"]."<br/>".Format::small(__($values['rating']));
+                });
+
+            $actions = $table->addActionColumn()
+                ->addParam('higherEducationApplicationInstitutionID')
+                ->format(function ($resource, $actions) {
+                    $actions->addAction('edit', __('Edit'))
+                        ->setURL('/modules/Higher Education/applications_track_edit.php');
+                    $actions->addAction('delete', __('Delete'))
+                        ->setURL('/modules/Higher Education/applications_track_delete.php');
+                });
+
+            echo $table->render($applications);
         }
-        echo '</div>';
     }
 }
 ?>

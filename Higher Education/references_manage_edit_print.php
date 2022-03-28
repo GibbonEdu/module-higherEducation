@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\Services\Format;
+use Gibbon\Tables\DataTable;
+use Gibbon\Module\HigherEducation\Domain\ReferenceGateway;
 
 //Module includes
 include __DIR__.'/moduleFunctions.php';
@@ -57,65 +59,38 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 //Let's go!
                 $row = $result->fetch();
 
+                // Print
                 echo "<p class='text-right mb-2 text-xs'>";
                 echo "<a href='javascript:window.print()'>".__("Print")."<img style='margin-left: 5px' title='Print' src='./themes/".$session->get('gibbonThemeName')."/img/print.png'/></a>";
-                echo '</p>'; ?>
-                <table class='smallIntBorder' cellspacing='0' style="width: 100%">
-                    <tr>
-                        <td>
-                            <b>Student</b><br/>
-                        </td>
-                        <td class="right">
-                            <input readonly name="student" id="student" maxlength=255 value="<?php echo Format::name('', htmlPrep($row['preferredName']), htmlPrep($row['surname']), 'Student', false, false) ?>" type="text" style="width: 300px">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Reference Type</b><br/>
-                        </td>
-                        <td class="right">
-                            <input readonly name="type" id="type" maxlength=255 value="<?php echo $row['type'] ?>" type="text" style="width: 300px">
-                        </td>
-                    </tr>
-                    <?php
-                    try {
-                        $dataContributions = array('higherEducationReferenceID' => $row['higherEducationReferenceID']);
-                        $sqlContributions = 'SELECT higherEducationReferenceComponent.*, preferredName, surname FROM higherEducationReferenceComponent JOIN gibbonPerson ON (higherEducationReferenceComponent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReferenceID=:higherEducationReferenceID ORDER BY title';
-                        $resultContributions = $connection2->prepare($sqlContributions);
-                        $resultContributions->execute($dataContributions);
-                    } catch (PDOException $e) {
-                    }
-                    if ($resultContributions->rowCount() < 1) {
-                        echo '<tr>';
-                        echo '<td colspan=2>';
-                        echo '<i>Error: no referees requested, or a system error.</i>';
-                        echo '</td>';
-                        echo '</tr>';
-                    } else {
-                        while ($rowContributions = $resultContributions->fetch()) {
-                            echo '<tr>';
-                            echo '<td colspan=2>';
-                            echo '<h4>';
-                            if ($rowContributions['title'] == '') {
-                                echo $rowContributions['type'].' Comment';
-                                echo "<span style='font-size: 75%; font-style: italic'>";
-                                echo ' . by '.Format::name('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
-                                echo '</span>';
-                            } else {
-                                echo $rowContributions['title'];
-                                echo "<span style='font-size: 75%; font-style: italic'>";
-                                echo ' . '.$rowContributions['type'].' comment by '.Format::name('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
-                                echo '</span>';
-                            }
-                            echo '</h4>';
-                            echo '<p>';
-                            echo $rowContributions['body'];
-                            echo '</p>';
-                            echo '</td>';
-                            echo '</tr>';
-                        }
-                    }
-                echo '</table>';
+                echo '</p>';
+
+                // Details table
+                $table = DataTable::createDetails('reference');
+
+                $table->addColumn('name', __('Student'))->format(Format::using('name', ['', 'preferredName', 'surname', 'Student', 'true']));
+                $table->addColumn('type', __m('Reference Type'));
+
+                echo $table->render([$row]);
+
+                // Data table
+                $referenceGateway = $container->get(ReferenceGateway::class);
+
+                // QUERY
+                $criteria = $referenceGateway->newQueryCriteria(true)
+                    ->sortBy(['title'])
+                    ->pageSize(50)
+                    ->fromPOST();
+
+                $references = $referenceGateway->queryReferenceComponentsByReference($criteria, $row['higherEducationReferenceID']);
+
+                $table = DataTable::createPaginated('contributions', $criteria);
+                    $table->addColumn('contribution', __m('Contributions'))->format(function($values) use ($guid, $session) {
+                        $return = "<span class='text-base font-bold'>".$values['title']." . ".$values['type']." Comment by ". Format::name('', $values['preferredName'], $values['surname'], 'Student', false, false)."</span><br/>" ;
+                        $return .= "<p class='mt-1'>".$values['body']."</p>";
+                        return $return;
+                    });
+
+                echo $table->render($references);
             }
         }
     }

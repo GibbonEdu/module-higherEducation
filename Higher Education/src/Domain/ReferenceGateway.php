@@ -71,4 +71,37 @@ class ReferenceGateway extends QueryableGateway
         return $this->runQuery($query, $criteria);
     }
 
+    public function queryReferenceComponentsByReference($criteria, $higherEducationReferenceID, $higherEducationReferenceComponentID = null)
+    {
+        $query = $this
+            ->newQuery()
+            ->cols(['higherEducationReferenceComponent.*', 'surname', 'preferredName'])
+            ->from('higherEducationReferenceComponent')
+            ->innerJoin('gibbonPerson','higherEducationReferenceComponent.gibbonPersonID=gibbonPerson.gibbonPersonID')
+            ->where('higherEducationReferenceComponent.higherEducationReferenceID=:higherEducationReferenceID')
+            ->bindValue('higherEducationReferenceID', $higherEducationReferenceID);
+
+        if (!empty($higherEducationReferenceComponentID)) {
+            $query->where('NOT higherEducationReferenceComponent.higherEducationReferenceComponentID=:higherEducationReferenceComponentID')
+                ->bindValue('higherEducationReferenceComponentID', $higherEducationReferenceComponentID);
+        }
+
+        return $this->runQuery($query, $criteria);
+    }
+
+    public function  queryReferencesByStudent($criteria, $gibbonPersonID)
+    {
+        $query = $this
+            ->newQuery()
+            ->cols(['higherEducationReference.*', "GROUP_CONCAT(DISTINCT surname, ', ', preferredName ORDER BY surname, preferredName ASC SEPARATOR '<br/>') AS referees"])
+            ->from($this->getTableName())
+            ->leftJoin('higherEducationReferenceComponent', 'higherEducationReferenceComponent.higherEducationReferenceID=higherEducationReference.higherEducationReferenceID')
+            ->leftJoin('gibbonPerson', 'higherEducationReferenceComponent.gibbonPersonID=gibbonPerson.gibbonPersonID')
+            ->where('higherEducationReference.gibbonPersonID=:gibbonPersonID')
+            ->bindValue('gibbonPersonID', $gibbonPersonID)
+            ->groupBy(['higherEducationReference.higherEducationReferenceID']);
+
+        return $this->runQuery($query, $criteria);
+    }
+
 }

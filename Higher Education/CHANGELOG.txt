@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.5.03
+-------
+Refactoring of tables
+
 v1.5.02
 -------
 Refactoring of printPagination

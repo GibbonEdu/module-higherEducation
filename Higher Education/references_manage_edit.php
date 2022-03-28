@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\Forms\Form;
 use Gibbon\Services\Format;
 use Gibbon\Tables\DataTable;
-use Gibbon\Domain\Staff\StaffGateway;
+use Gibbon\Module\HigherEducation\Domain\ReferenceGateway;
 
 //Module includes
 include __DIR__.'/moduleFunctions.php';
@@ -126,45 +126,38 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     $row->addAlert(__('The user(s) listed below have already been notified by email that their input is required for this reference, and will not be alerted again.'), 'success');
                 }
 
-                    $dataContributions = array('higherEducationReferenceID' => $values['higherEducationReferenceID']);
-                    $sqlContributions = 'SELECT higherEducationReferenceComponent.*, preferredName, surname FROM higherEducationReferenceComponent JOIN gibbonPerson ON (higherEducationReferenceComponent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReferenceID=:higherEducationReferenceID ORDER BY title';
-                    $resultContributions = $pdo->select($sqlContributions, $dataContributions)->toDataSet();
+                $referenceGateway = $container->get(ReferenceGateway::class);
 
-                if (count($resultContributions) < 1) {
-                    echo "<div class='error'>";
-                    echo 'Error: no referee requested, or a system error.';
-                    echo "</div>";
-                } else {
-
-                //Dummy Criteria to force table to render as paginated
-                $staffGateway = $container->get(StaffGateway::class);
-                $criteria = $staffGateway->newQueryCriteria()
-                    ->sortBy(['surname', 'preferredName'])
+                // QUERY
+                $criteria = $referenceGateway->newQueryCriteria(true)
+                    ->sortBy(['title'])
+                    ->pageSize(50)
                     ->fromPOST();
 
-                    $table = $form->addRow()->addDataTable('contributions', $criteria)->withData($resultContributions);
-                        $table->addExpandableColumn('body');
-                        $table->addColumn('name', __('Name'))->format(Format::using('name', ['title', 'preferredName', 'surname', 'Staff', true, true]));
-                        $table->addColumn('status', __('Status'))->format(function($valuesContributions) use ($guid, $session) {
-                            if ($valuesContributions['status'] == 'Complete') {
-                                return "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick.png'/> <b>".$valuesContributions['status']."</b>";
-                            } else {
-                                return "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick_light.png'/> <b> ".$valuesContributions['status']."</b>";
-                            }
+                $references = $referenceGateway->queryReferenceComponentsByReference($criteria, $values['higherEducationReferenceID']);
+
+                $table = $form->addRow()->addDataTable('contributions', $criteria)->withData($references);
+                    $table->addExpandableColumn('body');
+                    $table->addColumn('name', __('Name'))->format(Format::using('name', ['title', 'preferredName', 'surname', 'Staff', true, true]))->notSortable();
+                    $table->addColumn('status', __('Status'))->format(function($valuesContributions) use ($guid, $session) {
+                        if ($valuesContributions['status'] == 'Complete') {
+                            return "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick.png'/> <b>".$valuesContributions['status']."</b>";
+                        } else {
+                            return "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick_light.png'/> <b> ".$valuesContributions['status']."</b>";
+                        }
+                    });
+                    $table->addColumn('type', __('Type'));
+                    $table->addColumn('title', __('Title'));
+                    $table->addActionColumn()
+                        ->addParam('higherEducationReferenceComponentID')
+                        ->addParam('higherEducationReferenceID')
+                        ->addParam('gibbonSchoolYearID', $gibbonSchoolYearID)
+                        ->format(function ($valuesContributions, $actions) use ($session) {
+                            $actions->addAction('edit', __('Edit'))
+                                    ->setURL('/modules/'.$session->get('module').'/references_manage_edit_contribution_edit.php');
+                            $actions->addAction('delete', __('Delete'))
+                                    ->setURL('/modules/'.$session->get('module').'/references_manage_edit_contribution_delete.php');
                         });
-                        $table->addColumn('type', __('Type'));
-                        $table->addColumn('title', __('Title'));
-                        $table->addActionColumn()
-                            ->addParam('higherEducationReferenceComponentID')
-                            ->addParam('higherEducationReferenceID')
-                            ->addParam('gibbonSchoolYearID', $gibbonSchoolYearID)
-                            ->format(function ($valuesContributions, $actions) use ($session) {
-                                $actions->addAction('edit', __('Edit'))
-                                        ->setURL('/modules/'.$session->get('module').'/references_manage_edit_contribution_edit.php');
-                                $actions->addAction('delete', __('Delete'))
-                                        ->setURL('/modules/'.$session->get('module').'/references_manage_edit_contribution_delete.php');
-                            });
-                }
 
                 $form->loadAllValuesFrom($values);
 
@@ -172,7 +165,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     $row->addFooter();
                     $row->addSubmit();
 
-                    echo $form->getOutput();
+                echo $form->getOutput();
             }
         }
     }

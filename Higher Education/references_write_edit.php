@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\Services\Format;
+use Gibbon\Tables\DataTable;
+use Gibbon\Module\HigherEducation\Domain\ReferenceGateway;
 
 //Module includes
 include __DIR__.'/moduleFunctions.php';
@@ -247,113 +249,35 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             </select>
                         </td>
                     </tr>
-
-                    <?php
-                    try {
-                        $dataContributions = array('higherEducationReferenceID' => $row['higherEducationReferenceID'], 'higherEducationReferenceComponentID' => $higherEducationReferenceComponentID);
-                        $sqlContributions = 'SELECT higherEducationReferenceComponent.*, preferredName, surname FROM higherEducationReferenceComponent JOIN gibbonPerson ON (higherEducationReferenceComponent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE higherEducationReferenceID=:higherEducationReferenceID AND NOT higherEducationReferenceComponentID=:higherEducationReferenceComponentID ORDER BY title';
-                        $resultContributions = $connection2->prepare($sqlContributions);
-                        $resultContributions->execute($dataContributions);
-                    } catch (PDOException $e) {
-                    }
-
-                    if ($resultContributions->rowCount() > 0) {
-                        ?>
-                        <tr>
-                            <td colspan=2>
-                                <h3>Other Contributions</h3>
-                                <?php
-                                echo "<table cellspacing='0' style='width: 100%'>";
-                                echo "<tr class='head'>";
-                                echo '<th>';
-                                echo 'Name<br/>';
-                                echo '</th>';
-                                echo '<th colspan=2>';
-                                echo 'Status<br/>';
-                                echo '</th>';
-                                echo '<th>';
-                                echo 'Type';
-                                echo '</th>';
-                                echo '<th>';
-                                echo 'Title';
-                                echo '</th>';
-                                echo '<th>';
-                                echo 'Actions';
-                                echo '</th>';
-                                echo '</tr>';
-
-                                $count = 0;
-                                $rowNum = 'odd';
-                                while ($rowContributions = $resultContributions->fetch()) {
-                                    if ($count % 2 == 0) {
-                                        $rowNum = 'even';
-                                    } else {
-                                        $rowNum = 'odd';
-                                    }
-                                    ++$count;
-
-                                    echo "<tr class='$rowNum'>";
-                                    echo '<td>';
-                                    echo Format::name('', $rowContributions['preferredName'], $rowContributions['surname'], 'Staff', false, true);
-                                    echo '</td>';
-                                    echo "<td style='width: 25px'>";
-                                    if ($rowContributions['status'] == 'Complete') {
-                                        echo "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick.png'/> ";
-                                    } else {
-                                        echo "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick_light.png'/> ";
-                                    }
-                                    echo '</td>';
-                                    echo '<td>';
-                                    echo '<b>'.$rowContributions['status'].'</b>';
-                                    echo '</td>';
-                                    echo '<td>';
-                                    echo $rowContributions['type'];
-                                    echo '</td>';
-                                    echo '<td>';
-                                    if ($rowContributions['title'] == '') {
-                                        echo '<i>NA</i>';
-                                    } else {
-                                        echo $rowContributions['title'];
-                                    }
-                                    echo '</td>';
-                                    echo '<td>';
-                                    echo "<script type='text/javascript'>";
-                                    echo '$(document).ready(function(){';
-                                    echo "\$(\".description-$count\").hide();";
-                                    echo "\$(\".show_hide-$count\").fadeIn(1000);";
-                                    echo "\$(\".show_hide-$count\").click(function(){";
-                                    echo "\$(\".description-$count\").fadeToggle(1000);";
-                                    echo '});';
-                                    echo '});';
-                                    echo '</script>';
-                                    if ($rowContributions['status'] != 'Pending') {
-                                        echo "<a class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='".$session->get('absoluteURL')."/themes/Default/img/page_down.png' alt='Show Details' onclick='return false;' /></a>";
-                                    }
-                                    echo '</td>';
-                                    echo '</tr>';
-                                    if ($rowContributions['status'] != 'Pending') {
-                                        echo "<tr class='description-$count' id='fields-$count' style='background-color: #fff; display: none'>";
-                                        echo "<td style='border-bottom: 1px solid #333' colspan=6>";
-                                        echo $rowContributions['body'];
-                                        echo '</td>';
-                                        echo '</tr>';
-                                    }
-                                }
-                                echo '</table>';
-                                ?>
-                            </td>
-                        </tr>
-                        <?php
-
-                        }
-                    ?>
                     <tr>
-                        <td>
-                            <span style="font-size: 90%"><i>* denotes a required field</i></span>
-                        </td>
-                        <td class="right">
-                            <input type="hidden" name="address" value="<?php echo $session->get('address') ?>">
-                            <input type="submit" value="Submit">
+                        <td colspan=2>
+                            <?php
+                            $referenceGateway = $container->get(ReferenceGateway::class);
+
+                            // QUERY
+                            $criteria = $referenceGateway->newQueryCriteria(true)
+                                ->sortBy(['title'])
+                                ->pageSize(50)
+                                ->fromPOST();
+
+                            $references = $referenceGateway->queryReferenceComponentsByReference($criteria, $row['higherEducationReferenceID'], $higherEducationReferenceComponentID);
+
+                            $table = DataTable::createPaginated('contributions', $criteria);
+                                $table->setTitle(__m('Other Contributions'));
+                                $table->addExpandableColumn('body');
+                                $table->addColumn('name', __('Name'))->format(Format::using('name', ['title', 'preferredName', 'surname', 'Staff', true, true]))->notSortable();
+                                $table->addColumn('status', __('Status'))->format(function($valuesContributions) use ($guid, $session) {
+                                    if ($valuesContributions['status'] == 'Complete') {
+                                        return "<img style='margin-right: 3px; float: left' title='Complete' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick.png'/> <b>".$valuesContributions['status']."</b>";
+                                    } else {
+                                        return "<img style='margin-right: 3px; float: left' title='In Progress' src='./themes/".$session->get('gibbonThemeName')."/img/iconTick_light.png'/> <b> ".$valuesContributions['status']."</b>";
+                                    }
+                                });
+                                $table->addColumn('type', __('Type'));
+                                $table->addColumn('title', __('Title'));
+
+                            echo $table->render($references);
+                            ?>
                         </td>
                     </tr>
                 </table>

@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\Services\Format;
+use Gibbon\Tables\DataTable;
+use Gibbon\Module\HigherEducation\Domain\ApplicationGateway;
 
 //Module includes
 include __DIR__.'/moduleFunctions.php';
@@ -36,139 +38,54 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
         echo "Your higher educatuion staff role is $role. The students listed below are determined by your role, and student-staff relationship assignment.";
         echo '</p>';
 
-        try {
-            if ($role == 'Coordinator') {
-                $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
-                $sql = "SELECT gibbonPerson.gibbonPersonID, higherEducationStudentID, surname, preferredName, gibbonYearGroup.nameShort AS yearGroup, gibbonFormGroup.nameShort AS formGroup, gibbonFormGroup.gibbonFormGroupID, gibbonPersonIDAdvisor, gibbonSchoolYear.name AS schoolYear FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonSchoolYear ON (gibbonSchoolYear.gibbonSchoolYearID=gibbonPerson.gibbonSchoolYearIDClassOf) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' ORDER BY gibbonSchoolYear.sequenceNumber DESC, surname, preferredName";
-            } else {
-                $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'), 'advisor' => $session->get('gibbonPersonID'));
-                $sql = "SELECT gibbonPerson.gibbonPersonID, higherEducationStudentID, surname, preferredName, gibbonYearGroup.nameShort AS yearGroup, gibbonFormGroup.nameShort AS formGroup, gibbonFormGroup.gibbonFormGroupID, gibbonPersonIDAdvisor, gibbonSchoolYear.name AS schoolYear FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonSchoolYear ON (gibbonSchoolYear.gibbonSchoolYearID=gibbonPerson.gibbonSchoolYearIDClassOf) LEFT JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND gibbonPersonIDAdvisor=:advisor ORDER BY gibbonSchoolYear.sequenceNumber DESC, surname, preferredName";
-            }
-            $result = $connection2->prepare($sql);
-            $result->execute($data);
-        } catch (PDOException $e) {
-            $page->addError($e->getMessage());
-        }
+        $applicationGateway = $container->get(ApplicationGateway::class);
 
-        if ($result->rowCount() < 1) {
-            $page->addError(__('There are no students to display.'));
-        } else {
-            echo "<p class='text-right mb-2 text-xs'>";
-            echo 'Filter Form Group: ';
+        // QUERY
+        $criteria = $applicationGateway->newQueryCriteria(true)
+            ->sortBy(['gibbonSchoolYear.sequenceNumber'], 'DESC')
+            ->sortBy(['surname', 'preferredName'])
+            ->pageSize(50)
+            ->fromPOST();
 
-            ?>
-                <script type="text/javascript">
-                $(document).ready(function() {
-                    $('.searchInput').val(1);
-                    $('.body').find("tr:odd").addClass('odd');
-                    $('.body').find("tr:even").addClass('even');
+        $applications = $applicationGateway->queryApplications($criteria, $role, $session->get('gibbonSchoolYearID'), $session->get('gibbonPersonID'));
 
-                    $(".searchInput").change(function(){
-                        $('.body').find("tr").hide() ;
-                        if ($('.searchInput :selected').val() == "" ) {
-                            $('.body').find("tr").show() ;
-                        }
-                        else {
-                            $('.body').find('.' + $('.searchInput :selected').val()).show();
-                        }
+        // TABLE
+        $table = DataTable::createPaginated('applications', $criteria);
+        $table->setTitle(__('View'));
 
-                        $('.body').find("tr").removeClass('odd even');
-                        $('.body').find('tr:visible:odd').addClass('odd');
-                        $('.body').find('tr:visible:even').addClass('even');
-                    });
-                });
-                </script>
+        $table->addColumn('name', __m('Name'))
+            ->format(function ($values) {
+                return Format::name('', $values['preferredName'], $values['surname'], 'Student', true, true);
+            })
+            ->notSortable();
 
-                <select name="searchInput" class="searchInput" style='float: none; width: 100px'>
-                    <option selected value=''>All</option>
-                    <?php
-                    try {
-                        if ($role == 'Coordinator') {
-                            $dataSelect = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
-                            $sqlSelect = "SELECT DISTINCT gibbonFormGroup.nameShort AS formGroup, gibbonFormGroup.gibbonFormGroupID FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' ORDER BY gibbonFormGroup.nameShort";
-                        } else {
-                            $dataSelect = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'), 'advisor' => $session->get('gibbonPersonID'));
-                            $sqlSelect = "SELECT DISTINCT gibbonFormGroup.nameShort AS formGroup, gibbonFormGroup.gibbonFormGroupID FROM higherEducationStudent JOIN gibbonPerson ON (higherEducationStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (higherEducationStudent.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) LEFT JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPerson.status='Full' AND gibbonPersonIDAdvisor=:advisor ORDER BY gibbonFormGroup.nameShort";
-                        }
-                        $resultSelect = $connection2->prepare($sqlSelect);
-                        $resultSelect->execute($dataSelect);
-                    } catch (PDOException $e) {
-                        $page->addError($e->getMessage());
-                    }
+        $table->addColumn('formGroup', __m('Form Group'));
 
-                    while ($rowSelect = $resultSelect->fetch()) {
-                        echo "<option value='".$rowSelect['gibbonFormGroupID']."'>".htmlPrep($rowSelect['formGroup']).'</option>';
-                    }
-                    ?>
-                </select>
-                <?php
-                echo '</p>';
-
-                echo "<table cellspacing='0' style='width: 100%'>";
-                echo "<tr class='head'>";
-                echo '<th>';
-                echo 'Name';
-                echo '</th>';
-                echo '<th>';
-                echo 'Form<br/>Group';
-                echo '</th>';
-                echo '<th>';
-                echo 'Applying';
-                echo '</th>';
-                echo '<th>';
-                echo 'Applications';
-                echo '</th>';
-                echo '<th>';
-                echo 'Actions';
-                echo '</th>';
-                echo '</tr>';
-                echo "<tbody class='body'>";
-
-                $count = 0;
-                $rowNum = 'odd';
-                while ($row = $result->fetch()) {
-                    ++$count;
-
-                    //COLOR ROW BY STATUS!
-                    echo "<tr class='".$row['gibbonFormGroupID']."' id='".$row['formGroup']."' name='".$row['formGroup']."'>";
-                    echo '<td>';
-                    echo Format::name('', $row['preferredName'], $row['surname'], 'Student', true, true);
-                    echo '</td>';
-                    echo '<td>';
-                    echo $row['formGroup'];
-                    echo '</td>';
-                    echo '<td>';
-                    try {
-                        $dataAdvisor = array('gibbonPersonID' => $row['gibbonPersonID']);
-                        $sqlAdvisor = 'SELECT * FROM higherEducationApplication LEFT JOIN higherEducationApplicationInstitution ON (higherEducationApplicationInstitution.higherEducationApplicationID=higherEducationApplication.higherEducationApplicationID) WHERE gibbonPersonID=:gibbonPersonID';
-                        $resultAdvisor = $connection2->prepare($sqlAdvisor);
-                        $resultAdvisor->execute($dataAdvisor);
-                    } catch (PDOException $e) {
-                        echo "<div class='warning'>";
-                            echo $e->getMessage();
-                        echo '</div>';
-                    }
-
-                    if ($resultAdvisor->rowCount() < 1) {
-                        echo '<i>Not yet indicated.</i>';
-                    } else {
-                        $rowAdvisor = $resultAdvisor->fetch();
-                        echo $rowAdvisor['applying'];
-                    }
-                    echo '</td>';
-                    echo '<td>';
-                    echo $resultAdvisor->rowCount();
-                    echo '</td>';
-                    echo '<td>';
-                    if ($resultAdvisor->rowCount() > 0 and $rowAdvisor['applying'] == 'Y') {
-                        echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/'.$session->get('module').'/applications_view_details.php&gibbonPersonID='.$row['gibbonPersonID']."'><img title='Details' src='./themes/".$session->get('gibbonThemeName')."/img/page_right.png'/></a> ";
-                    }
-                    echo '</td>';
-                    echo '</tr>';
+        $table->addColumn('applying', __m('Applying'))
+            ->format(function ($values) {
+                if (!empty($values['applying'])) {
+                    return Format::yesNo($values['applying']);
+                } else {
+                    return __m("Not yet indicated");
                 }
-            echo '</tbody>';
-            echo '</table>';
-        }
+            });
+
+        $table->addColumn('applications', __m('Applications'))->format(function ($values) {
+            if ($values['applying'] == "Y") {
+                return $values['applications'];
+            }
+        });
+
+        $actions = $table->addActionColumn()
+            ->addParam('gibbonPersonID')
+            ->format(function ($values, $actions) {
+                    if ($values['applying'] == "Y") {
+                        $actions->addAction('view', __('View'))
+                            ->setURL('/modules/Higher Education/applications_view_details.php');
+                    }
+                });
+
+        echo $table->render($applications);
     }
 }
 ?>
