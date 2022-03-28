@@ -34,7 +34,7 @@ class ApplicationInstitutionGateway extends QueryableGateway
     {
         $query = $this
             ->newQuery()
-            ->cols(['higherEducationApplicationInstitution.higherEducationApplicationInstitutionID', 'higherEducationInstitution.name as institution', 'higherEducationMajor.name as major', 'rank', 'rating'])
+            ->cols(['higherEducationApplicationInstitution.*', 'higherEducationInstitution.name as institution', 'higherEducationMajor.name as major', 'rank', 'rating'])
             ->from($this->getTableName())
             ->innerJoin('higherEducationInstitution','higherEducationApplicationInstitution.higherEducationInstitutionID=higherEducationInstitution.higherEducationInstitutionID')
             ->innerJoin('higherEducationMajor','higherEducationApplicationInstitution.higherEducationMajorID=higherEducationMajor.higherEducationMajorID')

@@ -104,60 +104,50 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 
         echo $form->getOutput();
 
-        $style = '';
-        if (isset($values['applying'])) {
-            if ($values['applying'] == 'N' or $values['applying'] == '') {
-                $style = 'display: none;';
-            }
-        }
-        echo "<div id='applicationsDiv' style='$style'>";
-        echo '<h2>';
-        echo 'Application To Institutions';
-        echo '</h2>';
-
         if (isset($values['higherEducationApplicationID']) == false) {
             echo "<div class='warning'>";
             echo 'You need to save the information above (press the Submit button) before you can start adding applications.';
             echo '</div>';
         } else {
+            if ($values['applying'] == 'Y') {
+                $applicationInstitutionGateway = $container->get(ApplicationInstitutionGateway::class);
 
-            $applicationInstitutionGateway = $container->get(ApplicationInstitutionGateway::class);
+                // QUERY
+                $criteria = $applicationInstitutionGateway->newQueryCriteria(true)
+                    ->sortBy(['rank', 'institution', 'major'])
+                    ->pageSize(50)
+                    ->fromPOST();
 
-            // QUERY
-            $criteria = $applicationInstitutionGateway->newQueryCriteria(true)
-                ->sortBy(['rank', 'institution', 'major'])
-                ->pageSize(50)
-                ->fromPOST();
+                $applications = $applicationInstitutionGateway->queryApplicationInstitutions($criteria, $higherEducationApplicationID);
 
-            $applications = $applicationInstitutionGateway->queryApplicationInstitutions($criteria, $higherEducationApplicationID);
+                // TABLE
+                $table = DataTable::createPaginated('applications', $criteria);
+                $table->setTitle(__('Application To Institutions'));
 
-            // TABLE
-            $table = DataTable::createPaginated('applications', $criteria);
-            $table->setTitle(__('View'));
+                $table->addHeaderAction('add', __('Add'))
+                    ->setURL('/modules/Higher Education/applications_track_add.php')
+                    ->displayLabel();
 
-            $table->addHeaderAction('add', __('Add'))
-                ->setURL('/modules/Higher Education/applications_track_add.php')
-                ->displayLabel();
+                $table->addColumn('institution', __m('Institution'));
 
-            $table->addColumn('institution', __m('Institution'));
+                $table->addColumn('major', __m('Major'));
 
-            $table->addColumn('major', __m('Major'));
+                $table->addColumn('ranking', __m('Ranking'))
+                    ->format(function ($values) {
+                        return $values["rank"]."<br/>".Format::small(__($values['rating']));
+                    });
 
-            $table->addColumn('ranking', __m('Ranking'))
-                ->format(function ($values) {
-                    return $values["rank"]."<br/>".Format::small(__($values['rating']));
-                });
+                $actions = $table->addActionColumn()
+                    ->addParam('higherEducationApplicationInstitutionID')
+                    ->format(function ($resource, $actions) {
+                        $actions->addAction('edit', __('Edit'))
+                            ->setURL('/modules/Higher Education/applications_track_edit.php');
+                        $actions->addAction('delete', __('Delete'))
+                            ->setURL('/modules/Higher Education/applications_track_delete.php');
+                    });
 
-            $actions = $table->addActionColumn()
-                ->addParam('higherEducationApplicationInstitutionID')
-                ->format(function ($resource, $actions) {
-                    $actions->addAction('edit', __('Edit'))
-                        ->setURL('/modules/Higher Education/applications_track_edit.php');
-                    $actions->addAction('delete', __('Delete'))
-                        ->setURL('/modules/Higher Education/applications_track_delete.php');
-                });
-
-            echo $table->render($applications);
+                echo $table->render($applications);
+            }
         }
     }
 }

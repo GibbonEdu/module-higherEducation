@@ -17,11 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//Module includes
-include __DIR__.'/moduleFunctions.php';
-
 use Gibbon\Forms\Form;
 use Gibbon\Services\Format;
+use Gibbon\Tables\DataTable;
+use Gibbon\Module\HigherEducation\Domain\ApplicationInstitutionGateway;
+
+//Module includes
+include __DIR__.'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applications_view_details.php') == false) {
     //Acess denied
@@ -59,34 +61,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
                 $page->breadcrumbs->add(__('View Applications'), 'applications_view.php');
                 $page->breadcrumbs->add(__('Application Details'));
 
-                echo "<table class='smallIntBorder' cellspacing='0' style='width: 100%'>";
-                echo '<tr>';
-                echo "<td style='width: 34%; vertical-align: top'>";
-                echo "<span style='font-size: 115%; font-weight: bold'>Name</span><br/>";
-                echo Format::name('', $values['preferredName'], $values['surname'], 'Student', true, true);
-                echo '</td>';
-                echo "<td style='width: 34%; vertical-align: top'>";
-                echo "<span style='font-size: 115%; font-weight: bold'>Form Group</span><br/>";
-                try {
-                    $dataDetail = array('gibbonFormGroupID' => $values['gibbonFormGroupID']);
-                    $sqlDetail = 'SELECT * FROM gibbonFormGroup WHERE gibbonFormGroupID=:gibbonFormGroupID';
-                    $resultDetail = $connection2->prepare($sqlDetail);
-                    $resultDetail->execute($dataDetail);
-                } catch (PDOException $e) {
-                    echo "<div class='warning'>";
-                        echo $e->getMessage();
-                    echo '</div>';
-                }
-                if ($resultDetail->rowCount() == 1) {
-                    $valuesDetail = $resultDetail->fetch();
-                    echo '<i>'.$valuesDetail['name'].'</i>';
-                }
-                echo '</td>';
-                echo "<td style='width: 34%; vertical-align: top'>";
+                // Details table
+                $table = DataTable::createDetails('reference');
 
-                echo '</td>';
-                echo '</tr>';
-                echo '</table>';
+                $table->addColumn('name', __('Student'))->format(Format::using('name', ['', 'preferredName', 'surname', 'Student', 'true']));
+                $table->addColumn('formGroup', __m('Form Group'));
+
+                echo $table->render([$values]);
 
                 //Check for application record
                 try {
@@ -151,168 +132,64 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
 
                         echo $form->getOutput();
 
-                        $style = '';
-                        if ($values['applying'] == 'N' or $values['applying'] == '') {
-                            $style = 'display: none;';
+                        if ($values['applying'] == 'Y') {
+                            $applicationInstitutionGateway = $container->get(ApplicationInstitutionGateway::class);
+
+                            // QUERY
+                            $criteria = $applicationInstitutionGateway->newQueryCriteria(true)
+                                ->sortBy(['rank', 'institution', 'major'])
+                                ->pageSize(50)
+                                ->fromPOST();
+
+                            $applications = $applicationInstitutionGateway->queryApplicationInstitutions($criteria, $values["higherEducationApplicationID"]);
+
+                            // TABLE
+                            $table = DataTable::createPaginated('applications', $criteria);
+                            $table->setTitle(__('Application To Institutions'));
+
+                            $table->addExpandableColumn('details')
+                                ->format(function($values) {
+                                    $output = '';
+                                    if (!empty($values['applicationNumber'])) {
+                                        $output .= Format::bold(__m('Application Number')).'<br/>';
+                                        $output .= nl2brr($values['applicationNumber']).'<br/><br/>';
+                                    }
+                                    if (!empty($values['scholarship'])) {
+                                        $output .= Format::bold(__m('Scholarship')).'<br/>';
+                                        $output .= nl2brr($values['scholarship']).'<br/><br/>';
+                                    }
+                                    if (!empty($values['offer'])) {
+                                        $output .= Format::bold(__m('Offer')).'<br/>';
+                                        $output .= nl2brr($values['offer']);
+                                        if (!empty($values['offerDetails'])) {
+                                            $output .= ' - '.$values['offerDetails'];
+                                        }
+                                        $output .= '<br/><br/>';
+                                    }
+                                    if (!empty($values['question'])) {
+                                        $output .= Format::bold(__m('Application Question')).'<br/>';
+                                        $output .= nl2brr($values['question']).'<br/><br/>';
+                                    }
+                                    if (!empty($values['answer'])) {
+                                        $output .= Format::bold(__m('Application Answer')).'<br/>';
+                                        $output .= nl2brr($values['answer']).'<br/><br/>';
+                                    }
+                                    return $output;
+                                });
+
+                            $table->addColumn('institution', __m('Institution'));
+
+                            $table->addColumn('major', __m('Major'));
+
+                            $table->addColumn('ranking', __m('Ranking'))
+                                ->format(function ($values) {
+                                    return $values["rank"]."<br/>".Format::small(__($values['rating']));
+                                });
+
+                            $table->addColumn('status', __m('Status'));
+
+                            echo $table->render($applications);
                         }
-                        echo "<div id='applicationsDiv' style='$style'>";
-                        echo '<h2>';
-                        echo 'Application To Institutions';
-                        echo '</h2>';
-
-                        if ($values['higherEducationApplicationID'] == '') {
-                            echo "<div class='warning'>";
-                            echo 'You need to save the information above (press the Submit button) before you can start adding applications.';
-                            echo '</div>';
-                        } else {
-                            try {
-                                $dataApps = array('higherEducationApplicationID' => $values['higherEducationApplicationID']);
-                                $sqlApps = 'SELECT higherEducationApplicationInstitution.higherEducationApplicationInstitutionID, higherEducationInstitution.name as institution, higherEducationMajor.name as major, higherEducationApplicationInstitution.* FROM higherEducationApplicationInstitution JOIN higherEducationInstitution ON (higherEducationApplicationInstitution.higherEducationInstitutionID=higherEducationInstitution.higherEducationInstitutionID) JOIN higherEducationMajor ON (higherEducationApplicationInstitution.higherEducationMajorID=higherEducationMajor.higherEducationMajorID) WHERE higherEducationApplicationID=:higherEducationApplicationID ORDER BY rank, institution, major';
-                                $resultApps = $connection2->prepare($sqlApps);
-                                $resultApps->execute($dataApps);
-                            } catch (PDOException $e) {
-                                echo "<div class='warning'>";
-                                    echo $e->getMessage();
-                                echo '</div>';
-                            }
-
-                            if ($resultApps->rowCount() < 1) {
-                                echo "<div class='warning'>";
-                                    echo __('There are no applications to display.');
-                                echo '</div>';
-                            } else {
-                                echo "<table cellspacing='0' style='width: 100%'>";
-                                echo "<tr class='head'>";
-                                echo '<th>';
-                                echo 'Institution';
-                                echo '</th>';
-                                echo '<th>';
-                                echo 'Major';
-                                echo '</th>';
-                                echo '<th>';
-                                echo 'Ranking<br/>';
-                                echo "<span style='font-size: 75%; font-style: italic'>Rating</span>";
-                                echo '</th>';
-                                echo '<th>';
-                                echo 'Status';
-                                echo '</th>';
-                                echo '<th>';
-                                echo 'Actions';
-                                echo '</th>';
-                                echo '</tr>';
-
-                                $count = 0;
-                                $valuesNum = 'odd';
-                                while ($valuesApps = $resultApps->fetch()) {
-                                    if ($count % 2 == 0) {
-                                        $valuesNum = 'even';
-                                    } else {
-                                        $valuesNum = 'odd';
-                                    }
-
-                                    //COLOR ROW BY STATUS!
-                                    echo "<tr class=$valuesNum>";
-                                    echo '<td>';
-                                    echo $valuesApps['institution'];
-                                    echo '</td>';
-                                    echo '<td>';
-                                    echo $valuesApps['major'];
-                                    echo '</td>';
-                                    echo '<td>';
-                                    echo $valuesApps['rank'].'<br/>';
-                                    echo "<span style='font-size: 75%; font-style: italic'>".$valuesApps['rating'].'</span>';
-                                    echo '</td>';
-                                    echo '<td>';
-                                    echo $valuesApps['status'];
-                                    echo '</td>';
-                                    echo '<td>';
-                                    echo "<script type='text/javascript'>";
-                                    echo '$(document).ready(function(){';
-                                    echo "\$(\".description-$count\").hide();";
-                                    echo "\$(\".show_hide-$count\").fadeIn(1000);";
-                                    echo "\$(\".show_hide-$count\").click(function(){";
-                                    echo "\$(\".description-$count\").fadeToggle(1000);";
-                                    echo '});';
-                                    echo '});';
-                                    echo '</script>';
-                                    echo "<a class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='".$session->get('absoluteURL')."/themes/Default/img/page_down.png' alt='Show Details' onclick='return false;' /></a>";
-                                    echo '</td>';
-                                    echo '</tr>';
-                                    echo "<tr class='description-$count' id='fields-$count' style='background-color: #fff; display: none'>";
-                                    echo '<td colspan=5>';
-                                    echo "<table class='mini' cellspacing='0' style='width: 100%'>";
-                                    echo '<tr>';
-                                    echo "<td style='vertical-align: top'>";
-                                    echo '<b>Application Number</b>';
-                                    echo '</td>';
-                                    echo "<td style='vertical-align: top'>";
-                                    if ($valuesApps['applicationNumber'] == '') {
-                                        echo 'NA';
-                                    } else {
-                                        echo $valuesApps['applicationNumber'];
-                                    }
-                                    echo '</td>';
-                                    echo '</tr>';
-                                    echo '<tr>';
-                                    echo "<td style='vertical-align: top'>";
-                                    echo '<b>Scholarship Details</b>';
-                                    echo '</td>';
-                                    echo "<td style='vertical-align: top'>";
-                                    if ($valuesApps['scholarship'] == '') {
-                                        echo 'NA';
-                                    } else {
-                                        echo $valuesApps['scholarship'];
-                                    }
-                                    echo '</td>';
-                                    echo '</tr>';
-                                    echo '<tr>';
-                                    echo "<td style='vertical-align: top'>";
-                                    echo '<b>Offer</b>';
-                                    echo '</td>';
-                                    echo "<td style='vertical-align: top'>";
-                                    if ($valuesApps['offer'] == '') {
-                                        echo 'NA';
-                                    } else {
-                                        echo $valuesApps['offer'].'</br>';
-                                        echo '<i>'.$valuesApps['offerDetails'].'</i></br>';
-                                    }
-
-                                    echo '</td>';
-                                    echo '</tr>';
-                                    echo '<tr>';
-                                    echo "<td style='vertical-align: top'>";
-                                    echo '<b>Application Question</b>';
-                                    echo '</td>';
-                                    echo "<td style='vertical-align: top'>";
-                                    if ($valuesApps['question'] == '') {
-                                        echo 'NA';
-                                    } else {
-                                        echo $valuesApps['question'];
-                                    }
-                                    echo '</td>';
-                                    echo '</tr>';
-                                    echo '<tr>';
-                                    echo "<td style='vertical-align: top'>";
-                                    echo '<b>Application Answer</b>';
-                                    echo '</td>';
-                                    echo "<td style='vertical-align: top'>";
-                                    if ($valuesApps['answer'] == '') {
-                                        echo 'NA';
-                                    } else {
-                                        echo $valuesApps['answer'];
-                                    }
-                                    echo '</td>';
-                                    echo '</tr>';
-                                    echo '</table>';
-                                    echo '</td>';
-                                    echo '</tr>';
-
-                                    ++$count;
-                                }
-                                echo '</table>';
-                            }
-                        }
-                        echo '</div>';
                     }
                 }
 
