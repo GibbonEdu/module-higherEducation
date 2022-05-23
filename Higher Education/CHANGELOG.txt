@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.5.04
+-------
+Fixed reference add bug
+
 v1.5.03
 -------
 Refactoring of tables

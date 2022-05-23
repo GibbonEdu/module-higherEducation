@@ -23,8 +23,8 @@ include __DIR__.'/../../gibbon.php';
 include __DIR__.'/moduleFunctions.php';
 
 
-$gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
-$search = $_GET['search'];
+$gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? '';
+$search = $_GET['search'] ?? '';
 $URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/references_manage_addMulti.php&gibbonSchoolYearID=$gibbonSchoolYearID&search=$search";
 
 if (isActionAccessible($guid, $connection2, '/modules/Higher Education/references_manage_addMulti.php') == false) {

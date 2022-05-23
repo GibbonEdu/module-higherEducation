@@ -92,7 +92,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                     ->pageSize(50)
                     ->fromPOST();
 
-                $references = $referenceGateway->queryReferences($criteria, $session->get('gibbonSchoolYearID'), $search);
+                $references = $referenceGateway->queryReferences($criteria, $gibbonSchoolYearID, $search);
 
                 // TABLE
                 $table = DataTable::createPaginated('references', $criteria);
@@ -100,6 +100,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 $table->setDescription(__m('The table below shows all references request in the selected school year. Use the "Previous Year" and "Next Year" links to navigate to other years.'));
 
                 $table->addHeaderAction('add', __('Add Multiple Records'))
+                    ->addParam('gibbonSchoolYearID', $gibbonSchoolYearID)
+                    ->addParam('search', $search)
                     ->setURL('/modules/Higher Education/references_manage_addMulti.php')
                     ->displayLabel()
                     ->setIcon('page_new_multi');
@@ -129,6 +131,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 $actions = $table->addActionColumn()
                     ->addParam('higherEducationReferenceID')
                     ->addParam('gibbonSchoolYearID', $gibbonSchoolYearID)
+                    ->addParam('search', $search)
                     ->format(function ($resource, $actions) {
                         $actions->addAction('edit', __('Edit'))
                             ->setURL('/modules/Higher Education/references_manage_edit.php');

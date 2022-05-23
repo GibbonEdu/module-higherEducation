@@ -42,11 +42,12 @@ class ReferenceGateway extends QueryableGateway
             ->leftJoin('gibbonYearGroup','gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID')
             ->leftJoin('gibbonFormGroup','gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID')
             ->where('gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID')
+            ->where('higherEducationReference.gibbonSchoolYearID=:gibbonSchoolYearID')
             ->bindValue('gibbonSchoolYearID', $gibbonSchoolYearID)
             ->where('student.status=\'Full\'');
 
         if (!empty($search)) {
-            $query->where("(surname LIKE CONCAT('%', :search, '%') OR preferredName LIKE CONCAT('%', :search, '%') OR username LIKE CONCAT('%', :search, '%'))")
+            $query->where("((surname LIKE CONCAT('%', :search, '%') OR preferredName LIKE CONCAT('%', :search, '%') OR username LIKE CONCAT('%', :search, '%')))")
                 ->bindValue('search', $search);
         }
 
