@@ -280,6 +280,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                             ?>
                         </td>
                     </tr>
+                    <tr>
+						<td>
+							<span style="font-size: 90%"><i>* denotes a required field</i></span>
+						</td>
+						<td class="right">
+							<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
+							<input type="submit" value="Submit">
+						</td>
+					</tr>
                 </table>
             </form>
             <?php
