@@ -66,7 +66,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
             ->pageSize(50)
             ->fromPOST();
 
-        $references = $referenceGateway->queryReferenceComponents($criteria, $session->get('gibbonSchoolYearID'), $session->get('gibbonPersonID'));
+        $references = $referenceGateway->queryReferenceComponents($criteria, $gibbonSchoolYearID, $session->get('gibbonPersonID'));
 
         // TABLE
         $table = DataTable::createPaginated('references', $criteria);
