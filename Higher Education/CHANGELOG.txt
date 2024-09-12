@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.6.00
+-------
+Transferred ownership from Ross Parker to Gibbon Foundation
+
 v1.5.06
 -------
 Fixed bug in Write References in non-current years
