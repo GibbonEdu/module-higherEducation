@@ -91,17 +91,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             $row = $form->addRow();
                 $column = $row->addColumn();
                 $column->addLabel('question', __('Application Question'))->description(__('If the application form has a question, enter it here.'));
-                $column->addTextArea('question')->setRows(4)->setClass('fullWidth');
+                $column->addTextArea('question')->setRows(4)->setClass('w-full');
             
              $row = $form->addRow();
                 $column = $row->addColumn();
                 $column->addLabel('answer', __('Application Answer'))->description(__('Answer the above question here.'));
-                $column->addTextArea('answer')->setRows(14)->setClass('fullWidth');
+                $column->addTextArea('answer')->setRows(14)->setClass('w-full');
                 
             $row = $form->addRow();
                 $column = $row->addColumn();
                 $column->addLabel('scholarship', __('Scholarship Details'))->description(__('Have you applied for a scholarship? If so, list the details below.'));
-                $column->addTextArea('scholarship')->setRows(4)->setClass('fullWidth');
+                $column->addTextArea('scholarship')->setRows(4)->setClass('w-full');
                 
             $form->addRow()->addHeading(__('Status & Offers'));   
              
@@ -116,7 +116,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/applicati
             $row = $form->addRow();
                 $column = $row->addColumn();
                 $column->addLabel('offerDetails', __('Offer Details'))->description(__('If you have received an offer, enter details here.'));
-                $column->addTextArea('offerDetails')->setRows(4)->setClass('fullWidth');
+                $column->addTextArea('offerDetails')->setRows(4)->setClass('w-full');
             
             $row = $form->addRow();
                 $row->addFooter();

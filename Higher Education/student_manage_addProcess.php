@@ -32,7 +32,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/student_m
     //Proceed!
     $gibbonPersonIDAdvisor = $_POST['gibbonPersonIDAdvisor'] ?? null;
     $update = true;
-    $choices = $_POST['Members'] ?? '';
+    $choices = $_POST['Members'] ?? [];
 
     if (count($choices) < 1) {
         //Fail 2

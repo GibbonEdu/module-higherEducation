@@ -27,7 +27,7 @@ $description = 'A module to support students as they undertake the higher educat
 $entryURL = 'index.php';
 $type = 'Additional';
 $category = 'Other';
-$version = '1.6.02';
+$version = '1.7.00';
 $author = "Gibbon Foundation";
 $url = "https://gibbonedu.org";
 
