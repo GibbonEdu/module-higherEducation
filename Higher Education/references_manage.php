@@ -76,13 +76,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Higher Education/reference
                 $form->setClass('noIntBorder w-full');
 
                 $form->addHiddenValue('q', '/modules/'.$session->get('module').'/references_manage.php');
+                $form->addHiddenValue('gibbonSchoolYearID', $gibbonSchoolYearID);
 
                 $row = $form->addRow();
                     $row->addLabel('search', __('Search For'))->description(__('Preferred, surname, username.'));
                     $row->addTextField('search')->setValue($search);
 
                 $row = $form->addRow();
-                    $row->addSearchSubmit($session, __('Clear Search'));
+                    $row->addSearchSubmit($session, __('Clear Search'), ['gibbonSchoolYearID']);
 
                 echo $form->getOutput();
 

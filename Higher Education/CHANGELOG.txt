@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.7.02
+-------
+Fixed the issue of search parameters not including school year
+
 v1.7.01
 -------
 Refactored the Higher Education Write Reference form to use Classes and Gateways
